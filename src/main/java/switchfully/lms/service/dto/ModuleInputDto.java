@@ -17,4 +17,6 @@ public class ModuleInputDto {
         this.title = title;
         this.courseId = courseId;
     }
+
+
 }
