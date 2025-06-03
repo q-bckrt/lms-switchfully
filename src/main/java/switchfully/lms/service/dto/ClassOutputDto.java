@@ -6,7 +6,7 @@ import java.util.Objects;
 public class ClassOutputDto {
     private String title;
 
-    public ClassOutputDto(Long id, String title, List<UserOutputDto> users) {
+    public ClassOutputDto( String title) {
         this.title = title;
     }
 

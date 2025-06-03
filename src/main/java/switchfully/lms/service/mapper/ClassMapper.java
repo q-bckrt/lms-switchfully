@@ -1,14 +1,16 @@
 package switchfully.lms.service.mapper;
 
 import org.springframework.stereotype.Component;
-import switchfully.lms.service.dto.ClassInputDto;
+import switchfully.lms.service.dto.*;
 import switchfully.lms.domain.Class;
-import switchfully.lms.service.dto.ClassOutputDtoList;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ClassMapper {
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
     public ClassMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
@@ -17,10 +19,15 @@ public class ClassMapper {
         return new Class(payload.getTitle());
     }
 
-    public ClassOutputDtoList classToOutput(Class classDomain) {
+    public ClassOutputDtoList classToOutputList(Class classDomain, List<UserOutputDto> userList) {
         return new ClassOutputDtoList(classDomain.getId(),
                 classDomain.getTitle(),
-                classDomain.getUsers().stream()
-                        .map(u->userMapper.userToOutput(u)));
+                userList);
+    }
+
+    public ClassOutputDto classToOutput(Class classDomain) {
+        return new ClassOutputDto(
+                classDomain.getTitle()
+        );
     }
 }

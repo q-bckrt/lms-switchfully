@@ -3,25 +3,31 @@ package switchfully.lms.service;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.User;
 import switchfully.lms.repository.UserRepository;
+import switchfully.lms.service.dto.ClassOutputDto;
 import switchfully.lms.service.dto.UserInputDto;
 import switchfully.lms.service.dto.UserInputEditDto;
 import switchfully.lms.service.dto.UserOutputDtoList;
+import switchfully.lms.service.mapper.ClassMapper;
 import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import org.apache.commons.validator.routines.EmailValidator;
 import switchfully.lms.utility.exception.InvalidInputException;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ClassMapper classMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, ClassMapper classMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.classMapper = classMapper;
     }
 
     public UserOutputDtoList createNewStudent(UserInputDto userInputDto) {
@@ -29,12 +35,12 @@ public class UserService {
 
         User user = userMapper.inputToUser(validatedUser);
         User savedUser = userRepository.save(user);
-        return userMapper.userToOutput(savedUser);
+        return userMapper.userToOutputList(savedUser);
     }
 
     public UserOutputDtoList getProfile(String username) {
         User user = userRepository.findByUserName(username);
-        return userMapper.userToOutput(user);
+        return userMapper.userToOutputList(user);
     }
 
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
@@ -45,8 +51,12 @@ public class UserService {
         user.setDisplayName(validatedUser.getDisplayName());
         user.setPassword(validatedUser.getPassword());
         User savedUser = userRepository.save(user);
+        List<ClassOutputDto> classOutputDtos = user.getClasses()
+                .stream()
+                .map(classMapper::classToOutput)
+                .collect(Collectors.toList());
 
-        return userMapper.userToOutput(savedUser);
+        return userMapper.userToOutputList(savedUser,classOutputDtos);
     }
 
     private UserInputDto validateStudentInput(UserInputDto userInputDto) {
