@@ -1,19 +1,18 @@
 package switchfully.lms.service.dto;
 
-
-public class UserInputDto {
+public class UserInputEditDto {
 
     private String userName;
-    private String email;
+    private String displayName;
     private String password;
     private String passwordControl;
 
-    public UserInputDto() {
+    public UserInputEditDto() {
     }
 
-    public UserInputDto(String userName, String email, String password, String passwordControl) {
+    public UserInputEditDto(String userName, String displayName, String password, String passwordControl) {
         this.userName = userName;
-        this.email = email;
+        this.displayName = displayName;
         this.password = password;
         this.passwordControl = passwordControl;
     }
@@ -22,8 +21,8 @@ public class UserInputDto {
         return userName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getPassword() {
@@ -33,5 +32,4 @@ public class UserInputDto {
     public String getPasswordControl() {
         return passwordControl;
     }
-
 }
