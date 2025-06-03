@@ -20,7 +20,7 @@ public class Submodule {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @ManyToMany(mappedBy = "submodules")
+    @ManyToMany(mappedBy = "childSubmodules")
     private List<Module> parentModules;
 
     // CONSTRUCTORS

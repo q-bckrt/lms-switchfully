@@ -19,7 +19,7 @@ public class Module {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @ManyToMany(mappedBy = "modules")
+    @ManyToMany(mappedBy = "childModules")
     private List<Course> parentCourses;
 
     @ManyToMany

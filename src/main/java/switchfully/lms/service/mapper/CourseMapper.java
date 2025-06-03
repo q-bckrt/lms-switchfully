@@ -15,7 +15,7 @@ public class CourseMapper {
                 course.getId(),
                 course.getTitle(),
                 course
-                        .getModules()
+                        .getChildModules()
                         .stream()
                         .map(Module::getId)
                         .toList()

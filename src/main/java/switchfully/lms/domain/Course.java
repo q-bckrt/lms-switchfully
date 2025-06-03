@@ -25,18 +25,16 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "module_id")
     )
-    private List<Module> modules;
+    private List<Module> childModules;
 
 
     // CONSTRUCTORS
-    public Course() {
-        // Default constructor for JPA
-    }
+    public Course() {}
     public Course(String title) {
         this.title = title;
     }
-    public Course(String title, List<Module> modules) {
+    public Course(String title, List<Module> childModules) {
         this.title = title;
-        this.modules = modules;
+        this.childModules = childModules;
     }
 }
