@@ -37,11 +37,12 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String displayName, String email, String password) {
+    public User(String userName, String displayName, String email, String password, UserRole role) {
         this.userName = userName;
         this.displayName = displayName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -70,6 +71,22 @@ public class User {
 
     public List<Class> getClasses() {
         return classes;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

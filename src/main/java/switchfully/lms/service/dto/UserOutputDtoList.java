@@ -4,17 +4,19 @@ import switchfully.lms.domain.Class;
 
 import java.util.List;
 
-public class UserOutputDto {
+public class UserOutputDtoList {
 
     private String userName;
     private String displayName;
+    private List<Class> classes;
 
-    public UserOutputDto() {
+    public UserOutputDtoList() {
     }
 
-    public UserOutputDto(String userName, String displayName) {
+    public UserOutputDtoList(String userName, String displayName, List<Class> classes) {
         this.userName = userName;
         this.displayName = displayName;
+        this.classes = classes;
     }
 
     public String getUserName() {
@@ -25,4 +27,8 @@ public class UserOutputDto {
         return displayName;
     }
 
+
+    public List<Class> getClasses() {
+        return classes;
+    }
 }
