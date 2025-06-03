@@ -1,4 +1,8 @@
 package switchfully.lms.repository;
 
-public interface ModuleRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ModuleRepository implements JpaRepository<Module, Long> {
 }
