@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+import static switchfully.lms.utility.validation.Validation.validateArgument;
+
 @Entity
 @Table(name = "classes")
 public class Class {
@@ -34,6 +36,12 @@ public class Class {
 
     public List<User> getUsers() {
         return users;
+    }
+
+    public User addCoach(User coach) {
+        validateArgument(coach,"User must be of type COACH",u->!u.getRole().equals(UserRole.COACH));
+        this.users.add(coach);
+        return coach;
     }
 
     @Override
