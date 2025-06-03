@@ -1,11 +1,13 @@
 package switchfully.lms.webapi;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import switchfully.lms.domain.Course;
 import switchfully.lms.service.CourseService;
+import switchfully.lms.service.dto.CourseInputDto;
+import switchfully.lms.service.dto.CourseOutputDto;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
@@ -22,9 +24,30 @@ public class CourseController {
     // METHODS
 
     // Create
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseOutputDto createCourse(@RequestBody CourseInputDto courseInputDto) {
+        return courseService.createCourse(courseInputDto);
+    }
     // Get All
+    @GetMapping(produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CourseOutputDto> getAllCourses() {
+        return courseService.getAllCourses();
+    }
+
     // Get One By ID
+    @GetMapping(path = "/{id}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public CourseOutputDto getCourseById(@PathVariable Long id) {
+        return courseService.getCourseById(id);
+    }
     // Edit (title)
+    @PutMapping(path = "/{id}", consumes = "application/json")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public CourseOutputDto updateCourse(@PathVariable Long id, @RequestBody CourseInputDto courseInputDto) {
+        return courseService.updateCourse(id, courseInputDto);
+    }
     // Delete (by ID)
     // Get All Modules (by course ID)
 }
