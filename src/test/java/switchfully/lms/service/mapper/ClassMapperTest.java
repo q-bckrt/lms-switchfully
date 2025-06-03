@@ -3,7 +3,7 @@ package switchfully.lms.service.mapper;
 import org.junit.jupiter.api.Test;
 import switchfully.lms.service.dto.ClassInputDto;
 import switchfully.lms.domain.Class;
-import switchfully.lms.service.dto.ClassOutputDto;
+import switchfully.lms.service.dto.ClassOutputDtoList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,9 +30,9 @@ public class ClassMapperTest {
         //GIVEN
         Class classDomain = new Class("validTitle");
         //EXPECTED
-        ClassOutputDto expectedResult = new ClassOutputDto(null, "validTitle",null);
+        ClassOutputDtoList expectedResult = new ClassOutputDtoList(null, "validTitle",null);
 
-        ClassOutputDto result = classMapper.classToOutput(classDomain);
+        ClassOutputDtoList result = classMapper.classToOutput(classDomain);
 
         assertThat(result).isEqualTo(expectedResult);
         assertThat(result.getTitle()).isEqualTo(expectedResult.getTitle());
