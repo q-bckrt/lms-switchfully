@@ -57,6 +57,8 @@ public class KeycloakService {
         return user;
     }
 
+
+
     private void addRole(UserResource user, String roleName) {
         user.roles().clientLevel(getClientUUID()).add(List.of(getRole(roleName)));
     }
@@ -74,6 +76,10 @@ public class KeycloakService {
         }
     }
 
+    private void changePassword(KeycloakUserDTO keycloakUserDTO) {
+        UserResource user = getUser(keycloakUserDTO.userName());
+        user.resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
+    }
     private CredentialRepresentation createCredentialRepresentation(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();
         passwordCredentials.setTemporary(false);
