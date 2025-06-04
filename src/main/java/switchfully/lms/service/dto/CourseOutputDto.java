@@ -1,10 +1,10 @@
 package switchfully.lms.service.dto;
 
-import lombok.Setter;
+import lombok.Data;
 import java.util.List;
 
 
-@Setter
+@Data
 public class CourseOutputDto {
 
     // FIELDS

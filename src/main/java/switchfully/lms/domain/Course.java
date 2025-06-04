@@ -3,6 +3,7 @@ package switchfully.lms.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,6 +33,7 @@ public class Course {
     public Course() {}
     public Course(String title) {
         this.title = title;
+        this.childModules = new ArrayList<>();
     }
     public Course(String title, List<Module> childModules) {
         this.title = title;

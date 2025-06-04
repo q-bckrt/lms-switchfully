@@ -33,6 +33,7 @@ public class CourseController {
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<CourseOutputDto> getAllCourses() {
+        System.out.println("Hello CourseController");
         return courseService.getAllCourses();
     }
 
@@ -43,8 +44,8 @@ public class CourseController {
         return courseService.getCourseById(id);
     }
     // Edit (title)
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
     public CourseOutputDto updateCourse(@PathVariable Long id, @RequestBody CourseInputDto courseInputDto) {
         return courseService.updateCourse(id, courseInputDto);
     }

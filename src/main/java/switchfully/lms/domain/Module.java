@@ -3,6 +3,7 @@ package switchfully.lms.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,10 +35,13 @@ public class Module {
     public Module() {}
     public Module(String title) {
         this.title = title;
+        this.parentCourses = new ArrayList<>();
+        this.childSubmodules = new ArrayList<>();
     }
     public Module(String title, List<Course> parentCourses) {
         this.title = title;
         this.parentCourses = parentCourses;
+        this.childSubmodules = new ArrayList<>();
     }
     public Module(String title, List<Course> parentCourses, List<Submodule> childSubmodules) {
         this.title = title;
