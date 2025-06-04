@@ -53,10 +53,13 @@ public class ModuleController {
         return moduleService.updateModule(id, moduleInputDto);
     }
 
-    // Add Course By ID
-
     // Add Submodule By ID
+    @PostMapping(path="/{moduleId}/submodules/{submoduleId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ModuleOutputDto subModule(@PathVariable Long moduleId, @PathVariable Long submoduleId) {
+        return moduleService.addSubmoduleToModule(moduleId, submoduleId);
+    }
 
-    // Delete (by ID)
-    // Get All Courses Associated (by module ID)
+    // Delete (by ID) (not required)
+    // Get All Courses Associated (by module ID) ??
 }

@@ -65,7 +65,7 @@ public class CourseService {
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
         Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new IllegalArgumentException("Module not found with id: " + moduleId));
-        course.addModule(module);
+        course.addChildModule(module);
         Course updated = courseRepository.save(course);
         return courseMapper.courseToOutputDto(updated);
     }
