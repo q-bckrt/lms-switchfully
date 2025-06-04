@@ -37,12 +37,6 @@ public class ModuleMapper {
     }
 
     public Module inputDtoToModule(ModuleInputDto moduleInputDto) {
-        Long CourseId = moduleInputDto.getCourseId();
-        Course parentCourse = courseRepository.findById(CourseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + CourseId));
-        return new Module(
-                moduleInputDto.getTitle(),
-                parentCourse
-        );
+        return new Module(moduleInputDto.getTitle());
     }
 }

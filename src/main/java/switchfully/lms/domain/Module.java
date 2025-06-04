@@ -38,11 +38,6 @@ public class Module {
         this.title = title;
     }
 
-    public Module(String title, Course parentCourse) {
-        this.title = title;
-        this.addParentCourse(parentCourse);
-    }
-
     // METHODS
     public void addParentCourse(Course course) {
         parentCourses.add(course);
