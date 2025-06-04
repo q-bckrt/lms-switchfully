@@ -26,21 +26,17 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "module_id")
     )
-    private List<Module> childModules;
+    private List<Module> childModules = new ArrayList<>();
 
 
     // CONSTRUCTORS
     public Course() {}
     public Course(String title) {
         this.title = title;
-        this.childModules = new ArrayList<>();
     }
 
     // METHODS
     public void addModule(Module module) {
-        if (childModules == null) {
-            childModules = new ArrayList<>();
-        }
         childModules.add(module);
         module.getParentCourses().add(this);
     }

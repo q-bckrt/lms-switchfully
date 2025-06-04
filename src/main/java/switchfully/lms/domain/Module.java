@@ -21,7 +21,7 @@ public class Module {
     private String title;
 
     @ManyToMany(mappedBy = "childModules")
-    private List<Course> parentCourses;
+    private List<Course> parentCourses = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -29,23 +29,28 @@ public class Module {
             joinColumns = @JoinColumn(name = "module_id"),
             inverseJoinColumns = @JoinColumn(name = "submodule_id")
     )
-    private List<Submodule> childSubmodules;
+    private List<Submodule> childSubmodules = new ArrayList<>();
 
     // CONSTRUCTORS
     public Module() {}
+
     public Module(String title) {
         this.title = title;
-        this.parentCourses = new ArrayList<>();
-        this.childSubmodules = new ArrayList<>();
     }
-    public Module(String title, List<Course> parentCourses) {
+
+    public Module(String title, Course parentCourse) {
         this.title = title;
-        this.parentCourses = parentCourses;
-        this.childSubmodules = new ArrayList<>();
+        this.addParentCourse(parentCourse);
     }
-    public Module(String title, List<Course> parentCourses, List<Submodule> childSubmodules) {
-        this.title = title;
-        this.parentCourses = parentCourses;
-        this.childSubmodules = childSubmodules;
+
+    // METHODS
+    public void addParentCourse(Course course) {
+        parentCourses.add(course);
+        course.getChildModules().add(this);
+    }
+
+    public void addChildSubmodule(Submodule submodule) {
+        childSubmodules.add(submodule);
+        submodule.getParentModules().add(this);
     }
 }

@@ -1,8 +1,10 @@
 package switchfully.lms.webapi;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.ModuleService;
+import switchfully.lms.service.dto.ModuleInputDto;
+import switchfully.lms.service.dto.ModuleOutputDto;
 
 @RestController
 @RequestMapping("/modules")
@@ -19,6 +21,14 @@ public class ModuleController {
     // METHODS
 
     // Create
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ModuleOutputDto createModule(@RequestBody ModuleInputDto moduleInputDto) {
+        return moduleService.createModule(moduleInputDto);
+    }
+
+
+
     // Get All
     // Get One By ID
     // Edit (title)

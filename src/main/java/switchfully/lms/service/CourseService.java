@@ -23,7 +23,8 @@ public class CourseService {
     public CourseService(
             CourseRepository courseRepository,
             CourseMapper courseMapper,
-            ModuleRepository moduleRepository) {
+            ModuleRepository moduleRepository
+    ) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.moduleRepository = moduleRepository;
@@ -66,6 +67,5 @@ public class CourseService {
         Course updated = courseRepository.save(course);
         return courseMapper.courseToOutputDto(updated);
     }
-
 
 }

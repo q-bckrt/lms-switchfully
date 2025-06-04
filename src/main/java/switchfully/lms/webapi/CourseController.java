@@ -2,7 +2,6 @@ package switchfully.lms.webapi;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import switchfully.lms.domain.Course;
 import switchfully.lms.service.CourseService;
 import switchfully.lms.service.dto.CourseInputDto;
 import switchfully.lms.service.dto.CourseOutputDto;
