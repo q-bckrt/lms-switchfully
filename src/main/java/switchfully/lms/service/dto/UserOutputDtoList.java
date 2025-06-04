@@ -3,6 +3,7 @@ package switchfully.lms.service.dto;
 import switchfully.lms.domain.Class;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UserOutputDtoList {
 
@@ -27,8 +28,28 @@ public class UserOutputDtoList {
         return displayName;
     }
 
-
     public List<ClassOutputDto> getClasses() {
         return classes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        UserOutputDtoList that = (UserOutputDtoList) o;
+        return Objects.equals(userName, that.userName) && Objects.equals(displayName, that.displayName) && Objects.equals(classes, that.classes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName, displayName, classes);
+    }
+
+    @Override
+    public String toString() {
+        return "UserOutputDtoList{" +
+                "userName='" + userName + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", classes=" + classes +
+                '}';
     }
 }

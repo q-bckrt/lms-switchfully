@@ -30,18 +30,18 @@ public class UserService {
         this.classMapper = classMapper;
     }
 
-    public UserOutputDtoList createNewStudent(UserInputDto userInputDto) {
-        UserInputDto validatedUser = validateStudentInput(userInputDto);
-
-        User user = userMapper.inputToUser(validatedUser);
-        User savedUser = userRepository.save(user);
-        return userMapper.userToOutputList(savedUser);
-    }
-
-    public UserOutputDtoList getProfile(String username) {
-        User user = userRepository.findByUserName(username);
-        return userMapper.userToOutputList(user);
-    }
+//    public UserOutputDtoList createNewStudent(UserInputDto userInputDto) {
+//        UserInputDto validatedUser = validateStudentInput(userInputDto);
+//
+//        User user = userMapper.inputToUser(validatedUser);
+//        User savedUser = userRepository.save(user);
+//        return userMapper.userToOutputList(savedUser);
+//    }
+//
+//    public UserOutputDtoList getProfile(String username) {
+//        User user = userRepository.findByUserName(username);
+//        return userMapper.userToOutputList(user);
+//    }
 
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);

@@ -10,18 +10,12 @@ import java.util.stream.Collectors;
 @Component
 public class ClassMapper {
 
-    private final UserMapper userMapper;
-    public ClassMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
     public Class intputToClass(ClassInputDto payload) {
         return new Class(payload.getTitle());
     }
 
     public ClassOutputDtoList classToOutputList(Class classDomain, List<UserOutputDto> userList) {
-        return new ClassOutputDtoList(classDomain.getId(),
-                classDomain.getTitle(),
+        return new ClassOutputDtoList(classDomain.getTitle(),
                 userList);
     }
 

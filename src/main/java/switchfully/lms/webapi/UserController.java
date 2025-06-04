@@ -17,23 +17,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserOutputDtoList registerAsStudent(@RequestBody UserInputDto userInputDto) {
-        return userService.createNewStudent(userInputDto);
-    }
-
-    @GetMapping(path="/{username}",produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public UserOutputDtoList getProfileInfo(@PathVariable String username) {
-        return userService.getProfile(username);
-    }
-
-    @PutMapping(path="/{username}/edit",consumes = "application/json",produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public UserOutputDtoList updateProfileInfo(@PathVariable String username,
-                                               @RequestBody UserInputEditDto userInputEditDto) {
-        return userService.updateProfile(userInputEditDto,username);
-    }
+//    @PostMapping(consumes = "application/json", produces = "application/json")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public UserOutputDtoList registerAsStudent(@RequestBody UserInputDto userInputDto) {
+//        return userService.createNewStudent(userInputDto);
+//    }
+//
+//    @GetMapping(path="/{username}",produces = "application/json")
+//    @ResponseStatus(HttpStatus.OK)
+//    public UserOutputDtoList getProfileInfo(@PathVariable String username) {
+//        return userService.getProfile(username);
+//    }
+//
+//    @PutMapping(path="/{username}/edit",consumes = "application/json",produces = "application/json")
+//    @ResponseStatus(HttpStatus.OK)
+//    public UserOutputDtoList updateProfileInfo(@PathVariable String username,
+//                                               @RequestBody UserInputEditDto userInputEditDto) {
+//        return userService.updateProfile(userInputEditDto,username);
+//    }
 
 }

@@ -10,6 +10,7 @@ import java.util.Objects;
 public class User {
     @Id
     @SequenceGenerator(sequenceName = "users_seq", name="users_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
     private Long id;
 
     @Column(name="user_name", nullable = false, unique = true)

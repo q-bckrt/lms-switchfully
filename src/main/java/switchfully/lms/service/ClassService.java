@@ -3,8 +3,10 @@ package switchfully.lms.service;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.Class;
+import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.service.dto.ClassInputDto;
+import switchfully.lms.service.dto.ClassOutputDto;
 import switchfully.lms.service.dto.ClassOutputDtoList;
 import switchfully.lms.service.dto.UserOutputDto;
 import switchfully.lms.service.mapper.ClassMapper;
@@ -30,30 +32,35 @@ public class ClassService {
     }
 
     public ClassOutputDtoList createClass(ClassInputDto classInputDto, User coach) {
-        //coach is validated to be coach in controller
+        validateArgument(coach.getRole(),"User "+coach+" has role "+coach.getRole()+" and cannot create classes",role->!role.equals(UserRole.COACH));
         validateNonBlank(classInputDto.getTitle(),"Class title cannot be blank",InvalidInputException::new);
+
         Class classDomain = classMapper.intputToClass(classInputDto);
         classDomain.addCoach(coach);
         classRepository.save(classDomain);
         List<UserOutputDto> userList = classDomain.getUsers().stream()
                 .map(userMapper::userToOutput)
                 .collect(Collectors.toList());
+
         return classMapper.classToOutputList(classDomain,userList);
     }
 
-//    public ClassOutputDtoList getClassOverview(Long classId, User user) {
-//        validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
-//        return findClassById(classId);
-//    }
+    public ClassOutputDtoList getClassOverview(Long classId, User user) {
+        validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
+        return findClassById(classId);
+    }
 
-//    public ClassOutputDtoList findClassById(Long classId) {
-//        return classMapper.classToOutputList(classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository")));
-//    }
-//
-//    public List<ClassOutputDtoList> findAllClasses() {
-//        return classRepository.findAll().stream()
-//                .map(classMapper::classToOutputList)
-//                .collect(Collectors.toList());
-//    }
+    public ClassOutputDtoList findClassById(Long classId) {
+        Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
+        List<UserOutputDto> userList = classDomain.getUsers().stream()
+                .map(userMapper::userToOutput)
+                .toList();
+        return classMapper.classToOutputList(classDomain,userList);
+    }
 
+    public List<ClassOutputDto> findAllClasses() {
+        return classRepository.findAll().stream()
+                .map(classMapper::classToOutput)
+                .collect(Collectors.toList());
+    }
 }

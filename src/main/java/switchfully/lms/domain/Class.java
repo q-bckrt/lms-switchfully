@@ -2,6 +2,7 @@ package switchfully.lms.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class Class {
     private String title;
 
     @ManyToMany(mappedBy = "classes")
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     public Class() {}
     public Class(String title) {
