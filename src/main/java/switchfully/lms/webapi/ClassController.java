@@ -16,10 +16,8 @@ import java.util.List;
 public class ClassController {
 
     private final ClassService classService;
-    private final UserRepository userRepository; // THIS NEEDS TO BE REPLACED WITH AUTH SERVICE!!!!
-    public ClassController(ClassService classService, UserRepository userRepository) {
+    public ClassController(ClassService classService) {
         this.classService = classService;
-        this.userRepository = userRepository;
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
@@ -41,24 +39,23 @@ public class ClassController {
         return classService.getClassOverview(classId, user);
     }
 
-    //The 2 end points below are now setup to ony be used by a coach, not really sure if that is okay for front end
-    // ALSO getclassoverview is very similar to findclass by id, only difference is that the overview only returns the dto if
-    // the requestee is part of the class... maybe just consilidate into 1 multi-purpose method? of even some logic here to check
-    // if the requestee is part of the class user list?
+    @PutMapping(path = "/linkCourseClass/{classId}/{courseId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ClassOutputDto linkCourseToClass(@PathVariable Long classId,
+                                            @PathVariable Long courseId) {
+        return classService.linkCourseToClass(classId, courseId);
+    }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<ClassOutputDto> findAllClasses() {
-
-        //AUTHORIZATION SERVICE -> AUTHORIZE WITH TOKEN AND GET USER COACH
         return classService.findAllClasses();
     }
 
     @GetMapping(path = "/{classId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ClassOutputDtoList findClassById(@PathVariable Long classId) {
+    public ClassOutputDto findClassById(@PathVariable Long classId) {
 
-        //AUTHORIZATION SERVICE -> AUTHORIZE WITH TOKEN AND GET USER COACH
         return classService.findClassById(classId);
     }
 

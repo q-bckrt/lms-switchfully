@@ -19,6 +19,10 @@ public class Class {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
     @ManyToMany(mappedBy = "classes")
     private List<User> users = new ArrayList<>();
 
@@ -39,10 +43,19 @@ public class Class {
         return users;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
     public User addCoach(User coach) {
         validateArgument(coach,"User must be of type COACH",u->!u.getRole().equals(UserRole.COACH));
         this.users.add(coach);
         return coach;
+    }
+
+    public Course setCourse(Course course) {
+        this.course = course;
+        return course;
     }
 
     @Override

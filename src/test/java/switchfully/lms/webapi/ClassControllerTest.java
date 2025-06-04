@@ -56,13 +56,15 @@ public class ClassControllerTest {
     @Autowired
     private UserMapper userMapper;
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     User student1, student2, student3;
     User coach;
 
     Class classEnrolled;
+
+    Long lastClassId;
 
     @BeforeEach
     void beforeEach() {
@@ -78,11 +80,12 @@ public class ClassControllerTest {
 
         coach = userRepository.save(new User("elsa_schiap","Elsa Schiaparelli","elsa@yahoo.com","pass", UserRole.COACH));
 
-
         classEnrolled = classRepository.save(new Class("JAVA"));
         classEnrolled.addCoach(coach);
         //ENROLL ALL STUDENTS USING SERVICE!!!!!
         classEnrolled = classRepository.save(classEnrolled);
+
+        lastClassId = ((Number) entityManager.createNativeQuery("SELECT nextval('classes_seq')").getSingleResult()).longValue();
     }
 
     //all end points should have authorization, so i cant really write complete tests until authorization is implemented
@@ -93,7 +96,7 @@ public class ClassControllerTest {
         ClassInputDto input = new ClassInputDto("NEW CLASS");
         String token = "GENERATE TOKEN HERE";
         //EXPECTED
-        ClassOutputDtoList expectedResult = new ClassOutputDtoList(input.getTitle(), List.of(userMapper.userToOutput(coach)));
+        ClassOutputDtoList expectedResult = new ClassOutputDtoList(lastClassId+1,null,input.getTitle(), List.of(userMapper.userToOutput(coach)));
         //RESULT
         ClassOutputDtoList response = given()
                 .contentType(ContentType.JSON)

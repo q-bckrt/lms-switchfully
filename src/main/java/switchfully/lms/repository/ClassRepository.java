@@ -6,4 +6,5 @@ import switchfully.lms.domain.Class;
 
 @Repository
 public interface ClassRepository extends JpaRepository<Class, Long> {
+    boolean existsByTitle(String title);
 }
