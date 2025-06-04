@@ -37,6 +37,7 @@ public class CourseService {
         return courseMapper.courseToOutputDto(saved);
     }
 
+    // Needs more exception handling ?
     public CourseOutputDto getCourseById(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + id));
@@ -44,7 +45,8 @@ public class CourseService {
     }
 
     public List<CourseOutputDto> getAllCourses() {
-        return courseRepository.findAll()
+        return courseRepository
+                .findAll()
                 .stream()
                 .map(courseMapper::courseToOutputDto)
                 .toList();

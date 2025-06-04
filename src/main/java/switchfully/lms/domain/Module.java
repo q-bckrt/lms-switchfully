@@ -1,12 +1,12 @@
 package switchfully.lms.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Data
 @Entity
 @Table(name = "modules")
 public class Module {

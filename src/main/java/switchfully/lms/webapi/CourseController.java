@@ -49,7 +49,7 @@ public class CourseController {
         return courseService.updateCourse(id, courseInputDto);
     }
 
-    // Add Module By IDs
+    // Add Module By ID
     @PostMapping(path = "/{courseId}/modules/{moduleId}", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public CourseOutputDto addModuleToCourse(@PathVariable Long courseId, @PathVariable Long moduleId) {
