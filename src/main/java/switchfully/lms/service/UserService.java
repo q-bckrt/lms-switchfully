@@ -30,18 +30,20 @@ public class UserService {
         this.classMapper = classMapper;
     }
 
-//    public UserOutputDtoList createNewStudent(UserInputDto userInputDto) {
+    public UserOutputDtoList createNewStudent(UserInputDto userInputDto) {
 //        UserInputDto validatedUser = validateStudentInput(userInputDto);
 //
 //        User user = userMapper.inputToUser(validatedUser);
 //        User savedUser = userRepository.save(user);
-//        return userMapper.userToOutputList(savedUser);
-//    }
-//
-//    public UserOutputDtoList getProfile(String username) {
+//        return userMapper.userToOutputList(savedUser); // I think this should be UserOutputDto, not UserOutputDtoList -> when a user is just created, they are not going to be enrolled in any classes so class list will be null. but mayme this is needed for the frontend?
+        return null;
+    }
+
+    public UserOutputDtoList getProfile(String username) {
 //        User user = userRepository.findByUserName(username);
-//        return userMapper.userToOutputList(user);
-//    }
+//        return userMapper.userToOutputList(user); // Here there needs to just be the second argument with the class dtos i think
+        return null;
+    }
 
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
