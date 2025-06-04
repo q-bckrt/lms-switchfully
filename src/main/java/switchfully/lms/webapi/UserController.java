@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.UserService;
 import switchfully.lms.service.dto.UserInputDto;
 import switchfully.lms.service.dto.UserInputEditDto;
+import switchfully.lms.service.dto.UserOutputDto;
 import switchfully.lms.service.dto.UserOutputDtoList;
 
 @RestController
@@ -19,7 +20,7 @@ public class UserController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserOutputDtoList registerAsStudent(@RequestBody UserInputDto userInputDto) {
+    public UserOutputDto registerAsStudent(@RequestBody UserInputDto userInputDto) {
         return userService.createNewStudent(userInputDto);
     }
 

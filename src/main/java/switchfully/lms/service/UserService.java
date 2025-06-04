@@ -3,10 +3,7 @@ package switchfully.lms.service;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.User;
 import switchfully.lms.repository.UserRepository;
-import switchfully.lms.service.dto.ClassOutputDto;
-import switchfully.lms.service.dto.UserInputDto;
-import switchfully.lms.service.dto.UserInputEditDto;
-import switchfully.lms.service.dto.UserOutputDtoList;
+import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
 import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
@@ -30,17 +27,22 @@ public class UserService {
         this.classMapper = classMapper;
     }
 
-    public UserOutputDtoList createNewStudent(UserInputDto userInputDto) {
+    public UserOutputDto createNewStudent(UserInputDto userInputDto) {
         UserInputDto validatedUser = validateStudentInput(userInputDto);
 
         User user = userMapper.inputToUser(validatedUser);
         User savedUser = userRepository.save(user);
-        return userMapper.userToOutputList(savedUser);
+        return userMapper.userToOutput(savedUser);
     }
 
     public UserOutputDtoList getProfile(String username) {
         User user = userRepository.findByUserName(username);
-        return userMapper.userToOutputList(user);
+        List<ClassOutputDto> classOutputDtos = user.getClasses()
+                .stream()
+                .map(classMapper::classToOutput)
+                .collect(Collectors.toList());
+
+        return userMapper.userToOutputList(user, classOutputDtos);
     }
 
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
