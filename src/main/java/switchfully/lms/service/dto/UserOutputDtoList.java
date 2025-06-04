@@ -5,17 +5,19 @@ import switchfully.lms.domain.Class;
 import java.util.List;
 import java.util.Objects;
 
-public class UserOutputDto {
+public class UserOutputDtoList {
 
     private String userName;
     private String displayName;
+    private List<ClassOutputDto> classes;
 
-    public UserOutputDto() {
+    public UserOutputDtoList() {
     }
 
-    public UserOutputDto(String userName, String displayName) {
+    public UserOutputDtoList(String userName, String displayName, List<ClassOutputDto> classes) {
         this.userName = userName;
         this.displayName = displayName;
+        this.classes = classes;
     }
 
     public String getUserName() {
@@ -26,23 +28,28 @@ public class UserOutputDto {
         return displayName;
     }
 
+    public List<ClassOutputDto> getClasses() {
+        return classes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        UserOutputDto that = (UserOutputDto) o;
-        return Objects.equals(userName, that.userName) && Objects.equals(displayName, that.displayName);
+        UserOutputDtoList that = (UserOutputDtoList) o;
+        return Objects.equals(userName, that.userName) && Objects.equals(displayName, that.displayName) && Objects.equals(classes, that.classes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, displayName);
+        return Objects.hash(userName, displayName, classes);
     }
 
     @Override
     public String toString() {
-        return "UserOutputDto{" +
+        return "UserOutputDtoList{" +
                 "userName='" + userName + '\'' +
                 ", displayName='" + displayName + '\'' +
+                ", classes=" + classes +
                 '}';
     }
 }
