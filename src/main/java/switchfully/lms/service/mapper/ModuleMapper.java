@@ -8,7 +8,6 @@ import switchfully.lms.service.dto.ModuleInputDto;
 import switchfully.lms.service.dto.ModuleOutputDto;
 import switchfully.lms.domain.Module;
 
-
 @Component
 public class ModuleMapper {
 

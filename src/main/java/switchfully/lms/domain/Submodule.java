@@ -2,7 +2,6 @@ package switchfully.lms.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -23,13 +22,21 @@ public class Submodule {
     @ManyToMany(mappedBy = "childSubmodules")
     private List<Module> parentModules;
 
+    @OneToMany(mappedBy = "parentSubmodule", cascade = CascadeType.ALL)
+    private List<Codelab> childCodelabs;
+
     // CONSTRUCTORS
     public Submodule() {}
+
     public Submodule(String title) {
         this.title = title;
     }
-    public Submodule(String title, List<Module> parentModules) {
-        this.title = title;
-        this.parentModules = parentModules;
+
+    // METHODS
+    public void addChildCodelab(Codelab codelab) {
+        if (!childCodelabs.contains(codelab)) {
+            childCodelabs.add(codelab);
+            codelab.setParentSubmodule(this);
+        }
     }
 }
