@@ -4,10 +4,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class ClassOutputDto {
+    private Long id;
     private String title;
 
-    public ClassOutputDto( String title) {
+    public ClassOutputDto(Long id, String title) {
+        this.id = id;
         this.title = title;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -18,18 +24,19 @@ public class ClassOutputDto {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ClassOutputDto that = (ClassOutputDto) o;
-        return Objects.equals(title, that.title);
+        return Objects.equals(id, that.id) && Objects.equals(title, that.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(title);
+        return Objects.hash(id, title);
     }
 
     @Override
     public String toString() {
         return "ClassOutputDto{" +
                 "title='" + title + '\'' +
+                ", id=" + id + '\'' +
                 '}';
     }
 }

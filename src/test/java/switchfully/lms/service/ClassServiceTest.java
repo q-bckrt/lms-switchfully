@@ -1,5 +1,7 @@
 package switchfully.lms.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,11 +76,12 @@ public class ClassServiceTest {
         //GIVEN
         ClassInputDto classInputDto = new ClassInputDto("NEW CLASS");
         //EXPECTED RESULT
-        ClassOutputDtoList classOutputDto = new ClassOutputDtoList("NEW CLASS",List.of(userMapper.userToOutput(coach)));
+        ClassOutputDtoList classOutputDto = new ClassOutputDtoList(0L,null,"NEW CLASS",List.of(userMapper.userToOutput(coach)));
         //WHEN THEN
         ClassOutputDtoList result = classService.createClass(classInputDto,coach);
 
-        assertThat(result).isEqualTo(classOutputDto);
+        assertThat(result.getTitle()).isEqualTo(classOutputDto.getTitle());
+        assertThat(result.getUsers()).isEqualTo(classOutputDto.getUsers());
     }
 
     @Test

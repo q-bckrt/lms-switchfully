@@ -14,13 +14,15 @@ public class ClassMapper {
         return new Class(payload.getTitle());
     }
 
-    public ClassOutputDtoList classToOutputList(Class classDomain, List<UserOutputDto> userList) {
-        return new ClassOutputDtoList(classDomain.getTitle(),
+    public ClassOutputDtoList classToOutputList(Class classDomain, List<UserOutputDto> userList, CourseOutputDto course) {
+        return new ClassOutputDtoList(classDomain.getId(),
+                course,
+                classDomain.getTitle(),
                 userList);
     }
 
     public ClassOutputDto classToOutput(Class classDomain) {
-        return new ClassOutputDto(
+        return new ClassOutputDto(classDomain.getId(),
                 classDomain.getTitle()
         );
     }

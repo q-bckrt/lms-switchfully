@@ -31,7 +31,7 @@ public class ClassMapperTest {
         //GIVEN
         Class classDomain = new Class("validTitle");
         //EXPECTED
-        ClassOutputDto expectedResult = new ClassOutputDto("validTitle");
+        ClassOutputDto expectedResult = new ClassOutputDto(1L,"validTitle");
 
         ClassOutputDto result = classMapper.classToOutput(classDomain);
 
