@@ -6,16 +6,14 @@ public class UserInputDto {
     private String userName;
     private String email;
     private String password;
-    private String passwordControl;
 
     public UserInputDto() {
     }
 
-    public UserInputDto(String userName, String email, String password, String passwordControl) {
+    public UserInputDto(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
         this.password = password;
-        this.passwordControl = passwordControl;
     }
 
     public String getUserName() {
@@ -28,10 +26,6 @@ public class UserInputDto {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getPasswordControl() {
-        return passwordControl;
     }
 
 }
