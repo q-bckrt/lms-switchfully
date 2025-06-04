@@ -1,7 +1,10 @@
 package switchfully.lms.service;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.User;
+import switchfully.lms.domain.Class;
+import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
@@ -18,11 +21,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ClassRepository classRepository;
     private final UserMapper userMapper;
     private final ClassMapper classMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, ClassMapper classMapper) {
+    public UserService(UserRepository userRepository, ClassRepository classRepository, UserMapper userMapper, ClassMapper classMapper) {
         this.userRepository = userRepository;
+        this.classRepository = classRepository;
         this.userMapper = userMapper;
         this.classMapper = classMapper;
     }
@@ -47,12 +52,31 @@ public class UserService {
 
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
-        UserInputEditDto validatedUser = validateStudentInputEdit(userInputEditDto);
 
-        user.setUserName(validatedUser.getUserName());
-        user.setDisplayName(validatedUser.getDisplayName());
-        user.setPassword(validatedUser.getPassword());
+        if (!Objects.equals(username, userInputEditDto.getUserName())) {
+            validateStudentInputEdit(userInputEditDto);
+        }
+
+
+        user.setUserName(userInputEditDto.getUserName());
+        user.setDisplayName(userInputEditDto.getDisplayName());
+        user.setPassword(userInputEditDto.getPassword());
         User savedUser = userRepository.save(user);
+        List<ClassOutputDto> classOutputDtos = user.getClasses()
+                .stream()
+                .map(classMapper::classToOutput)
+                .collect(Collectors.toList());
+
+        return userMapper.userToOutputList(savedUser,classOutputDtos);
+    }
+
+    public UserOutputDtoList updateClassInfo(Long classId, String username) {
+        User user = userRepository.findByUserName(username);
+        validateArgument(classId,"Class not found in repository", i->!classRepository.existsById(i),InvalidInputException::new);
+        Class classDomain = classRepository.findById(classId).get();
+        user.addClasses(classDomain);
+        User savedUser = userRepository.save(user);
+
         List<ClassOutputDto> classOutputDtos = user.getClasses()
                 .stream()
                 .map(classMapper::classToOutput)
@@ -65,18 +89,12 @@ public class UserService {
         validateArgument(userInputDto.getEmail(), "Email already exists in the repository", userRepository::existsByEmail, InvalidInputException::new);
         validateArgument(userInputDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
         validateArgument(userInputDto.getEmail(),"Invalid email format", e-> !EmailValidator.getInstance().isValid(e),InvalidInputException::new);
-        if(!Objects.equals(userInputDto.getPassword(), userInputDto.getPasswordControl())){
-            throw new InvalidInputException("The passwords do not match");
-        }
 
         return userInputDto;
     }
 
     private UserInputEditDto validateStudentInputEdit(UserInputEditDto userInputEditDto) {
         validateArgument(userInputEditDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
-        if(!Objects.equals(userInputEditDto.getPassword(), userInputEditDto.getPasswordControl())){
-            throw new InvalidInputException("The passwords do not match");
-        }
         return userInputEditDto;
     }
 }

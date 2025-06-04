@@ -37,4 +37,12 @@ public class UserController {
         return userService.updateProfile(userInputEditDto,username);
     }
 
+    @PutMapping(path="/{username}/edit/class",produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public UserOutputDtoList updateClassInfo(@PathVariable String username,
+                                             @RequestParam (name = "classId", required = true) Long classId) {
+        return userService.updateClassInfo(classId,username);
+        //return userService.updateProfile(userInputEditDto,username);
+    }
+
 }

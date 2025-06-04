@@ -90,6 +90,10 @@ public class User {
         this.password = password;
     }
 
+    public void addClasses(Class classDomain) {
+        this.classes.add(classDomain);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
