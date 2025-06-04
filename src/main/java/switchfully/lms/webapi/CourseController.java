@@ -49,6 +49,14 @@ public class CourseController {
     public CourseOutputDto updateCourse(@PathVariable Long id, @RequestBody CourseInputDto courseInputDto) {
         return courseService.updateCourse(id, courseInputDto);
     }
+
+    // Add Module By IDs
+    @PostMapping(path = "/{courseId}/modules/{moduleId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseOutputDto addModuleToCourse(@PathVariable Long courseId, @PathVariable Long moduleId) {
+        return courseService.addModuleToCourse(courseId, moduleId);
+    }
+
     // Delete (by ID)
     // Get All Modules (by course ID)
 }

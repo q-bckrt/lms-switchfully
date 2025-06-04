@@ -35,8 +35,13 @@ public class Course {
         this.title = title;
         this.childModules = new ArrayList<>();
     }
-    public Course(String title, List<Module> childModules) {
-        this.title = title;
-        this.childModules = childModules;
+
+    // METHODS
+    public void addModule(Module module) {
+        if (childModules == null) {
+            childModules = new ArrayList<>();
+        }
+        childModules.add(module);
+        module.getParentCourses().add(this);
     }
 }
