@@ -52,7 +52,6 @@ public class ClassServiceTest {
         this.classRepository.deleteAll();
         this.userRepository.deleteAll();
 
-        //CLASS CONFIGURATION ERROR -> IN USER CLASS ID IS NOT CONFIGURED CORRECTLY
         student1 = userRepository.save(new User("ann_DM","Ann Demeulemeester","ann@yahoo.com","pass", UserRole.STUDENT));
         student2 = userRepository.save(new User("jil_sander","Jil Sander","jil@yahoo.com","pass", UserRole.STUDENT));
         student3 = userRepository.save(new User("maarten_mar","Maarten Margiela","maarten@yahoo.com","pass", UserRole.STUDENT));
