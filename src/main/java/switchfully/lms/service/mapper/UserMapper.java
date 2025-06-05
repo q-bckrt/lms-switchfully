@@ -9,7 +9,6 @@ import switchfully.lms.service.dto.UserOutputDto;
 import switchfully.lms.service.dto.UserOutputDtoList;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
