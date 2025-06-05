@@ -19,6 +19,7 @@ import switchfully.lms.domain.User;
 import switchfully.lms.domain.Class;
 import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.ClassRepository;
+import switchfully.lms.repository.CourseRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.ClassService;
 import switchfully.lms.service.UserService;
@@ -55,6 +56,8 @@ public class ClassControllerTest {
     private UserRepository userRepository;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CourseRepository courseRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -66,12 +69,14 @@ public class ClassControllerTest {
 
     Long lastClassId;
 
+
     @BeforeEach
     void beforeEach() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
 
         classRepository.deleteAll();
+        courseRepository.deleteAll();
         userRepository.deleteAll();
 
         student1 = userRepository.save(new User("ann_DM","Ann Demeulemeester","ann@yahoo.com","pass", UserRole.STUDENT));
@@ -82,13 +87,13 @@ public class ClassControllerTest {
 
         classEnrolled = classRepository.save(new Class("JAVA"));
         classEnrolled.addCoach(coach);
-        //ENROLL ALL STUDENTS USING SERVICE!!!!!
+        student1.addClasses(classEnrolled);
+        student2.addClasses(classEnrolled);
+        student3.addClasses(classEnrolled);
         classEnrolled = classRepository.save(classEnrolled);
 
         lastClassId = ((Number) entityManager.createNativeQuery("SELECT nextval('classes_seq')").getSingleResult()).longValue();
     }
-
-    //all end points should have authorization, so i cant really write complete tests until authorization is implemented
 
     @Test
     void givenValidPayloadAndAuth_whenCreateClass_thenReturnClassDtoList() {

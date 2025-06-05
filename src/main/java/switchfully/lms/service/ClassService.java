@@ -66,7 +66,7 @@ public class ClassService {
                 .collect(Collectors.toList());
     }
 
-    public ClassOutputDto linkCourseToClass(Long courseId, Long classId) {
+    public ClassOutputDto linkCourseToClass(Long classId, Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new InvalidInputException("Course id not found in repository"));
         Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
         classDomain.setCourse(course);

@@ -76,7 +76,7 @@ public class Class {
         return "Class{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", users=" + users +
+                ", users=" + users.stream().map(User::getUserName).toList() +
                 '}';
     }
 }
