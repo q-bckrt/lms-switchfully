@@ -50,13 +50,6 @@ public class SubmoduleController {
         return submoduleService.updateSubmodule(id, submoduleInputDto);
     }
 
-    // Add Codelab By ID
-    @PostMapping(path = "/{submoduleId}/codelabs/{codelabId}", produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public SubmoduleOutputDto addCodelabToSubmodule(@PathVariable Long submoduleId, @PathVariable Long codelabId) {
-        return submoduleService.addCodelabToSubmodule(submoduleId, codelabId);
-    }
-
     // Delete (by ID) (not required)
     // Get All Modules Associated (by Submodule ID) ??
     // Get All Codelabs Associated (by Submodule ID) ??

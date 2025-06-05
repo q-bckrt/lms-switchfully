@@ -65,14 +65,4 @@ public class SubmoduleService {
         return submoduleMapper.submoduleToOutputDto(updated);
     }
 
-    public SubmoduleOutputDto addCodelabToSubmodule(Long submoduleId, Long codelabId) {
-        Submodule submodule = submoduleRepository.findById(submoduleId)
-                .orElseThrow(() -> new IllegalArgumentException("Submodule not found with id: " + submoduleId));
-        Codelab codelab = codelabsRepository.findById(codelabId)
-                .orElseThrow(() -> new IllegalArgumentException("Codelab not found with id: " + codelabId));
-        submodule.addChildCodelab(codelab);
-        Submodule updated = submoduleRepository.save(submodule);
-        return submoduleMapper.submoduleToOutputDto(updated);
-    }
-
 }

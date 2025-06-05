@@ -37,7 +37,6 @@ public class Submodule {
     public void addChildCodelab(Codelab codelab) {
         if (!childCodelabs.contains(codelab)) {
             childCodelabs.add(codelab);
-            codelab.setParentSubmodule(this);
         }
     }
 }

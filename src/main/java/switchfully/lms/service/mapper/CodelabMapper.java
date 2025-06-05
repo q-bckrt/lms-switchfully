@@ -2,6 +2,7 @@ package switchfully.lms.service.mapper;
 
 import switchfully.lms.domain.Codelab;
 import org.springframework.stereotype.Component;
+import switchfully.lms.domain.Submodule;
 import switchfully.lms.repository.SubmoduleRepository;
 import switchfully.lms.service.dto.CodelabOutputDto;
 import switchfully.lms.service.dto.CodelabInputDto;
@@ -28,7 +29,11 @@ public class CodelabMapper {
     }
 
     public Codelab inputDtoToCodelab(CodelabInputDto codelabInputDto) {
-        System.out.println("Mapping CodelabInputDto to Codelab: " + codelabInputDto.getTitle());
-        return new Codelab(codelabInputDto.getTitle(), codelabInputDto.getDetails());
+        Submodule parentSubmodule = submoduleRepository.findById(codelabInputDto.getParentSubmoduleId())
+                .orElseThrow(() -> new IllegalArgumentException("Parent submodule not found with id: " + codelabInputDto.getParentSubmoduleId()));
+        return new Codelab(
+                codelabInputDto.getTitle(),
+                codelabInputDto.getDetails(),
+                parentSubmodule);
     }
 }

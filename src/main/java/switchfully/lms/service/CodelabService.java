@@ -27,6 +27,7 @@ public class CodelabService {
         Codelab codelab = codelabMapper.inputDtoToCodelab(codelabInputDto);
         System.out.println("Creating codelab: " + codelab.getTitle());
         Codelab saved = codelabRepository.save(codelab);
+        saved.getParentSubmodule().getChildCodelabs().add(saved);
         return codelabMapper.moduleToOutputDto(saved);
     }
 

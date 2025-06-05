@@ -27,8 +27,9 @@ public class Codelab {
     // CONSTRUCTORS
     public Codelab() {}
 
-    public Codelab(String title, String details) {
+    public Codelab(String title, String details, Submodule parentSubmodule) {
         this.title = title;
         this.details = details;
+        this.parentSubmodule = parentSubmodule;
     }
 }

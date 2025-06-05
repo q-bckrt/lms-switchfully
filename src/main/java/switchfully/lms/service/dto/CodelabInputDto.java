@@ -8,11 +8,13 @@ public class CodelabInputDto {
     // FIELDS
     private String title;
     private String details;
+    private Long parentSubmoduleId;
 
     // CONSTRUCTORS
     public CodelabInputDto() {}
-    public CodelabInputDto(String title, String details) {
+    public CodelabInputDto(String title, String details, Long parentSubmoduleId) {
         this.title = title;
         this.details = details;
+        this.parentSubmoduleId = parentSubmoduleId;
     }
 }
