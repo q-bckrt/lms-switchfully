@@ -9,14 +9,16 @@ public class UserOutputDtoList {
 
     private String userName;
     private String displayName;
+    private String email;
     private List<ClassOutputDto> classes;
 
     public UserOutputDtoList() {
     }
 
-    public UserOutputDtoList(String userName, String displayName, List<ClassOutputDto> classes) {
+    public UserOutputDtoList(String userName, String displayName, String email,List<ClassOutputDto> classes) {
         this.userName = userName;
         this.displayName = displayName;
+        this.email = email;
         this.classes = classes;
     }
 
@@ -26,6 +28,9 @@ public class UserOutputDtoList {
 
     public String getDisplayName() {
         return displayName;
+    }
+    public String getEmail() {
+        return email;
     }
 
     public List<ClassOutputDto> getClasses() {

@@ -9,13 +9,15 @@ public class UserOutputDto {
 
     private String userName;
     private String displayName;
+    private String email;
 
     public UserOutputDto() {
     }
 
-    public UserOutputDto(String userName, String displayName) {
+    public UserOutputDto(String userName, String displayName, String email) {
         this.userName = userName;
         this.displayName = displayName;
+        this.email = email;
     }
 
     public String getUserName() {
@@ -24,6 +26,9 @@ public class UserOutputDto {
 
     public String getDisplayName() {
         return displayName;
+    }
+    public String getEmail() {
+        return email;
     }
 
     @Override
