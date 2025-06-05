@@ -39,11 +39,6 @@ public class Module {
     }
 
     // METHODS
-    public void addParentCourse(Course course) {
-        parentCourses.add(course);
-        course.getChildModules().add(this);
-    }
-
     public void addChildSubmodule(Submodule submodule) {
         childSubmodules.add(submodule);
         submodule.getParentModules().add(this);

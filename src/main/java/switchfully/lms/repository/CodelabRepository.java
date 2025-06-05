@@ -1,4 +1,9 @@
 package switchfully.lms.repository;
 
-public interface CodelabRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import switchfully.lms.domain.Codelab;
+
+@Repository
+public interface CodelabRepository extends JpaRepository<Codelab, Long> {
 }

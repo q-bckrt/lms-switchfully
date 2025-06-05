@@ -36,7 +36,7 @@ public class Course {
     }
 
     // METHODS
-    public void addModule(Module module) {
+    public void addChildModule(Module module) {
         childModules.add(module);
         module.getParentCourses().add(this);
     }
