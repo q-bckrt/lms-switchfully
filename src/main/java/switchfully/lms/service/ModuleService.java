@@ -1,7 +1,6 @@
 package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
-import switchfully.lms.domain.Course;
 import switchfully.lms.domain.Submodule;
 import switchfully.lms.repository.ModuleRepository;
 import switchfully.lms.repository.SubmoduleRepository;

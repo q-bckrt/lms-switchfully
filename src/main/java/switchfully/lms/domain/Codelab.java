@@ -11,6 +11,7 @@ public class Codelab {
     // FIELDS
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "codelabs_seq")
     @SequenceGenerator(sequenceName = "codelabs_seq", name = "codelabs_seq", allocationSize = 1)
+    @Id
     private Long id;
 
     @Column(name = "title", nullable = false)
@@ -23,4 +24,11 @@ public class Codelab {
     @JoinColumn(name = "submodule_id")
     private Submodule parentSubmodule;
 
+    // CONSTRUCTORS
+    public Codelab() {}
+
+    public Codelab(String title, String details) {
+        this.title = title;
+        this.details = details;
+    }
 }
