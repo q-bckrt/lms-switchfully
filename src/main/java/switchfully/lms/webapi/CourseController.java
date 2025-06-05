@@ -50,8 +50,8 @@ public class CourseController {
     }
 
     // Add Module By ID
-    @PostMapping(path = "/{courseId}/modules/{moduleId}", produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping(path = "/{courseId}/modules/{moduleId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
     public CourseOutputDto addModuleToCourse(@PathVariable Long courseId, @PathVariable Long moduleId) {
         return courseService.addModuleToCourse(courseId, moduleId);
     }
