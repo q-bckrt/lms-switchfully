@@ -98,6 +98,11 @@ public class ClassServiceTest {
         setId(student3, 3L);
         setId(coach, 4L);
 
+        student1.setClasses(new ArrayList<>());
+        student2.setClasses(new ArrayList<>());
+        student3.setClasses(new ArrayList<>());
+        coach.setClasses(new ArrayList<>());
+
         courseJava = new Course("JAVA FUNDAMENTALS");
         classEnrolled = new Class("JAVA_2025");
 
@@ -117,10 +122,10 @@ public class ClassServiceTest {
         lenient().when(userRepository.findByUserName(coach.getUserName())).thenReturn(coach);
         lenient().when(userRepository.findAll()).thenReturn(List.of(student1, student2, student3, coach));
 
-        student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName());
-        student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName());
-        student3Dto = new UserOutputDto(student3.getUserName(),student3.getDisplayName());
-        coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName());
+        student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail());
+        student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail());
+        student3Dto = new UserOutputDto(student3.getUserName(),student3.getDisplayName(),student3.getEmail());
+        coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail());
 
         lenient().when(userMapper.userToOutput(student1)).thenReturn(student1Dto);
         lenient().when(userMapper.userToOutput(student2)).thenReturn(student2Dto);

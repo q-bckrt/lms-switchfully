@@ -53,7 +53,7 @@ public class ClassMapperTest {
         classDomain.addCoach(coach);
         classDomain.setCourse(course);
         //EXPECTED
-        UserOutputDto coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName());
+        UserOutputDto coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail());
         ModuleOutputDto moduleDto = new ModuleOutputDto(module.getId(), "module",List.of(course.getId()), null);
         CourseOutputDto courseDto = new CourseOutputDto(course.getId(),"course",List.of(moduleDto.getId()));
         ClassOutputDtoList expectedResult = new ClassOutputDtoList(1L,courseDto,"validTitle",List.of(coachDto));
