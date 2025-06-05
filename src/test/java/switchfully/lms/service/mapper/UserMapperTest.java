@@ -33,7 +33,7 @@ public class UserMapperTest {
         //Given
         User user = new User("test", "testDisplay", "test@test.com", "testPassword", UserRole.STUDENT);
         // expected
-        UserOutputDto expectedDto = new UserOutputDto("test","testDisplay");
+        UserOutputDto expectedDto = new UserOutputDto("test","testDisplay", "test@test.com");
         //when
         UserOutputDto resultDto = userMapper.userToOutput(user);
         // then
