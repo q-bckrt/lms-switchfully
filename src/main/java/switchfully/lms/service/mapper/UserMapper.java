@@ -9,7 +9,6 @@ import switchfully.lms.service.dto.UserOutputDto;
 import switchfully.lms.service.dto.UserOutputDtoList;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
@@ -30,6 +29,7 @@ public class UserMapper {
         return new UserOutputDtoList(
                 user.getUserName(),
                 user.getDisplayName(),
+                user.getEmail(),
                 classList
 
         );
@@ -38,7 +38,8 @@ public class UserMapper {
     public UserOutputDto userToOutput(User user) {
         return new UserOutputDto(
                 user.getUserName(),
-                user.getDisplayName()
+                user.getDisplayName(),
+                user.getEmail()
         );
     }
 
