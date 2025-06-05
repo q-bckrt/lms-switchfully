@@ -26,7 +26,7 @@ public class ModuleRepositoryTest {
 
     @Test
     void givenCorrectModule_whenSaveModule_theModuleSaved(){
-        Module module = new switchfully.lms.domain.Module("test");
+        Module module = new Module("test");
         Module savedModule = moduleRepository.save(module);
 
         assertThat(savedModule.getId()).isNotNull();

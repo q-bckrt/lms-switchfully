@@ -56,11 +56,12 @@ public class CourseServiceTest {
         assertThat(course.getTitle()).isEqualTo(savedCourse.getTitle());
     }
 
+    @Transactional
     @Test
     void getCourseById_retrieveCourse() {
         Course course = new Course("test");
         courseRepository.save(course);
-        Course savedCourse = courseRepository.findById(course.getId()).get();
+        CourseOutputDto savedCourse = courseService.getCourseById(course.getId());
         assertThat(savedCourse).isNotNull();
         assertThat(savedCourse.getTitle()).isEqualTo(course.getTitle());
     }
@@ -68,7 +69,7 @@ public class CourseServiceTest {
     @Test
     void getCourseById_throwsException_whenCourseNotFound() {
 
-        assertThrows(Exception.class, () -> courseRepository.findById(50L).get());
+        assertThrows(Exception.class, () -> courseService.getCourseById(50L));
     }
 
     @Transactional
