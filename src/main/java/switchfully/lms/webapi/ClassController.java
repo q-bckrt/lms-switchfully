@@ -25,7 +25,7 @@ public class ClassController {
     public ClassOutputDtoList createClass(@RequestBody ClassInputDto classInputDto,
                                           User coach) {
 
-        //AUTHORIZATION SERVICE -> AUTHORIZE WITH TOKEN AND GET USER COACH
+        //AUTHORIZATION SERVICE -> AUTHORIZE WITH TOKEN AND GE
         return classService.createClass(classInputDto, coach);
     }
 
