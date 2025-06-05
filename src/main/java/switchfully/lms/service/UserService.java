@@ -1,6 +1,5 @@
 package switchfully.lms.service;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.Class;
@@ -15,7 +14,6 @@ import switchfully.lms.utility.exception.InvalidInputException;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -34,7 +32,6 @@ public class UserService {
 
     public UserOutputDto createNewStudent(UserInputDto userInputDto) {
         UserInputDto validatedUser = validateStudentInput(userInputDto);
-
         User user = userMapper.inputToUser(validatedUser);
         User savedUser = userRepository.save(user);
         return userMapper.userToOutput(savedUser);
@@ -42,11 +39,7 @@ public class UserService {
 
     public UserOutputDtoList getProfile(String username) {
         User user = userRepository.findByUserName(username);
-        List<ClassOutputDto> classOutputDtos = user.getClasses()
-                .stream()
-                .map(classMapper::classToOutput)
-                .collect(Collectors.toList());
-
+        List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
         return userMapper.userToOutputList(user, classOutputDtos);
     }
 
@@ -54,18 +47,13 @@ public class UserService {
         User user = userRepository.findByUserName(username);
 
         if (!Objects.equals(username, userInputEditDto.getUserName())) {
-            validateStudentInputEdit(userInputEditDto);
+            validateArgument(userInputEditDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
         }
-
-
         user.setUserName(userInputEditDto.getUserName());
         user.setDisplayName(userInputEditDto.getDisplayName());
         user.setPassword(userInputEditDto.getPassword());
         User savedUser = userRepository.save(user);
-        List<ClassOutputDto> classOutputDtos = user.getClasses()
-                .stream()
-                .map(classMapper::classToOutput)
-                .collect(Collectors.toList());
+        List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
 
         return userMapper.userToOutputList(savedUser,classOutputDtos);
     }
@@ -77,10 +65,7 @@ public class UserService {
         user.addClasses(classDomain);
         User savedUser = userRepository.save(user);
 
-        List<ClassOutputDto> classOutputDtos = user.getClasses()
-                .stream()
-                .map(classMapper::classToOutput)
-                .collect(Collectors.toList());
+        List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
 
         return userMapper.userToOutputList(savedUser,classOutputDtos);
     }
@@ -93,8 +78,11 @@ public class UserService {
         return userInputDto;
     }
 
-    private UserInputEditDto validateStudentInputEdit(UserInputEditDto userInputEditDto) {
-        validateArgument(userInputEditDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
-        return userInputEditDto;
+    private List<ClassOutputDto> getListOfClasses(User user) {
+        List<ClassOutputDto> classOutputDtos;
+        return classOutputDtos = user.getClasses()
+                .stream()
+                .map(classMapper::classToOutput)
+                .toList();
     }
 }

@@ -42,7 +42,6 @@ public class UserController {
     public UserOutputDtoList updateClassInfo(@PathVariable String username,
                                              @RequestParam (name = "classId", required = true) Long classId) {
         return userService.updateClassInfo(classId,username);
-        //return userService.updateProfile(userInputEditDto,username);
     }
 
 }

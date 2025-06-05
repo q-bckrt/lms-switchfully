@@ -90,6 +90,10 @@ public class User {
         this.password = password;
     }
 
+    public void setClasses(List<Class> classes) {
+        this.classes = classes;
+    }
+
     public void addClasses(Class classDomain) {
         this.classes.add(classDomain);
     }
