@@ -3,6 +3,7 @@ package switchfully.lms.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,10 +21,10 @@ public class Submodule {
     private String title;
 
     @ManyToMany(mappedBy = "childSubmodules")
-    private List<Module> parentModules;
+    private List<Module> parentModules = new ArrayList<>();
 
     @OneToMany(mappedBy = "parentSubmodule", cascade = CascadeType.ALL)
-    private List<Codelab> childCodelabs;
+    private List<Codelab> childCodelabs = new ArrayList<>();
 
     // CONSTRUCTORS
     public Submodule() {}

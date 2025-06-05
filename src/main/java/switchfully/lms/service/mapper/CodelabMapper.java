@@ -28,6 +28,7 @@ public class CodelabMapper {
     }
 
     public Codelab inputDtoToCodelab(CodelabInputDto codelabInputDto) {
+        System.out.println("Mapping CodelabInputDto to Codelab: " + codelabInputDto.getTitle());
         return new Codelab(codelabInputDto.getTitle(), codelabInputDto.getDetails());
     }
 }

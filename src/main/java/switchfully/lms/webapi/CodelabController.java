@@ -25,7 +25,7 @@ public class CodelabController {
     // Create
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCodelab(CodelabInputDto codelabInputDto) {
+    public void createCodelab(@RequestBody CodelabInputDto codelabInputDto) {
         codelabService.createCodelab(codelabInputDto);
     }
 
