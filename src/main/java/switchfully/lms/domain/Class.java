@@ -23,7 +23,7 @@ public class Class {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @ManyToMany(mappedBy = "classes")
+    @ManyToMany(mappedBy = "classes", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> users = new ArrayList<>();
 
     public Class() {}
@@ -56,6 +56,10 @@ public class Class {
     public Course setCourse(Course course) {
         this.course = course;
         return course;
+    }
+
+    public void clearUsersForTest() {
+        this.users.clear();
     }
 
     @Override

@@ -122,6 +122,11 @@ public class ClassServiceTest {
         lenient().when(userRepository.findByUserName(coach.getUserName())).thenReturn(coach);
         lenient().when(userRepository.findAll()).thenReturn(List.of(student1, student2, student3, coach));
 
+        lenient().when(userRepository.existsByUserName(student1.getUserName())).thenReturn(true);
+        lenient().when(userRepository.existsByUserName(student2.getUserName())).thenReturn(true);
+        lenient().when(userRepository.existsByUserName(student3.getUserName())).thenReturn(true);
+        lenient().when(userRepository.existsByUserName(coach.getUserName())).thenReturn(true);
+
         student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail());
         student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail());
         student3Dto = new UserOutputDto(student3.getUserName(),student3.getDisplayName(),student3.getEmail());
@@ -168,7 +173,7 @@ public class ClassServiceTest {
         //EXPECTED RESULT
         ClassOutputDtoList classOutputDto = new ClassOutputDtoList(classDomain.getId(),null,"NEW CLASS",List.of(coachDto));
         //WHEN THEN
-        ClassOutputDtoList result = classService.createClass(classInputDto,coach);
+        ClassOutputDtoList result = classService.createClass(classInputDto,coach.getUserName());
 
         assertThat(result.getTitle()).isEqualTo(classOutputDto.getTitle());
         assertThat(result.getUsers()).isEqualTo(classOutputDto.getUsers());
@@ -179,7 +184,7 @@ public class ClassServiceTest {
         //GIVEN
         ClassInputDto classInputDto = new ClassInputDto("NEW CLASS");
 
-        assertThrows(IllegalArgumentException.class, () -> classService.createClass(classInputDto,student2));
+        assertThrows(IllegalArgumentException.class, () -> classService.createClass(classInputDto,student2.getUserName()));
     }
 
     @Test
@@ -187,12 +192,12 @@ public class ClassServiceTest {
         //GIVEN
         ClassInputDto classInputDto = new ClassInputDto("   ");
 
-        assertThrows(IllegalArgumentException.class, () -> classService.createClass(classInputDto,student2));
+        assertThrows(IllegalArgumentException.class, () -> classService.createClass(classInputDto,student2.getUserName()));
     }
 
     @Test
     void givenClassWithStudentsExists_whenGetClassOverview_thenReturnClassOverview() {
-        ClassOutputDtoList result = classService.getClassOverview(classEnrolled.getId(),coach);
+        ClassOutputDtoList result = classService.getClassOverview(classEnrolled.getId(),coach.getUserName());
 
         assertThat(result).isEqualTo(classOutputDtoList);
     }
@@ -256,6 +261,6 @@ public class ClassServiceTest {
 
         ClassOutputDto result = classService.linkCourseToClass(classDomain.getId(),course.getId());
 
-        assertThat(result).isEqualTo(result);
+        assertThat(result).isEqualTo(classDomainDto);
     }
 }

@@ -20,42 +20,42 @@ public class ClassController {
         this.classService = classService;
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping(path ="/{coachUserName}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ClassOutputDtoList createClass(@RequestBody ClassInputDto classInputDto,
-                                          User coach) {
+                                          @PathVariable String coachUserName) {
 
-        //AUTHORIZATION SERVICE -> AUTHORIZE WITH TOKEN AND GET USER COACH
-        return classService.createClass(classInputDto, coach);
+        //AUTHORIZE
+        return classService.createClass(classInputDto, coachUserName);
     }
 
-    @GetMapping(path = "/classOverview", produces = "application/json")
+    @GetMapping(path = "/classOverview/{userName}/{classId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ClassOutputDtoList getClassOverview(@RequestParam(name = "classId", required = true) Long classId,
-                                               User user) {
-
-        //AUTHORIZATION SERVICE -> AUTHORIZE WITH TOKEN AND GET USER
-
-        return classService.getClassOverview(classId, user);
+    public ClassOutputDtoList getClassOverview(@PathVariable String userName,
+                                               @PathVariable Long classId) {
+        //AUTHORIZE
+        return classService.getClassOverview(classId, userName);
     }
 
     @PutMapping(path = "/linkCourseClass/{classId}/{courseId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public ClassOutputDto linkCourseToClass(@PathVariable Long classId,
                                             @PathVariable Long courseId) {
+        //AUTHORIZE
         return classService.linkCourseToClass(classId, courseId);
     }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<ClassOutputDto> findAllClasses() {
+        //AUTHORIZE
         return classService.findAllClasses();
     }
 
     @GetMapping(path = "/{classId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public ClassOutputDto findClassById(@PathVariable Long classId) {
-
+        //AUTHORIZE
         return classService.findClassById(classId);
     }
 
