@@ -28,11 +28,12 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // changed authenticated to permitAll() dont forget to change it back
                 )
                 .build();
 
     }
+
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
