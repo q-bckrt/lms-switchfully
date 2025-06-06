@@ -38,6 +38,9 @@ public class Course {
     // METHODS
     public void addChildModule(Module module) {
         childModules.add(module);
-        module.getParentCourses().add(this);
+    }
+
+    public String toString() {
+        return id + " - " + title;
     }
 }

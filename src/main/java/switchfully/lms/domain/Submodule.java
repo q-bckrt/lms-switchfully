@@ -36,7 +36,11 @@ public class Submodule {
     // METHODS
     public void addChildCodelab(Codelab codelab) {
         if (!childCodelabs.contains(codelab)) {
-            childCodelabs.add(codelab);
         }
+    }
+
+    @Override
+    public String toString() {
+        return id + " - " + title;
     }
 }

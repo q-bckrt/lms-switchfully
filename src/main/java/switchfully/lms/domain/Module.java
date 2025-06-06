@@ -41,6 +41,5 @@ public class Module {
     // METHODS
     public void addChildSubmodule(Submodule submodule) {
         childSubmodules.add(submodule);
-        submodule.getParentModules().add(this);
     }
 }

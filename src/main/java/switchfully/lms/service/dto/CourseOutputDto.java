@@ -19,4 +19,9 @@ public class CourseOutputDto {
         this.title = title;
         this.childModules = childModules;
     }
+
+    @Override
+    public String toString() {
+        return id + " - " + title + " - " + childModules;
+    }
 }
