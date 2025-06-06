@@ -28,7 +28,7 @@ public class CodelabService {
         System.out.println("Creating codelab: " + codelab.getTitle());
         Codelab saved = codelabRepository.save(codelab);
         saved.getParentSubmodule().getChildCodelabs().add(saved);
-        return codelabMapper.moduleToOutputDto(saved);
+        return codelabMapper.codelabToOutputDto(saved);
     }
 
     // Needs more exception handling ?
@@ -36,14 +36,14 @@ public class CodelabService {
         return codelabRepository
                 .findAll()
                 .stream()
-                .map(codelabMapper::moduleToOutputDto)
+                .map(codelabMapper::codelabToOutputDto)
                 .toList();
     }
 
     public CodelabOutputDto getCodelabById(Long id) {
         Codelab codelab = codelabRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Codelab not found with id: " + id));
-        return codelabMapper.moduleToOutputDto(codelab);
+        return codelabMapper.codelabToOutputDto(codelab);
     }
 
     public CodelabOutputDto updateCodelab(Long id, CodelabInputDto codelabInputDto) {
@@ -52,7 +52,7 @@ public class CodelabService {
         codelab.setTitle(codelabInputDto.getTitle());
         codelab.setDetails(codelabInputDto.getDetails());
         Codelab updated = codelabRepository.save(codelab);
-        return codelabMapper.moduleToOutputDto(updated);
+        return codelabMapper.codelabToOutputDto(updated);
     }
 
 }
