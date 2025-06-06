@@ -11,12 +11,6 @@ import switchfully.lms.domain.Module;
 @Component
 public class ModuleMapper {
 
-    private final CourseRepository courseRepository;
-
-    public ModuleMapper(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
-
     // METHODS
     public ModuleOutputDto moduleToOutputDto(Module module) {
         return new ModuleOutputDto(

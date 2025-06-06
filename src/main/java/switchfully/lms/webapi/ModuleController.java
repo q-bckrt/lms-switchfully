@@ -54,8 +54,8 @@ public class ModuleController {
     }
 
     // Add Submodule By ID
-    @PostMapping(path="/{moduleId}/submodules/{submoduleId}", produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping(path="/{moduleId}/submodules/{submoduleId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
     public ModuleOutputDto subModule(@PathVariable Long moduleId, @PathVariable Long submoduleId) {
         return moduleService.addSubmoduleToModule(moduleId, submoduleId);
     }
