@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.transaction.TestTransaction;
+import org.springframework.transaction.annotation.Transactional;
 import switchfully.lms.domain.Module;
 
 import org.junit.jupiter.api.TestInstance;
@@ -23,6 +26,8 @@ import static org.hamcrest.Matchers.*;
 @AutoConfigureTestDatabase
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Transactional
+@Rollback
 public class ModuleControllerTest {
     @LocalServerPort
     private int port;
@@ -36,6 +41,11 @@ public class ModuleControllerTest {
     void setUp() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
+        //to remove link from join table:
+        for (Module module : moduleRepository.findAll()) {
+            module.getChildSubmodules().clear();
+        }
+        moduleRepository.flush();
         submoduleRepository.deleteAll();
         moduleRepository.deleteAll();
         submoduleRepository.flush();
@@ -44,6 +54,8 @@ public class ModuleControllerTest {
 
     @Test
     void testCreateNewModule() {
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
         //given
         ModuleInputDto moduleInputDto = new ModuleInputDto("test");
 
@@ -59,10 +71,13 @@ public class ModuleControllerTest {
 
     @Test
     void testGetAllModules() {
-        Module module1 = new Module("module1");
-        Module module2 = new Module("module2");
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
+        Module module1 = new Module("modulegetall");
+        Module module2 = new Module("modulegetall2");
         moduleRepository.save(module1);
         moduleRepository.save(module2);
+        moduleRepository.flush();
 
         given()
                 .when()
@@ -76,8 +91,12 @@ public class ModuleControllerTest {
 
     @Test
     void testGetModuleById(){
-        Module module1 = new Module("module1");
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
+        Module module1 = new Module("modulebyid");
         moduleRepository.save(module1);
+        moduleRepository.flush();
+
 
         given()
                 .when()
@@ -89,6 +108,8 @@ public class ModuleControllerTest {
 
     @Test
     void testUpdateModuleTitle() {
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
         Module module1 = new Module("module1");
         moduleRepository.save(module1);
         ModuleInputDto moduleInputDto = new ModuleInputDto("test");
@@ -103,12 +124,17 @@ public class ModuleControllerTest {
                 .body("title", equalTo(moduleInputDto.getTitle()));
     }
 
+
     @Test
     void testAddSubmoduleToModule() {
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
         Module module1 = new Module("module1");
         moduleRepository.save(module1);
         Submodule submodule1 = new Submodule("submodule1");
         submoduleRepository.save(submodule1);
+        moduleRepository.flush();
+        submoduleRepository.flush();
 
         given()
                 .when()
