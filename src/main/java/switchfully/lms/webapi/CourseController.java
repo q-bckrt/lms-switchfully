@@ -56,6 +56,6 @@ public class CourseController {
         return courseService.addModuleToCourse(courseId, moduleId);
     }
 
-    // Delete (by ID)
-    // Get All Modules (by course ID)
+    // Delete (by ID) (not required)
+    // Get All Modules Associated (by course ID) ??
 }

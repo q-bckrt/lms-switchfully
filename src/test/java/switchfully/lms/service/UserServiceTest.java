@@ -1,6 +1,5 @@
 package switchfully.lms.service;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -19,8 +18,6 @@ import switchfully.lms.service.dto.UserInputDto;
 import switchfully.lms.service.dto.UserInputEditDto;
 import switchfully.lms.service.dto.UserOutputDto;
 import switchfully.lms.service.dto.UserOutputDtoList;
-import switchfully.lms.service.mapper.ClassMapper;
-import switchfully.lms.service.mapper.UserMapper;
 import switchfully.lms.domain.Class;
 
 import java.util.ArrayList;
