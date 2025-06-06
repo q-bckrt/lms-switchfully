@@ -10,7 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import switchfully.lms.domain.Course;
 import switchfully.lms.domain.Module;
 import switchfully.lms.domain.Submodule;
-import switchfully.lms.repository.CourseRepository;
 import switchfully.lms.repository.ModuleRepository;
 import switchfully.lms.service.dto.ModuleInputDto;
 import switchfully.lms.service.dto.ModuleOutputDto;
@@ -27,11 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ModuleMapperTest {
 
     @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
     private ModuleRepository moduleRepository;
 
-    private final ModuleMapper moduleMapper = new ModuleMapper(courseRepository);
+    private final ModuleMapper moduleMapper = new ModuleMapper();
 
     private List<Submodule> childSubmodules = new ArrayList<>();
     private List<Course> parentCourses = new ArrayList<>();
@@ -39,9 +36,7 @@ public class ModuleMapperTest {
     @BeforeEach
     public void cleanUp() {
         moduleRepository.deleteAll();
-        courseRepository.deleteAll();
         moduleRepository.flush();
-        courseRepository.flush();
     }
 
     @Test
