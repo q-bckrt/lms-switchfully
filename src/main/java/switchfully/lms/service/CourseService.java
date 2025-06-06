@@ -67,8 +67,6 @@ public class CourseService {
                 .orElseThrow(() -> new IllegalArgumentException("Module not found with id: " + moduleId));
         course.addChildModule(module);
         Course updated = courseRepository.save(course);
-        System.out.println(course.getChildModules());
-        System.out.println(module.getParentCourses());
         return courseMapper.courseToOutputDto(updated);
     }
 
