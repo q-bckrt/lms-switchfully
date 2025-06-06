@@ -7,6 +7,7 @@ import switchfully.lms.domain.Class;
 import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.CourseRepository;
+import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
 import switchfully.lms.service.mapper.CourseMapper;
@@ -27,19 +28,23 @@ public class ClassService {
     private final ClassMapper classMapper;
     private final UserMapper userMapper;
     private final CourseMapper courseMapper;
+    private final UserRepository userRepository;
 
     public ClassService(ClassRepository classRepository,
                         CourseRepository courseRepository,
                         ClassMapper classMapper, UserMapper userMapper,
-                        CourseMapper courseMapper) {
+                        CourseMapper courseMapper, UserRepository userRepository) {
         this.classRepository = classRepository;
         this.courseRepository = courseRepository;
         this.classMapper = classMapper;
         this.userMapper = userMapper;
         this.courseMapper = courseMapper;
+        this.userRepository = userRepository;
     }
 
-    public ClassOutputDtoList createClass(ClassInputDto classInputDto, User coach) {
+    public ClassOutputDtoList createClass(ClassInputDto classInputDto, String userNameCoach) {
+        validateArgument(userNameCoach, "User " +userNameCoach+ " not found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
+        User coach = userRepository.findByUserName(userNameCoach);
         Class classDomain = classMapper.intputToClass(validateClassInputDto(classInputDto, coach));
         classDomain.addCoach(coach);
         classRepository.save(classDomain);
@@ -47,7 +52,9 @@ public class ClassService {
         return GetClassDtoList(classDomain);
     }
 
-    public ClassOutputDtoList getClassOverview(Long classId, User user) {
+    public ClassOutputDtoList getClassOverview(Long classId, String userName) {
+        validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
+        User user = userRepository.findByUserName(userName);
         validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
 
         Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
@@ -66,7 +73,7 @@ public class ClassService {
                 .collect(Collectors.toList());
     }
 
-    public ClassOutputDto linkCourseToClass(Long courseId, Long classId) {
+    public ClassOutputDto linkCourseToClass(Long classId, Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new InvalidInputException("Course id not found in repository"));
         Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
         classDomain.setCourse(course);

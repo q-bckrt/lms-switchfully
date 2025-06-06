@@ -23,7 +23,7 @@ public class Class {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @ManyToMany(mappedBy = "classes")
+    @ManyToMany(mappedBy = "classes", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> users = new ArrayList<>();
 
     public Class() {}
@@ -58,6 +58,10 @@ public class Class {
         return course;
     }
 
+    public void clearUsersForTest() {
+        this.users.clear();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,7 +80,7 @@ public class Class {
         return "Class{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", users=" + users +
+                ", users=" + users.stream().map(User::getUserName).toList() +
                 '}';
     }
 }
