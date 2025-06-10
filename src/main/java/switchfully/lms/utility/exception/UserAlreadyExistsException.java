@@ -1,4 +1,4 @@
-package switchfully.lms.utility.security;
+package switchfully.lms.utility.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

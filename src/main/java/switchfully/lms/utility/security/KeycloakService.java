@@ -10,6 +10,7 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import switchfully.lms.utility.exception.UserAlreadyExistsException;
 
 
 import javax.ws.rs.WebApplicationException;
@@ -27,8 +28,18 @@ public class KeycloakService {
         this.realmRessource = keycloak.realm(realmName);
     }
 
+    // create user in the realm
     private Response createUser(String username) {
         return realmRessource.users().create(createUserRepresentation(username));
+    }
+
+    // create a representation ?
+    private String createUser(KeycloakUserDTO keycloakUserDTO) {
+        try {
+            return CreatedResponseUtil.getCreatedId(createUser(keycloakUserDTO.userName()));
+        } catch (WebApplicationException exception) {
+            throw new UserAlreadyExistsException(keycloakUserDTO.userName());
+        }
     }
 
 
@@ -68,13 +79,6 @@ public class KeycloakService {
     }
 
 
-    private String createUser(KeycloakUserDTO keycloakUserDTO) {
-        try {
-            return CreatedResponseUtil.getCreatedId(createUser(keycloakUserDTO.userName()));
-        } catch (WebApplicationException exception) {
-            throw new UserAlreadyExistsException(keycloakUserDTO.userName());
-        }
-    }
 
     private void changePassword(KeycloakUserDTO keycloakUserDTO) {
         UserResource user = getUser(keycloakUserDTO.userName());

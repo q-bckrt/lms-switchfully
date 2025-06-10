@@ -34,6 +34,9 @@ public class UserService {
         UserInputDto validatedUser = validateStudentInput(userInputDto);
         User user = userMapper.inputToUser(validatedUser);
         User savedUser = userRepository.save(user);
+        //addUser from Keycloak
+        // create mapper from UserInputDto to KeycloakDto
+        // if to check if added to both database and keycloak, if not added to one should be removed in both
         return userMapper.userToOutput(savedUser);
     }
 
