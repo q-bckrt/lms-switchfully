@@ -7,28 +7,20 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import switchfully.lms.domain.Codelab;
-import switchfully.lms.domain.Course;
-import switchfully.lms.domain.Module;
 import switchfully.lms.domain.Submodule;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.SubmoduleRepository;
 import switchfully.lms.service.dto.CodelabInputDto;
 import switchfully.lms.service.dto.CodelabOutputDto;
-import switchfully.lms.service.dto.SubmoduleInputDto;
-import switchfully.lms.service.dto.SubmoduleOutputDto;
 
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CodelabRepositoryTest {
+public class CodelabMapperTest {
 
     @Autowired
     private CodelabRepository codelabRepository;
@@ -48,7 +40,7 @@ public class CodelabRepositoryTest {
         submoduleRepository.save(parentSubmodule);
 
         // given
-        CodelabInputDto codelabInputDto = new CodelabInputDto("Test Codelab", "Details about the codelab", 1L);
+        CodelabInputDto codelabInputDto = new CodelabInputDto("Test Codelab", "Details about the codelab", parentSubmodule.getId());
 
         // expected
         Codelab expectedCodelab = new Codelab("Test Codelab", "Details about the codelab", parentSubmodule);
