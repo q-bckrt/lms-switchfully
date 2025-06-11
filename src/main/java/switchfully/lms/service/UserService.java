@@ -11,6 +11,8 @@ import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import org.apache.commons.validator.routines.EmailValidator;
 import switchfully.lms.utility.exception.InvalidInputException;
+import switchfully.lms.utility.security.KeycloakService;
+import switchfully.lms.utility.security.KeycloakUserDTO;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,21 +24,25 @@ public class UserService {
     private final ClassRepository classRepository;
     private final UserMapper userMapper;
     private final ClassMapper classMapper;
+    private final KeycloakService keycloakService;
 
-    public UserService(UserRepository userRepository, ClassRepository classRepository, UserMapper userMapper, ClassMapper classMapper) {
+    public UserService(UserRepository userRepository, ClassRepository classRepository, UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
         this.userMapper = userMapper;
         this.classMapper = classMapper;
+        this.keycloakService = keycloakService;
     }
 
     public UserOutputDto createNewStudent(UserInputDto userInputDto) {
         UserInputDto validatedUser = validateStudentInput(userInputDto);
+
         User user = userMapper.inputToUser(validatedUser);
+        KeycloakUserDTO keycloakUserDTO = userMapper.userInputToKeycloakUser(userInputDto);
+
+        keycloakService.addUser(keycloakUserDTO);
         User savedUser = userRepository.save(user);
-        //addUser from Keycloak
-        // create mapper from UserInputDto to KeycloakDto
-        // if to check if added to both database and keycloak, if not added to one should be removed in both
+
         return userMapper.userToOutput(savedUser);
     }
 
@@ -46,6 +52,7 @@ public class UserService {
         return userMapper.userToOutputList(user, classOutputDtos);
     }
 
+    // refactor --> do not change username, remove role and remove change password, add update password from keycloak
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
 

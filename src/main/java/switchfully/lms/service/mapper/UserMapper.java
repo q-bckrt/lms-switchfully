@@ -7,6 +7,7 @@ import switchfully.lms.service.dto.ClassOutputDto;
 import switchfully.lms.service.dto.UserInputDto;
 import switchfully.lms.service.dto.UserOutputDto;
 import switchfully.lms.service.dto.UserOutputDtoList;
+import switchfully.lms.utility.security.KeycloakUserDTO;
 
 import java.util.List;
 
@@ -19,6 +20,14 @@ public class UserMapper {
                 userInputDto.getUserName(),
                 userInputDto.getUserName(),
                 userInputDto.getEmail(),
+                userInputDto.getPassword(),
+                UserRole.STUDENT
+        );
+    }
+
+    public KeycloakUserDTO userInputToKeycloakUser(UserInputDto userInputDto) {
+        return new KeycloakUserDTO(
+                userInputDto.getUserName(),
                 userInputDto.getPassword(),
                 UserRole.STUDENT
         );
