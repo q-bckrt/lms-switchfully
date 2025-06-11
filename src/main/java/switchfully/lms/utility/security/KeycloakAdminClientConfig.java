@@ -10,14 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class KeycloakAdminClientConfig {
 
     @Bean
-    //OLD CONFIG WITH ADMIN USER WE MADE IN KEYCLOAK
-//    public Keycloak keycloak(@Value("${keycloak.server-url}") String serverUrl,
-//                             @Value("${keycloak.realm}") String realm,
-//                             @Value("${keycloak.username}") String username,
-//                             @Value("${keycloak.password}") String password,
-//                             @Value("${keycloak.client-id}") String clientId) {
-
-    //LOGIN WE USE ON WEBSITE (JAVA USERNAME)
     public Keycloak keycloak(@Value("${keycloak.server-url}") String serverUrl,
                              @Value("${keycloak.realm}") String realm,
                              @Value("${keycloak.username}") String username,

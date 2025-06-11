@@ -25,25 +25,22 @@ public class KeycloakService {
     private final RealmResource realmResource;
     private final String clientID;
 
-    public KeycloakService(Keycloak keycloak, @Value("java-2025-03") String realmName, @Value("admin-cli") String clientId) {
+    public KeycloakService(Keycloak keycloak, @Value("${keycloak.realm}") String realmName, @Value("${keycloak.resource}") String clientId) {
         this.clientID = clientId;
         this.realmResource = keycloak.realm(realmName);
     }
 
-    // create user in the realm
-    //401 not authorized by keycloak
-    private Response createUser(String username) {
-        return realmResource.users().create(createUserRepresentation(username));
+    public void addUser(KeycloakUserDTO keycloakUserDTO) {
+        String createdUserId = createUser(keycloakUserDTO);
+        getUser(createdUserId).resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
+        addRole(getUser(createdUserId), keycloakUserDTO.role().name());
     }
 
-    private UserRepresentation createUserRepresentation(String username) {
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(username);
-        user.setEnabled(true);
-        return user;
+    public void changePassword(KeycloakUserDTO keycloakUserDTO) {
+        UserResource user = getUser(keycloakUserDTO.userName());
+        user.resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
     }
 
-    // create a representation ?
     private String createUser(KeycloakUserDTO keycloakUserDTO) {
         try {
             return CreatedResponseUtil.getCreatedId(createUser(keycloakUserDTO.userName()));
@@ -52,57 +49,6 @@ public class KeycloakService {
         }
     }
 
-
-    public void addUser(KeycloakUserDTO keycloakUserDTO) {
-        String createdUserId = createUser(keycloakUserDTO);
-        getUser(createdUserId).resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
-        addRole(getUser(createdUserId), keycloakUserDTO.role().name());
-    }
-    private UserResource getUser(String userId) {
-        return realmResource.users().get(userId);
-    }
-
-
-    private ClientResource getClientResource() {
-        return realmResource.clients().get(getClientUUID().getId());
-    }
-
-    private ClientRepresentation getClientUUID() {
-        ClientsResource clientResource = realmResource.clients();
-        //NEXT LINE RETURNS AN EMPTY LIST
-        List<ClientRepresentation> clientResources = clientResource.findByClientId(this.clientID);
-        List<ClientRepresentation> client = realmResource.clients().findAll();
-        return realmResource.clients()
-                .findByClientId(clientID)
-                .get(0);
-    }
-
-
-
-
-
-    private void addRole(UserResource user, String roleName) {
-        RoleRepresentation role = getRole(roleName);
-        List<RoleRepresentation> roles = List.of(role);
-        user.roles()
-                .clientLevel(getClientUUID().getId())
-                .add(roles);
-        //user.roles().clientLevel(getClientUUID()).add(List.of(getRole(roleName)));
-    }
-
-    private RoleRepresentation getRole(String roleToAdd) {
-        return getClientResource()
-                .roles()
-                .get(roleToAdd)
-                .toRepresentation();
-    }
-
-
-
-    private void changePassword(KeycloakUserDTO keycloakUserDTO) {
-        UserResource user = getUser(keycloakUserDTO.userName());
-        user.resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
-    }
     private CredentialRepresentation createCredentialRepresentation(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();
         passwordCredentials.setTemporary(false);
@@ -111,5 +57,34 @@ public class KeycloakService {
         return passwordCredentials;
     }
 
+    private void addRole(UserResource user, String roleName) {
+        user.roles().clientLevel(getClientUUID()).add(List.of(getRole(roleName)));
+    }
 
+    private String getClientUUID() {
+        return realmResource.clients().findByClientId(clientID).get(0).getId();
+    }
+
+    private Response createUser(String username) {
+        return realmResource.users().create(createUserRepresentation(username));
+    }
+
+    private UserResource getUser(String userId) {
+        return realmResource.users().get(userId);
+    }
+
+    private RoleRepresentation getRole(String roleToAdd) {
+        return getClientResource().roles().get(roleToAdd).toRepresentation();
+    }
+
+    private ClientResource getClientResource() {
+        return realmResource.clients().get(getClientUUID());
+    }
+
+    private UserRepresentation createUserRepresentation(String username) {
+        UserRepresentation user = new UserRepresentation();
+        user.setUsername(username);
+        user.setEnabled(true);
+        return user;
+    }
 }
