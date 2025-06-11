@@ -25,8 +25,10 @@ public class CodelabController {
     // Create
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCodelab(@RequestBody CodelabInputDto codelabInputDto) {
-        codelabService.createCodelab(codelabInputDto);
+    public CodelabOutputDto createCodelab(@RequestBody CodelabInputDto codelabInputDto) {
+        CodelabOutputDto codelabOutputDto = codelabService.createCodelab(codelabInputDto);
+        System.out.println("Codelab DTO created with title: " + codelabOutputDto.getTitle());
+        return codelabOutputDto;
     }
 
     // Get All

@@ -72,7 +72,7 @@ public class CodelabMapperTest {
         );
 
         // when
-        CodelabOutputDto resultOutputDto = codelabMapper.moduleToOutputDto(codelab);
+        CodelabOutputDto resultOutputDto = codelabMapper.codelabToOutputDto(codelab);
 
         // then
         assertThat(resultOutputDto).isEqualTo(expectedOutputDto);

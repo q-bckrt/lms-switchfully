@@ -19,7 +19,7 @@ public class CodelabMapper {
     }
 
     // METHODS
-    public CodelabOutputDto moduleToOutputDto(Codelab codelab) {
+    public CodelabOutputDto codelabToOutputDto(Codelab codelab) {
         return new CodelabOutputDto(
                 codelab.getId(),
                 codelab.getTitle(),
