@@ -39,4 +39,13 @@ public class Submodule {
             childCodelabs.add(codelab);
         }
     }
+
+    // TO STRING
+    @Override
+    public String toString() {
+        return "Submodule{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }
