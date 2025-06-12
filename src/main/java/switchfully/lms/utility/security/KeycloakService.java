@@ -41,9 +41,13 @@ public class KeycloakService {
         user.resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
     }
 
+    private Response createUserRealm(KeycloakUserDTO keycloakUserDTO) {
+        return realmResource.users().create(createUserRepresentation(keycloakUserDTO));
+    }
+
     private String createUser(KeycloakUserDTO keycloakUserDTO) {
         try {
-            return CreatedResponseUtil.getCreatedId(createUser(keycloakUserDTO.userName()));
+            return CreatedResponseUtil.getCreatedId(createUserRealm(keycloakUserDTO));
         } catch (WebApplicationException exception) {
             throw new UserAlreadyExistsException(keycloakUserDTO.userName());
         }
@@ -65,9 +69,6 @@ public class KeycloakService {
         return realmResource.clients().findByClientId(clientID).get(0).getId();
     }
 
-    private Response createUser(String username) {
-        return realmResource.users().create(createUserRepresentation(username));
-    }
 
     private UserResource getUser(String userId) {
         return realmResource.users().get(userId);
@@ -81,10 +82,14 @@ public class KeycloakService {
         return realmResource.clients().get(getClientUUID());
     }
 
-    private UserRepresentation createUserRepresentation(String username) {
+    private UserRepresentation createUserRepresentation(KeycloakUserDTO keycloakUserDTO) {
         UserRepresentation user = new UserRepresentation();
-        user.setUsername(username);
+        user.setUsername(keycloakUserDTO.userName());
         user.setEnabled(true);
+        user.setFirstName(keycloakUserDTO.firstName());
+        user.setLastName(keycloakUserDTO.lastName());
+        user.setEmail(keycloakUserDTO.email());
+        user.setEmailVerified(true);
         return user;
     }
 }
