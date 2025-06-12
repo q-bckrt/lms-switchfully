@@ -59,14 +59,13 @@ public class UserService {
         return userMapper.userToOutputList(user, classOutputDtos);
     }
 
-    // refactor --> do not change username, remove role and remove change password, add update password from keycloak
+    // refactor --> remove role and remove change password, add update password from keycloak
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
-
-        if (!Objects.equals(username, userInputEditDto.getUserName())) {
-            validateArgument(userInputEditDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
-        }
-        user.setUserName(userInputEditDto.getUserName());
+        // keycloak
+        KeycloakUserDTO keycloakUserDTO = userMapper.userEditToKeycloakUser(user, userInputEditDto);
+        keycloakService.changePassword(keycloakUserDTO);
+        // database
         user.setDisplayName(userInputEditDto.getDisplayName());
         user.setPassword(userInputEditDto.getPassword());
         User savedUser = userRepository.save(user);

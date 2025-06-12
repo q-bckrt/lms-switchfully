@@ -3,10 +3,7 @@ package switchfully.lms.service.mapper;
 import org.springframework.stereotype.Component;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.UserRole;
-import switchfully.lms.service.dto.ClassOutputDto;
-import switchfully.lms.service.dto.UserInputDto;
-import switchfully.lms.service.dto.UserOutputDto;
-import switchfully.lms.service.dto.UserOutputDtoList;
+import switchfully.lms.service.dto.*;
 import switchfully.lms.utility.security.KeycloakUserDTO;
 
 import java.util.List;
@@ -16,9 +13,12 @@ public class UserMapper {
 
 
     public User inputToUser(UserInputDto userInputDto) {
+        String displayName = userInputDto.getFirstName() + " " + userInputDto.getLastName();
         return new User(
                 userInputDto.getUserName(),
-                userInputDto.getUserName(),
+                displayName,
+                userInputDto.getFirstName(),
+                userInputDto.getLastName(),
                 userInputDto.getEmail(),
                 userInputDto.getPassword(),
                 UserRole.STUDENT
@@ -28,8 +28,22 @@ public class UserMapper {
     public KeycloakUserDTO userInputToKeycloakUser(UserInputDto userInputDto) {
         return new KeycloakUserDTO(
                 userInputDto.getUserName(),
+                userInputDto.getFirstName(),
+                userInputDto.getLastName(),
                 userInputDto.getPassword(),
-                UserRole.STUDENT
+                UserRole.STUDENT,
+                userInputDto.getEmail()
+        );
+    }
+
+    public KeycloakUserDTO userEditToKeycloakUser(User user, UserInputEditDto userInputEditDto) {
+        return new KeycloakUserDTO(
+                user.getUserName(),
+                user.getFirstName(),
+                user.getLastName(),
+                userInputEditDto.getPassword(),
+                UserRole.STUDENT,
+                user.getEmail()
         );
     }
 
