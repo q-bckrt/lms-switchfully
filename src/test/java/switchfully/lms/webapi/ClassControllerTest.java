@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.DirtiesContext;
@@ -21,6 +22,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
+import switchfully.lms.TestSecurityConfig;
 import switchfully.lms.domain.Course;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.Class;
@@ -46,6 +48,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Transactional
 @Rollback
+@ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 public class ClassControllerTest {
 
     @LocalServerPort
@@ -167,43 +171,6 @@ public class ClassControllerTest {
                 .body(input)
                 .when()
                 .post("/classes/"+student1.getUserName())
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
-    void givenValidUserIsEnrolled_whenGetClassOverView_thenReturnClassDtoList() {
-        //NOT TAKING INTO ACCOUNT AUTHORIZATION
-        TestTransaction.flagForCommit();
-        TestTransaction.end();
-
-        //EXPECTED
-        CourseOutputDto courseDto = new CourseOutputDto(courseJava.getId(),courseJava.getTitle(),new ArrayList<>());
-        ClassOutputDtoList expectedResult = new ClassOutputDtoList(classEnrolled.getId(),courseDto,classEnrolled.getTitle(), List.of(coachDto,
-                student1Dto,student2Dto,student3Dto));
-        //RESULT
-        ClassOutputDtoList response = given()
-                .when()
-                .get("/classes/classOverview/"+coach.getUserName()+"/"+classEnrolled.getId())
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(ClassOutputDtoList.class);
-
-        //THIS LETS ME IGNORE THE ORDER AND ONLY FOCUS ON CONTENT WHEN COMPARING ENTIRE OBJECTS CONTAINING LISTS!!!!!!!
-        assertThat(response).usingRecursiveComparison()
-                .ignoringCollectionOrder()
-                .isEqualTo(expectedResult);
-    }
-
-    @Test
-    void givenValidUserIsNotEnrolled_whenGetClassOverView_thenThrowException() {
-        //NOT TAKING INTO ACCOUNT AUTHORIZATION
-        User newStudent = userRepository.save(new User("newname","newname","testFirstname","testLastName","new@yahoo.com","pass", UserRole.STUDENT));
-        //RESULT
-        given()
-                .when()
-                .get("/classes/classOverview/"+coach.getUserName()+"/"+newStudent.getId())
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import switchfully.lms.TestSecurityConfig;
 import switchfully.lms.domain.Course;
 import switchfully.lms.domain.Module;
 import switchfully.lms.repository.CourseRepository;
@@ -22,6 +25,8 @@ import static org.hamcrest.Matchers.*;
 @AutoConfigureTestDatabase
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 public class CourseControllerTest {
 
     @LocalServerPort

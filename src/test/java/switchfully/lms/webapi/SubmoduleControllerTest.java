@@ -5,9 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
+import switchfully.lms.TestSecurityConfig;
 import switchfully.lms.domain.Module;
 
 import org.junit.jupiter.api.TestInstance;
@@ -29,6 +32,8 @@ import static org.hamcrest.Matchers.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Transactional
 @Rollback
+@ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 public class SubmoduleControllerTest {
 
     @LocalServerPort

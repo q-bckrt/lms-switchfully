@@ -1,9 +1,6 @@
 package switchfully.lms.webapi;
 
 import io.restassured.RestAssured;
-import io.restassured.config.HttpClientConfig;
-import io.restassured.config.RestAssuredConfig;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -11,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import switchfully.lms.TestSecurityConfig;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.UserRole;
 import switchfully.lms.domain.Class;
 import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.UserRepository;
-import switchfully.lms.service.dto.UserInputDto;
-import switchfully.lms.service.dto.UserInputEditDto;
 import switchfully.lms.utility.security.KeycloakService;
 
 import static io.restassured.RestAssured.given;
@@ -28,6 +26,8 @@ import static org.hamcrest.Matchers.*;
 @AutoConfigureTestDatabase
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 public class UserControllerTest {
     @LocalServerPort
     private int port;
@@ -41,8 +41,7 @@ public class UserControllerTest {
 
     private User user;
     private Class classDomain;
-    private String tokenStudent;
-    private String tokenCoach;
+
 
 
     @BeforeEach
@@ -55,25 +54,7 @@ public class UserControllerTest {
         classRepository.flush();
         classDomain = new Class("TestClass");
         classRepository.save(classDomain);
-        tokenStudent = obtainAccessToken("BritneySpears", "pass");
-        tokenCoach = obtainAccessToken("asmith", "securepass");
     }
-
-    public String obtainAccessToken(String username, String password) {
-
-        Response response = RestAssured
-                .given()
-                        .contentType("application/x-www-form-urlencoded")
-                        .formParam("client_secret","pkuA7PVvcC6QlAIsSOu8SRMLBmEZz49N")
-                        .formParam("grant_type", "password")
-                        .formParam("client_id", "lms")
-                        .formParam("username", username)
-                        .formParam("password", password)
-                        .post("https://keycloak.switchfully.com/realms/java-2025-03/protocol/openid-connect/token");
-
-        return response.jsonPath().getString("access_token");
-    }
-
 
     //BELOW IS PERSISTING TO KEYCLOAK DB --> WE WONT TEST THIS
 
@@ -102,7 +83,7 @@ public class UserControllerTest {
 
         given()
                 .when()
-                .auth().oauth2(tokenStudent)
+                //.auth().oauth2(tokenStudent)
                 .get("/users/" + username)
                 .then()
                 .statusCode(200)
