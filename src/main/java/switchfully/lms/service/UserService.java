@@ -7,6 +7,7 @@ import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
+import switchfully.lms.service.mapper.CourseMapper;
 import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -14,8 +15,10 @@ import switchfully.lms.utility.exception.InvalidInputException;
 import switchfully.lms.utility.security.KeycloakService;
 import switchfully.lms.utility.security.KeycloakUserDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -25,13 +28,17 @@ public class UserService {
     private final UserMapper userMapper;
     private final ClassMapper classMapper;
     private final KeycloakService keycloakService;
+    private final CourseMapper courseMapper;
 
-    public UserService(UserRepository userRepository, ClassRepository classRepository, UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService) {
+    public UserService(UserRepository userRepository, ClassRepository classRepository,
+                       UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService,
+                       CourseMapper courseMapper) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
         this.userMapper = userMapper;
         this.classMapper = classMapper;
         this.keycloakService = keycloakService;
+        this.courseMapper = courseMapper;
     }
 
     public UserOutputDto createNewStudent(UserInputDto userInputDto) {
@@ -94,5 +101,32 @@ public class UserService {
                 .stream()
                 .map(classMapper::classToOutput)
                 .toList();
+    }
+
+    public ClassOutputDtoList getClassOverview(String userName) {
+        validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
+        User user = userRepository.findByUserName(userName);
+        validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
+
+        // student only have one class
+        Class classDomain = user.getClasses().get(0);
+
+        return GetClassDtoListUser(classDomain);
+    }
+
+    private ClassOutputDtoList GetClassDtoListUser(Class classDomain) {
+        List<UserOutputDto> userList = new ArrayList<>();
+        if(!classDomain.getUsers().isEmpty()) {
+            userList = classDomain.getUsers().stream()
+                    .map(userMapper::userToOutput)
+                    .collect(Collectors.toList());
+        }
+
+        CourseOutputDto courseOutputDto = null;
+        if(classDomain.getCourse() != null) {
+            courseOutputDto = courseMapper.courseToOutputDto(classDomain.getCourse());
+        }
+
+        return classMapper.classToOutputList(classDomain,userList,courseOutputDto);
     }
 }

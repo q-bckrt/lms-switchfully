@@ -1,6 +1,7 @@
 package switchfully.lms.webapi;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.CodelabService;
 import switchfully.lms.service.dto.CodelabInputDto;
@@ -24,6 +25,7 @@ public class CodelabController {
 
     // Create
     @PostMapping(consumes = "application/json", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.CREATED)
     public void createCodelab(@RequestBody CodelabInputDto codelabInputDto) {
         codelabService.createCodelab(codelabInputDto);
@@ -31,6 +33,7 @@ public class CodelabController {
 
     // Get All
     @GetMapping(produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
     public List<CodelabOutputDto> getAllCodelabs() {
         return codelabService.getAllCodelabs();
@@ -38,6 +41,7 @@ public class CodelabController {
 
     // Get One By ID
     @GetMapping(path = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
     public CodelabOutputDto getCodelabById(@PathVariable Long id) {
         return codelabService.getCodelabById(id);
@@ -45,6 +49,7 @@ public class CodelabController {
 
     // Edit (title, details)
     @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
     public CodelabOutputDto updateCodelab(@PathVariable Long id, @RequestBody CodelabInputDto codelabInputDto) {
         return codelabService.updateCodelab(id, codelabInputDto);

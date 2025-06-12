@@ -52,16 +52,6 @@ public class ClassService {
         return GetClassDtoList(classDomain);
     }
 
-    public ClassOutputDtoList getClassOverview(Long classId, String userName) {
-        validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
-        User user = userRepository.findByUserName(userName);
-        validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
-
-        Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
-
-        return GetClassDtoList(classDomain);
-    }
-
     public ClassOutputDto findClassById(Long classId) {
         Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
         return classMapper.classToOutput(classDomain);
