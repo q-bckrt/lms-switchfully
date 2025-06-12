@@ -1,6 +1,7 @@
 package switchfully.lms.webapi;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.ModuleService;
 import switchfully.lms.service.dto.ModuleInputDto;
@@ -27,6 +28,7 @@ public class ModuleController {
     // And use the addModule endpoint in CourseController to associate it with a course
     // because a module can never be "orphaned"
     @PostMapping(consumes = "application/json", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.CREATED)
     public ModuleOutputDto createModule(@RequestBody ModuleInputDto moduleInputDto) {
         return moduleService.createModule(moduleInputDto);
@@ -34,6 +36,7 @@ public class ModuleController {
 
     // Get All
     @GetMapping(produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
     public List<ModuleOutputDto> getAllModules() {
         return moduleService.getAllModules();
@@ -41,6 +44,7 @@ public class ModuleController {
 
     // Get One By ID
     @GetMapping(path = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
     public ModuleOutputDto getModuleById(@PathVariable Long id) {
         return moduleService.getModuleById(id);
@@ -48,14 +52,16 @@ public class ModuleController {
 
     // Edit (title)
     @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
     public ModuleOutputDto updateModule(@PathVariable Long id, @RequestBody ModuleInputDto moduleInputDto) {
         return moduleService.updateModule(id, moduleInputDto);
     }
 
     // Add Submodule By ID
-    @PostMapping(path="/{moduleId}/submodules/{submoduleId}", produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping(path="/{moduleId}/submodules/{submoduleId}", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
+    @ResponseStatus(HttpStatus.OK)
     public ModuleOutputDto subModule(@PathVariable Long moduleId, @PathVariable Long submoduleId) {
         return moduleService.addSubmoduleToModule(moduleId, submoduleId);
     }

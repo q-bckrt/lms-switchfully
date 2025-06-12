@@ -1,6 +1,7 @@
 package switchfully.lms.webapi;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.CourseService;
 import switchfully.lms.service.dto.CourseInputDto;
@@ -24,12 +25,14 @@ public class CourseController {
 
     // Create
     @PostMapping(consumes = "application/json", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.CREATED)
     public CourseOutputDto createCourse(@RequestBody CourseInputDto courseInputDto) {
         return courseService.createCourse(courseInputDto);
     }
     // Get All
     @GetMapping(produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
     public List<CourseOutputDto> getAllCourses() {
         System.out.println("Hello CourseController");
@@ -38,20 +41,24 @@ public class CourseController {
 
     // Get One By ID
     @GetMapping(path = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
     public CourseOutputDto getCourseById(@PathVariable Long id) {
         return courseService.getCourseById(id);
     }
+
     // Edit (title)
     @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
     public CourseOutputDto updateCourse(@PathVariable Long id, @RequestBody CourseInputDto courseInputDto) {
         return courseService.updateCourse(id, courseInputDto);
     }
 
     // Add Module By ID
-    @PostMapping(path = "/{courseId}/modules/{moduleId}", produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping(path = "/{courseId}/modules/{moduleId}", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
+    @ResponseStatus(HttpStatus.OK)
     public CourseOutputDto addModuleToCourse(@PathVariable Long courseId, @PathVariable Long moduleId) {
         return courseService.addModuleToCourse(courseId, moduleId);
     }

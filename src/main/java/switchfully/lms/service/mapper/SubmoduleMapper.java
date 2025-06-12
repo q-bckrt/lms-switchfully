@@ -11,12 +11,6 @@ import switchfully.lms.service.dto.SubmoduleOutputDto;
 @Component
 public class SubmoduleMapper {
 
-    private final ModuleRepository moduleRepository;
-
-    public SubmoduleMapper(ModuleRepository moduleRepository) {
-        this.moduleRepository = moduleRepository;
-    }
-
     // METHODS
     public SubmoduleOutputDto submoduleToOutputDto(Submodule submodule) {
         return new SubmoduleOutputDto(
