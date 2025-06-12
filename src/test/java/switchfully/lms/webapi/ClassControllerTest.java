@@ -94,9 +94,9 @@ public class ClassControllerTest {
         entityManager.flush();
         entityManager.clear();
 
-        student1 = userRepository.save(new User("ann_DM","Ann Demeulemeester","ann@yahoo.com","pass", UserRole.STUDENT));
-        student2 = userRepository.save(new User("jil_sander","Jil Sander","jil@yahoo.com","pass", UserRole.STUDENT));
-        student3 = userRepository.save(new User("maarten_mar","Maarten Margiela","maarten@yahoo.com","pass", UserRole.STUDENT));
+        student1 = userRepository.save(new User("ann_DM","Ann Demeulemeester","testFirstname","testLastName","ann@yahoo.com","pass", UserRole.STUDENT));
+        student2 = userRepository.save(new User("jil_sander","Jil Sander","testFirstname","testLastName","jil@yahoo.com","pass", UserRole.STUDENT));
+        student3 = userRepository.save(new User("maarten_mar","Maarten Margiela","testFirstname","testLastName","maarten@yahoo.com","pass", UserRole.STUDENT));
 
         student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail());
         student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail());
@@ -106,7 +106,7 @@ public class ClassControllerTest {
         student2.setClasses(new ArrayList<>());
         student3.setClasses(new ArrayList<>());
 
-        coach = userRepository.save(new User("elsa_schiap","Elsa Schiaparelli","elsa@yahoo.com","pass", UserRole.COACH));
+        coach = userRepository.save(new User("elsa_schiap","Elsa Schiaparelli","testFirstname","testLastName","elsa@yahoo.com","pass", UserRole.COACH));
 
         coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail());
 
@@ -199,7 +199,7 @@ public class ClassControllerTest {
     @Test
     void givenValidUserIsNotEnrolled_whenGetClassOverView_thenThrowException() {
         //NOT TAKING INTO ACCOUNT AUTHORIZATION
-        User newStudent = userRepository.save(new User("newname","newname","new@yahoo.com","pass", UserRole.STUDENT));
+        User newStudent = userRepository.save(new User("newname","newname","testFirstname","testLastName","new@yahoo.com","pass", UserRole.STUDENT));
         //RESULT
         given()
                 .when()
