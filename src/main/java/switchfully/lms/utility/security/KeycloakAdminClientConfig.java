@@ -16,6 +16,7 @@ public class KeycloakAdminClientConfig {
                              @Value("${keycloak.password}") String password,
                              @Value("${keycloak.client-id}") String clientId) {
 
+
         return KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
                 .realm(realm)

@@ -1,6 +1,7 @@
 package switchfully.lms.webapi;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import switchfully.lms.domain.User;
 import switchfully.lms.repository.UserRepository;
@@ -21,6 +22,7 @@ public class ClassController {
     }
 
     @PostMapping(path ="/{coachUserName}", consumes = "application/json", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.CREATED)
     public ClassOutputDtoList createClass(@RequestBody ClassInputDto classInputDto,
                                           @PathVariable String coachUserName) {
@@ -29,15 +31,9 @@ public class ClassController {
         return classService.createClass(classInputDto, coachUserName);
     }
 
-    @GetMapping(path = "/classOverview/{userName}/{classId}", produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public ClassOutputDtoList getClassOverview(@PathVariable String userName,
-                                               @PathVariable Long classId) {
-        //AUTHORIZE
-        return classService.getClassOverview(classId, userName);
-    }
 
     @PutMapping(path = "/linkCourseClass/{classId}/{courseId}", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
     public ClassOutputDto linkCourseToClass(@PathVariable Long classId,
                                             @PathVariable Long courseId) {

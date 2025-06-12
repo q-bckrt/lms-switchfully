@@ -19,6 +19,12 @@ public class User {
     @Column(name = "display_name", nullable = false)
     private String displayName;
 
+    @Column(name="first_name", nullable = false)
+    private String firstName;
+
+    @Column(name="last_name", nullable = false)
+    private String lastName;
+
     @Column(name="email", nullable = false, unique = true)
     private String email;
 
@@ -38,9 +44,11 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String displayName, String email, String password, UserRole role) {
+    public User(String userName, String displayName, String firstName, String lastName, String email, String password, UserRole role) {
         this.userName = userName;
         this.displayName = displayName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -56,6 +64,14 @@ public class User {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {

@@ -7,13 +7,18 @@ import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
+import switchfully.lms.service.mapper.CourseMapper;
 import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import org.apache.commons.validator.routines.EmailValidator;
 import switchfully.lms.utility.exception.InvalidInputException;
+import switchfully.lms.utility.security.KeycloakService;
+import switchfully.lms.utility.security.KeycloakUserDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -22,21 +27,29 @@ public class UserService {
     private final ClassRepository classRepository;
     private final UserMapper userMapper;
     private final ClassMapper classMapper;
+    private final KeycloakService keycloakService;
+    private final CourseMapper courseMapper;
 
-    public UserService(UserRepository userRepository, ClassRepository classRepository, UserMapper userMapper, ClassMapper classMapper) {
+    public UserService(UserRepository userRepository, ClassRepository classRepository,
+                       UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService,
+                       CourseMapper courseMapper) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
         this.userMapper = userMapper;
         this.classMapper = classMapper;
+        this.keycloakService = keycloakService;
+        this.courseMapper = courseMapper;
     }
 
     public UserOutputDto createNewStudent(UserInputDto userInputDto) {
         UserInputDto validatedUser = validateStudentInput(userInputDto);
+
         User user = userMapper.inputToUser(validatedUser);
+        KeycloakUserDTO keycloakUserDTO = userMapper.userInputToKeycloakUser(userInputDto);
+
+        keycloakService.addUser(keycloakUserDTO);
         User savedUser = userRepository.save(user);
-        //addUser from Keycloak
-        // create mapper from UserInputDto to KeycloakDto
-        // if to check if added to both database and keycloak, if not added to one should be removed in both
+
         return userMapper.userToOutput(savedUser);
     }
 
@@ -46,13 +59,13 @@ public class UserService {
         return userMapper.userToOutputList(user, classOutputDtos);
     }
 
+    // refactor --> remove role and remove change password, add update password from keycloak
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
-
-        if (!Objects.equals(username, userInputEditDto.getUserName())) {
-            validateArgument(userInputEditDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
-        }
-        user.setUserName(userInputEditDto.getUserName());
+        // keycloak
+        KeycloakUserDTO keycloakUserDTO = userMapper.userEditToKeycloakUser(user, userInputEditDto);
+        keycloakService.changePassword(keycloakUserDTO);
+        // database
         user.setDisplayName(userInputEditDto.getDisplayName());
         user.setPassword(userInputEditDto.getPassword());
         User savedUser = userRepository.save(user);
@@ -87,5 +100,32 @@ public class UserService {
                 .stream()
                 .map(classMapper::classToOutput)
                 .toList();
+    }
+
+    public ClassOutputDtoList getClassOverview(String userName) {
+        validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
+        User user = userRepository.findByUserName(userName);
+        validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
+
+        // student only have one class
+        Class classDomain = user.getClasses().get(0);
+
+        return GetClassDtoListUser(classDomain);
+    }
+
+    private ClassOutputDtoList GetClassDtoListUser(Class classDomain) {
+        List<UserOutputDto> userList = new ArrayList<>();
+        if(!classDomain.getUsers().isEmpty()) {
+            userList = classDomain.getUsers().stream()
+                    .map(userMapper::userToOutput)
+                    .collect(Collectors.toList());
+        }
+
+        CourseOutputDto courseOutputDto = null;
+        if(classDomain.getCourse() != null) {
+            courseOutputDto = courseMapper.courseToOutputDto(classDomain.getCourse());
+        }
+
+        return classMapper.classToOutputList(classDomain,userList,courseOutputDto);
     }
 }
