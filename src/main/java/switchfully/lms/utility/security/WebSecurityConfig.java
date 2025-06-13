@@ -31,6 +31,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/classes").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/classes/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
