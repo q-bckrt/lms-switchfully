@@ -3,7 +3,11 @@ package switchfully.lms.service.dto;
 import lombok.Data;
 import java.util.List;
 
-
+/**
+ * Data Transfer Object for Course Output.
+ * This class is used to transfer course data from the server to the client,
+ * and is typically used in response bodies.
+ */
 @Data
 public class CourseOutputDto {
 

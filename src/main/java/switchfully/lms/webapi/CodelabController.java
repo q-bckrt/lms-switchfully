@@ -9,6 +9,13 @@ import switchfully.lms.service.dto.CodelabOutputDto;
 
 import java.util.List;
 
+/**
+ * CodelabController handles HTTP requests related to codelabs.
+ * It allows coaches to create, retrieve, and update codelabs.
+ * Students can retrieve all codelabs and view individual codelabs.
+ *
+ * @see CodelabService
+ */
 @RestController
 @RequestMapping("/codelabs")
 public class CodelabController {
@@ -23,7 +30,12 @@ public class CodelabController {
 
     // METHODS
 
-    // Create
+    /** Create a new codelab.
+     * Only coaches can create codelabs.
+     *
+     * @param codelabInputDto the input data for the new codelab
+     * @return the created codelab as a CodelabOutputDto
+     */
     @PostMapping(consumes = "application/json", produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,7 +45,11 @@ public class CodelabController {
         return codelabOutputDto;
     }
 
-    // Get All
+    /** Get all codelabs.
+     * Both students and coaches can retrieve all codelabs.
+     *
+     * @return a list of all codelabs as CodelabOutputDto
+     */
     @GetMapping(produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -41,7 +57,12 @@ public class CodelabController {
         return codelabService.getAllCodelabs();
     }
 
-    // Get One By ID
+    /** Get a codelab by its ID.
+     * Both students and coaches can retrieve a codelab by its ID.
+     *
+     * @param id the ID of the codelab to retrieve
+     * @return the codelab as a CodelabOutputDto
+     */
     @GetMapping(path = "/{id}", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -49,7 +70,13 @@ public class CodelabController {
         return codelabService.getCodelabById(id);
     }
 
-    // Edit (title, details)
+    /** Edit (title) of a codelab.
+     * Only coaches can update codelabs.
+     *
+     * @param id the ID of the codelab to update
+     * @param codelabInputDto the input data for the updated codelab
+     * @return the updated codelab as a CodelabOutputDto
+     */
     @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
