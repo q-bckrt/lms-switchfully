@@ -3,6 +3,7 @@ package switchfully.lms.service;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.Class;
+import switchfully.lms.domain.Course;
 import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
@@ -10,6 +11,7 @@ import switchfully.lms.service.mapper.ClassMapper;
 import switchfully.lms.service.mapper.CourseMapper;
 import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
+import switchfully.lms.utility.validation.Validation;
 import org.apache.commons.validator.routines.EmailValidator;
 import switchfully.lms.utility.exception.InvalidInputException;
 import switchfully.lms.utility.security.KeycloakService;
@@ -17,10 +19,23 @@ import switchfully.lms.utility.security.KeycloakUserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-
+/**
+ * Service class responsible for handling user-related operations such as registration, profile updates,
+ * and class assignments. <p>
+ *
+ * This service acts as a bridge between controllers and the database, coordinating user creation,
+ * validation, and mapping logic. It interacts with external services (e.g., Keycloak for user management)
+ * and uses various mappers and repositories to convert between domain entities and data transfer objects (DTOs). <p>
+ *
+ * Current functionality includes:
+ * <ul>
+ *   <li>Creating a new student account and saving it to the database</li>
+ *   <li>Updating user profiles and synchronizing password changes with Keycloak</li>
+ *   <li>Assigning users to classes and retrieving some class-related information</li>
+ * </ul>
+ */
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -41,6 +56,14 @@ public class UserService {
         this.courseMapper = courseMapper;
     }
 
+    /** Register a new User on the database and Keycloak using a UserInputDto, the input dto contains a username, last and first name, an email and a password.
+     * Some validation are performed (e.g., username not present in the database, valid email format) then user is first added to keycloak and then on the database.
+     * For now, every user created using this method is a student.
+     * @param userInputDto UserInputDto object,
+     * @see UserMapper,
+     * @see Validation,
+     * @return new UserOutputDto object
+     * */
     public UserOutputDto createNewStudent(UserInputDto userInputDto) {
         UserInputDto validatedUser = validateStudentInput(userInputDto);
 
@@ -53,13 +76,31 @@ public class UserService {
         return userMapper.userToOutput(savedUser);
     }
 
+    /** Get the profile information for a specific user.
+     * Search for the user in the database using its username.
+     * Return the following information: username, display name, email and list of classes the user is part of.
+     * @param username String username used to search the database,
+     * @see UserRepository,
+     * @see UserMapper,
+     * @return new UserOutputDtoList object
+     * */
     public UserOutputDtoList getProfile(String username) {
         User user = userRepository.findByUserName(username);
         List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
         return userMapper.userToOutputList(user, classOutputDtos);
     }
 
-    // refactor --> remove role and remove change password, add update password from keycloak
+    /** Update the profile information for a specific user using a UserInputEditDto object.
+     * Search for the user in the database using its username.
+     * Update first the information on Keycloak (password).
+     * Update second the information on the database (display name).
+     * @param username String username used to search the database,
+     * @param userInputEditDto UserInputEditDto object,
+     * @see UserRepository,
+     * @see UserMapper,
+     * @return new UserOutputDtoList object
+     * */
+    // refactor -->  remove change password on database
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
         // keycloak
@@ -74,6 +115,17 @@ public class UserService {
         return userMapper.userToOutputList(savedUser,classOutputDtos);
     }
 
+    /** Update the list of Class associated with a user, only one class can be added at a time. A class ID and a username must be provided.
+     * Search for the user in the database using its username.
+     * Check if class id is in the database.
+     * Get the class from the database and add it to the list.
+     * @param username String username used to search the database,
+     * @param classId Long id of the class to be added to the User entity,
+     * @see UserRepository,
+     * @see ClassRepository,
+     * @see UserMapper,
+     * @return new UserOutputDtoList object
+     * */
     public UserOutputDtoList updateClassInfo(Long classId, String username) {
         User user = userRepository.findByUserName(username);
         validateArgument(classId,"Class not found in repository", i->!classRepository.existsById(i),InvalidInputException::new);
@@ -86,6 +138,13 @@ public class UserService {
         return userMapper.userToOutputList(savedUser,classOutputDtos);
     }
 
+    /** Validate the UserInputDto content
+     * Check if username or email not already in the database and that the email has the right format.
+     * @param userInputDto UserInputDto to be validated,
+     * @throws IllegalArgumentException if criteria not met,
+     * @see Validation,
+     * @return validated UserInputDto object
+     * */
     private UserInputDto validateStudentInput(UserInputDto userInputDto) {
         validateArgument(userInputDto.getEmail(), "Email already exists in the repository", userRepository::existsByEmail, InvalidInputException::new);
         validateArgument(userInputDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
@@ -94,6 +153,12 @@ public class UserService {
         return userInputDto;
     }
 
+    /** Get the list of classes associated with a user.
+     * Classes returned only contains the title and id of the class.
+     * @param user User from which we want to retrieve the classes,
+     * @see ClassMapper,
+     * @return List of Class
+     * */
     private List<ClassOutputDto> getListOfClasses(User user) {
         List<ClassOutputDto> classOutputDtos;
         return classOutputDtos = user.getClasses()
@@ -102,6 +167,13 @@ public class UserService {
                 .toList();
     }
 
+    /** Get the overview of a class for a user.
+     * Check if both user is present in the database and is a member of a class.
+     * @param userName username use to retrieve a User from the database,
+     * @see UserRepository,
+     * @see Validation,
+     * @return ClassOutputDtoList object
+     * */
     public ClassOutputDtoList getClassOverview(String userName) {
         validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
         User user = userRepository.findByUserName(userName);
@@ -113,6 +185,14 @@ public class UserService {
         return GetClassDtoListUser(classDomain);
     }
 
+    /** Private helper method that gets additional fields used in class mapper method for ClassOutputDtoList, also handles nullpointers
+     * @param classDomain The {@code Class}  domain entity to map
+     * @see Class
+     * @see User
+     * @see Course
+     * @see ClassMapper
+     * @return ClassOutputDtoList object
+     * */
     private ClassOutputDtoList GetClassDtoListUser(Class classDomain) {
         List<UserOutputDto> userList = new ArrayList<>();
         if(!classDomain.getUsers().isEmpty()) {

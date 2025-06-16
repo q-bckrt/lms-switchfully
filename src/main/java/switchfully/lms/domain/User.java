@@ -35,6 +35,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    /** class of type List<Class> holds the class entities from the database that are linked to this user, it initialized as null upon user creation and is set later.
+     * @see Class */
     @ManyToMany
     @JoinTable(name="users_classes",
     joinColumns = {@JoinColumn(name = "user_id")},
@@ -110,6 +112,10 @@ public class User {
         this.classes = classes;
     }
 
+    /** Adds a Class to the classes field.
+     *
+     * @param classDomain
+     */
     public void addClasses(Class classDomain) {
         this.classes.add(classDomain);
     }
