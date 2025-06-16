@@ -10,11 +10,13 @@ public class UserCodelab {
     private UserCodelabId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "codelab_id", insertable = false, updatable = false)
+    @MapsId("codelabId")
+    @JoinColumn(name = "codelab_id")
     private Codelab codelab;
 
     @Column(name="progress", nullable=false)
