@@ -26,6 +26,7 @@ public class Validation {
      * @param exceptionMessage The exception message to pass to the IllegalArgumentException thrown when invalid
      * @param invalidWhen the predicate that checks for validity of {@code argumentToValidate}, exception is thrown when predicate returns true
      * @throws IllegalArgumentException if {@code argumentToValidate} is invalid after {@code invalidWhen} returns true
+     * @return valid argument
      * */
     public static <T> T validateArgument(T argumentToValidate, String exceptionMessage, Predicate<T> invalidWhen) throws IllegalArgumentException {
         if(invalidWhen.test(argumentToValidate)){
@@ -40,6 +41,7 @@ public class Validation {
      * @param exceptionMessage The exception message to pass to the IllegalArgumentException when invalid
      * @param invalidWhen the Boolean that checks for validity of {@code argumentToValidate}, exception is thrown when true
      * @throws IllegalArgumentException if {@code argumentToValidate} is invalid after {@code invalidWhen} return true
+     * @return valid argument
      * */
     public static <T> T validateArgumentWithBooleanCondition(T argumentToValidate, String exceptionMessage, Boolean invalidWhen) throws IllegalArgumentException {
         if(invalidWhen){
@@ -55,6 +57,7 @@ public class Validation {
      * @param invalidWhen the Boolean that checks for validity of {@code argumentToValidate}, exception is thrown when true
      * @param exceptionFunction Function that applies {@code exceptionMessage} to the desired Child class of RuntimeException
      * @throws RuntimeException if {@code argumentToValidate} is invalid after {@code invalidWhen} return true
+     * @return valid argument
      * */
     public static <T> T validateArgument(T argumentToValidate, String exceptionMessage, Predicate<T> invalidWhen, Function<String,RuntimeException> exceptionFunction) throws RuntimeException {
         if(invalidWhen.test(argumentToValidate)){
@@ -70,6 +73,7 @@ public class Validation {
      * @param invalidWhen the predicate that checks for validity of {@code argumentToValidate}, exception is thrown when predicate returns true
      * @param exceptionFunction Function that applies {@code exceptionMessage} to the desired Child class of RuntimeException
      * @throws RuntimeException if {@code argumentToValidate} is invalid after {@code invalidWhen} return true
+     * @return valid argument
      * */
     public static <T> T validateArgumentWithBooleanCondition(T argumentToValidate, String exceptionMessage, Boolean invalidWhen, Function<String,RuntimeException> exceptionFunction) throws RuntimeException {
         if(invalidWhen){
@@ -84,6 +88,7 @@ public class Validation {
      * @param exceptionMessage The exception message to apply to the child class of RuntimeException in {@code exceptionFunction}
      * @param exceptionFunction Function that applies {@code exceptionMessage} to the desired Child class of RuntimeException
      * @throws RuntimeException if {@code string} is null or blank
+     * @return valid argument
      * */
     public static String validateNonBlank(String string, String exceptionMessage, Function<String, RuntimeException> exceptionFunction) throws RuntimeException {
         return validateArgumentWithBooleanCondition(string, exceptionMessage,string==null||string.isBlank(),exceptionFunction);
@@ -93,6 +98,7 @@ public class Validation {
      * @param argumentToValidate The argument to validate
      * @param logMessage The warning to log when {@code argumentToValidate} does not meet the condition
      * @param warnWhen the predicate that checks if {@code argumentToValidate} meets the condition, message is logged when predicate returns true
+     * @return argument
      */
     public static <T> T checkArgumentAndLogWarn(T argumentToValidate, String logMessage, Predicate<T> warnWhen) {
         if(warnWhen.test(argumentToValidate)){
@@ -105,6 +111,7 @@ public class Validation {
      * @param argumentToValidate The argument to validate
      * @param logMessage The warning to log when {@code argumentToValidate} does not meet the condition
      * @param warnWhen the Boolean that checks if {@code argumentToValidate} meets the condition, message is logged when true
+     * @return argument
      */
     public static <T> T logWarningIfConditionMet(T argumentToValidate, String logMessage, boolean warnWhen) {
         if(warnWhen){
