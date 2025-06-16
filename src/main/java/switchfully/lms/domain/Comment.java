@@ -29,9 +29,11 @@ public class Comment {
     LocalDateTime timeStamp;
 
     public Comment() {}
-    public Comment(User user, Codelab codelab) {
+    public Comment(User user, Codelab codelab, String comment) {
         this.user = user;
         this.codelab = codelab;
+        this.comment = comment;
+        this.timeStamp = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -54,6 +56,11 @@ public class Comment {
         return timeStamp;
     }
 
+    /** set the comment field once, only when its null or empty
+     *
+     * @param text the text content of the comment
+     * @return the text content
+     */
     public String setTextOnce(String text) {
         if(this.comment == null || this.comment.isEmpty()) {
             this.comment = text;

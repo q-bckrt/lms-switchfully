@@ -4,8 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.CodelabService;
+import switchfully.lms.service.CommentService;
 import switchfully.lms.service.dto.CodelabInputDto;
 import switchfully.lms.service.dto.CodelabOutputDto;
+import switchfully.lms.service.dto.CommentInputDto;
+import switchfully.lms.service.dto.CommentOutputDto;
 
 import java.util.List;
 
@@ -22,10 +25,13 @@ public class CodelabController {
 
     // FIELDS
     private final CodelabService codelabService;
+    private final CommentService commentService;
 
     // CONSTRUCTOR
-    public CodelabController(CodelabService codelabService) {
+    public CodelabController(CodelabService codelabService, CommentService commentService) {
+
         this.codelabService = codelabService;
+        this.commentService = commentService;
     }
 
     // METHODS
@@ -82,6 +88,21 @@ public class CodelabController {
     @ResponseStatus(HttpStatus.OK)
     public CodelabOutputDto updateCodelab(@PathVariable Long id, @RequestBody CodelabInputDto codelabInputDto) {
         return codelabService.updateCodelab(id, codelabInputDto);
+    }
+
+    /** Post a new comment under a codelab.
+     * coaches and students can post comments.
+     *
+     * @param commentInputDto the input data for the new comment
+     * @return the created comment as a CommentOutputDto
+     */
+    @PostMapping(path = "/{codelabId}/comments/{username}", consumes = "application/json", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentOutputDto postComment(@RequestBody CommentInputDto commentInputDto,
+                                        @PathVariable Long codelabId,
+                                        @PathVariable String username) {
+        return commentService.postComment(commentInputDto, username, codelabId);
     }
 
 }
