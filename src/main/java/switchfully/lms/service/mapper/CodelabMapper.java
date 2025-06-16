@@ -22,11 +22,6 @@ public class CodelabMapper {
     private final SubmoduleRepository submoduleRepository;
 
     // CONSTRUCTOR
-    /**
-     * Creates a new CodelabMapper with the specified repository.
-     *
-     * @param submoduleRepository Repository for accessing Submodule data
-     */
     public CodelabMapper(SubmoduleRepository submoduleRepository) {
         this.submoduleRepository = submoduleRepository;
     }
