@@ -9,6 +9,13 @@ import switchfully.lms.service.dto.CourseOutputDto;
 
 import java.util.List;
 
+/**
+ * CourseController handles HTTP requests related to courses.
+ * It allows coaches to create, retrieve, and update courses.
+ * Students can retrieve all courses and view individual courses.
+ *
+ * @see CourseService
+ */
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
@@ -23,14 +30,26 @@ public class CourseController {
 
     // METHODS
 
-    // Create
+    /**
+     * Create a new course.
+     * Only coaches can create courses.
+     *
+     * @param courseInputDto the input data for the new course
+     * @return the created course as a CourseOutputDto
+     */
     @PostMapping(consumes = "application/json", produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.CREATED)
     public CourseOutputDto createCourse(@RequestBody CourseInputDto courseInputDto) {
         return courseService.createCourse(courseInputDto);
     }
-    // Get All
+
+    /**
+     * Get all courses.
+     * Both students and coaches can retrieve all courses.
+     *
+     * @return a list of all courses as CourseOutputDto
+     */
     @GetMapping(produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -39,7 +58,12 @@ public class CourseController {
         return courseService.getAllCourses();
     }
 
-    // Get One By ID
+    /** Get a course by its ID.
+     * Both students and coaches can retrieve a course by its ID.
+     *
+     * @param id the ID of the course to retrieve
+     * @return the course as a CourseOutputDto
+     */
     @GetMapping(path = "/{id}", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -47,7 +71,13 @@ public class CourseController {
         return courseService.getCourseById(id);
     }
 
-    // Edit (title)
+    /** Edit (title) of a course.
+     * Only coaches can update courses.
+     *
+     * @param id the ID of the course to update
+     * @param courseInputDto the input data for the updated course
+     * @return the updated course as a CourseOutputDto
+     */
     @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -55,7 +85,13 @@ public class CourseController {
         return courseService.updateCourse(id, courseInputDto);
     }
 
-    // Add Module By ID
+    /** Add a module to a course.
+     * Only coaches can add modules to courses.
+     *
+     * @param courseId the ID of the course to which the module will be added
+     * @param moduleId the ID of the module to add
+     * @return the updated course as a CourseOutputDto
+     */
     @PutMapping(path = "/{courseId}/modules/{moduleId}", produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)

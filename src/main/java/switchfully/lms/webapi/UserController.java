@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.UserService;
 import switchfully.lms.service.dto.*;
 
+/**
+ * REST controller for managing user-related operations such as registration, profile updates, and class info retrieval.
+ * <p>
+ * Handles incoming HTTP requests and delegates processing to {@link UserService}.
+ */
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/users")
@@ -17,12 +22,24 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Registers a new student user.
+     *
+     * @param userInputDto DTO containing the student's registration information
+     * @return the created user details
+     */
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public UserOutputDto registerAsStudent(@RequestBody UserInputDto userInputDto) {
         return userService.createNewStudent(userInputDto);
     }
 
+    /**
+     * Get information for the profile page.
+     *
+     * @param username username of the user we need to profile info for
+     * @return username, display name, email and list of classes
+     */
     @GetMapping(path="/{username}",produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -30,6 +47,13 @@ public class UserController {
         return userService.getProfile(username);
     }
 
+    /**
+     * Edit profile information, only the password and the display name can be changed.
+     *
+     * @param username username of user who wants to change its profile info,
+     * @param userInputEditDto dto with info that need to be changed
+     * @return updated profile info (only the display name is returned, for security reasons)
+     */
     @PutMapping(path="/{username}/edit",consumes = "application/json",produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -38,6 +62,14 @@ public class UserController {
         return userService.updateProfile(userInputEditDto,username);
     }
 
+    /**
+     * Add class to which the user belongs to. <p>
+     *
+     * Only one class can be added at a time.
+     * @param username username of user who wants to change its profile info,
+     * @param classId ID of the class that need to be added
+     * @return update profile info
+     */
     @PutMapping(path="/{username}/edit/class",produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -46,6 +78,12 @@ public class UserController {
         return userService.updateClassInfo(classId,username);
     }
 
+    /**
+     * User get the overview of the class(es) he belongs to.
+     *
+     * @param userName username of the user who wants to see the class overview
+     * @return the class overview
+     */
     @GetMapping(path = "/{userName}/class-overview", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
