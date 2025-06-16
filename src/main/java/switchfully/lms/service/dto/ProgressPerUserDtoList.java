@@ -24,4 +24,12 @@ public class ProgressPerUserDtoList {
     public List<ProgressPerUserDto> getProgressPerUserDtoList() {
         return progressPerUserDtoList;
     }
+
+    @Override
+    public String toString() {
+        return "ProgressPerUserDtoList{" +
+                "username='" + username + '\'' +
+                ", progressPerUserDtoList=" + progressPerUserDtoList +
+                '}';
+    }
 }

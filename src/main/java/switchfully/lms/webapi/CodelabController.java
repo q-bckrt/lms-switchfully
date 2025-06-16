@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.CodelabService;
 import switchfully.lms.service.dto.CodelabInputDto;
 import switchfully.lms.service.dto.CodelabOutputDto;
+import switchfully.lms.service.dto.ProgressPerCodelabDtoList;
 
 import java.util.List;
 
@@ -82,6 +83,13 @@ public class CodelabController {
     @ResponseStatus(HttpStatus.OK)
     public CodelabOutputDto updateCodelab(@PathVariable Long id, @RequestBody CodelabInputDto codelabInputDto) {
         return codelabService.updateCodelab(id, codelabInputDto);
+    }
+
+    @GetMapping(path = "/{id}/user-progress-overview", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public ProgressPerCodelabDtoList getCodelabProgressPerCodelab(@PathVariable Long id) {
+        return codelabService.getCodelabProgressPerCodelab(id);
     }
 
 }

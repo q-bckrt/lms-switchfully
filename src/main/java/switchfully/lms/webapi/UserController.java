@@ -98,7 +98,7 @@ public class UserController {
      * @param username username of the user who wants to see the class overview
      * @return the class overview
      */
-    @GetMapping(path = "/{username}/codelabs-overview", produces = "application/json")
+    @GetMapping(path = "/{username}/codelabs-progress-overview", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
     public ProgressPerUserDtoList getCodelabProgressPerUser(@PathVariable String username) {

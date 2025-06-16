@@ -177,9 +177,9 @@ public class UserService {
      * */
     public ProgressPerUserDtoList getCodelabProgressPerUser(String username) {
         User user = userRepository.findByUserName(username);
-        List<UserCodelab> codelabList = userCodelabRepository.findByIdUserId(user.getId());
+        List<UserCodelab> userCodelabList = userCodelabRepository.findByIdUserId(user.getId());
 
-        List<ProgressPerUserDto> progressDtos = codelabList.stream()
+        List<ProgressPerUserDto> progressDtos = userCodelabList.stream()
                 .map(userCodelabMapper::userCodelabToProgressPerUserDto
                 )
                 .toList();

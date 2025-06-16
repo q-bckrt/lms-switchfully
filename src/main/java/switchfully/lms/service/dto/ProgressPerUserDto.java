@@ -22,5 +22,13 @@ public class ProgressPerUserDto {
     public ProgressLevel getProgressLevel() {
         return progressLevel;
     }
+
+    @Override
+    public String toString() {
+        return "ProgressPerUserDto{" +
+                "codelabTitle='" + codelabTitle + '\'' +
+                ", progressLevel=" + progressLevel +
+                '}';
+    }
 }
 
