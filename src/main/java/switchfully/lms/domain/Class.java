@@ -19,10 +19,14 @@ public class Class {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
+    /** course of type Course holds the course entity from the database that is linked to this class, it initialized as null upon class creation and is set later.
+     * @see Course */
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 
+    /** users of type List<User> holds the users entities from the database that are enrolled in this class, it initialized as null upon class creation and is set later at multiple stages.
+     * @see User */
     @ManyToMany(mappedBy = "classes", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> users = new ArrayList<>();
 
@@ -47,19 +51,22 @@ public class Class {
         return course;
     }
 
+    /** Adds a User to the users field, only if the user has UserRole.COACH as role
+     * @param coach User object with Coach role
+     * @throws IllegalArgumentException if {@code coach} does not have UserRole.COACH
+     * */
     public User addCoach(User coach) {
         validateArgument(coach,"User must be of type COACH",u->!u.getRole().equals(UserRole.COACH));
         this.users.add(coach);
         return coach;
     }
 
+    /** setter for course field in this class
+     * @param course Course object to set course field to
+     * */
     public Course setCourse(Course course) {
         this.course = course;
         return course;
-    }
-
-    public void clearUsersForTest() {
-        this.users.clear();
     }
 
     @Override

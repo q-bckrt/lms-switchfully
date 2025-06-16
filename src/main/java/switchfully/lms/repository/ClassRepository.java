@@ -6,5 +6,8 @@ import switchfully.lms.domain.Class;
 
 @Repository
 public interface ClassRepository extends JpaRepository<Class, Long> {
+    /** Searches the database for a class the provided title string
+     * @param title title to query class repo with
+     * */
     boolean existsByTitle(String title);
 }
