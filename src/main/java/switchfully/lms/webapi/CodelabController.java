@@ -10,37 +10,31 @@ import switchfully.lms.service.dto.CodelabOutputDto;
 import java.util.List;
 
 /**
- * REST controller for managing Codelabs.
- * Provides endpoints for creating, retrieving, and updating Codelabs.
+ * CodelabController handles HTTP requests related to codelabs.
+ * It allows coaches to create, retrieve, and update codelabs.
+ * Students can retrieve all codelabs and view individual codelabs.
+ *
+ * @see CodelabService
  */
 @RestController
 @RequestMapping("/codelabs")
 public class CodelabController {
 
     // FIELDS
-    /**
-     * Service for handling Codelab business logic.
-     */
     private final CodelabService codelabService;
 
     // CONSTRUCTOR
-    /**
-     * Creates a new CodelabController with the specified service.
-     *
-     * @param codelabService Service for handling Codelab business logic
-     */
     public CodelabController(CodelabService codelabService) {
         this.codelabService = codelabService;
     }
 
     // METHODS
 
-    /**
-     * Creates a new Codelab.
-     * Only users with the COACH authority can access this endpoint.
+    /** Create a new codelab.
+     * Only coaches can create codelabs.
      *
-     * @param codelabInputDto The DTO containing the data for the new Codelab
-     * @return A DTO containing the data of the created Codelab, including its generated ID
+     * @param codelabInputDto the input data for the new codelab
+     * @return the created codelab as a CodelabOutputDto
      */
     @PostMapping(consumes = "application/json", produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
@@ -51,11 +45,10 @@ public class CodelabController {
         return codelabOutputDto;
     }
 
-    /**
-     * Retrieves all Codelabs.
-     * Users with either STUDENT or COACH authority can access this endpoint.
+    /** Get all codelabs.
+     * Both students and coaches can retrieve all codelabs.
      *
-     * @return A list of DTOs containing the data of all Codelabs
+     * @return a list of all codelabs as CodelabOutputDto
      */
     @GetMapping(produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
@@ -64,13 +57,11 @@ public class CodelabController {
         return codelabService.getAllCodelabs();
     }
 
-    /**
-     * Retrieves a specific Codelab by its ID.
-     * Users with either STUDENT or COACH authority can access this endpoint.
+    /** Get a codelab by its ID.
+     * Both students and coaches can retrieve a codelab by its ID.
      *
-     * @param id The ID of the Codelab to retrieve
-     * @return A DTO containing the data of the requested Codelab
-     * @throws IllegalArgumentException if no Codelab with the specified ID exists
+     * @param id the ID of the codelab to retrieve
+     * @return the codelab as a CodelabOutputDto
      */
     @GetMapping(path = "/{id}", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
@@ -79,14 +70,12 @@ public class CodelabController {
         return codelabService.getCodelabById(id);
     }
 
-    /**
-     * Updates an existing Codelab with the provided data.
-     * Only users with the COACH authority can access this endpoint.
+    /** Edit (title) of a codelab.
+     * Only coaches can update codelabs.
      *
-     * @param id The ID of the Codelab to update
-     * @param codelabInputDto The DTO containing the updated data
-     * @return A DTO containing the data of the updated Codelab
-     * @throws IllegalArgumentException if no Codelab with the specified ID exists
+     * @param id the ID of the codelab to update
+     * @param codelabInputDto the input data for the updated codelab
+     * @return the updated codelab as a CodelabOutputDto
      */
     @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
     @PreAuthorize("hasAuthority('COACH')")

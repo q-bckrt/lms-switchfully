@@ -9,6 +9,13 @@ import switchfully.lms.service.dto.ModuleOutputDto;
 
 import java.util.List;
 
+/**
+ * ModuleController handles HTTP requests related to modules.
+ * It allows coaches to create, retrieve, and update modules.
+ * Students can retrieve all modules and view individual modules.
+ *
+ * @see ModuleService
+ */
 @RestController
 @RequestMapping("/modules")
 public class ModuleController {
@@ -23,10 +30,12 @@ public class ModuleController {
 
     // METHODS
 
-    // Create
-    //!\\ Front-End must get the ID of the created module from the response,
-    // And use the addModule endpoint in CourseController to associate it with a course
-    // because a module can never be "orphaned"
+    /** Create a new module.
+     * Only coaches can create modules.
+     *
+     * @param moduleInputDto the input data for the new module
+     * @return the created module as a ModuleOutputDto
+     */
     @PostMapping(consumes = "application/json", produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -34,7 +43,11 @@ public class ModuleController {
         return moduleService.createModule(moduleInputDto);
     }
 
-    // Get All
+    /** Get all modules.
+     * Both students and coaches can retrieve all modules.
+     *
+     * @return a list of all modules as ModuleOutputDto
+     */
     @GetMapping(produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -42,7 +55,12 @@ public class ModuleController {
         return moduleService.getAllModules();
     }
 
-    // Get One By ID
+    /** Get a module by its ID.
+     * Both students and coaches can retrieve a module by its ID.
+     *
+     * @param id the ID of the module to retrieve
+     * @return the module as a ModuleOutputDto
+     */
     @GetMapping(path = "/{id}", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -50,7 +68,13 @@ public class ModuleController {
         return moduleService.getModuleById(id);
     }
 
-    // Edit (title)
+    /** Update a module by its ID.
+     * Only coaches can update modules.
+     *
+     * @param id the ID of the module to update
+     * @param moduleInputDto the input data for the updated module
+     * @return the updated module as a ModuleOutputDto
+     */
     @PutMapping(path = "/{id}", produces = "application/json", consumes = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
@@ -58,7 +82,13 @@ public class ModuleController {
         return moduleService.updateModule(id, moduleInputDto);
     }
 
-    // Add Submodule By ID
+    /** Add a submodule to a module.
+     * Only coaches can add submodules to modules.
+     *
+     * @param moduleId the ID of the module to which the submodule will be added
+     * @param submoduleId the ID of the submodule to add
+     * @return the updated module with the added submodule as a ModuleOutputDto
+     */
     @PutMapping(path="/{moduleId}/submodules/{submoduleId}", produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
