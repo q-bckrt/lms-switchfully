@@ -138,6 +138,24 @@ public class UserService {
         return userMapper.userToOutputList(savedUser,classOutputDtos);
     }
 
+    /** Get the overview of a class for a user.
+     * Check if both user is present in the database and is a member of a class.
+     * @param userName username use to retrieve a User from the database,
+     * @see UserRepository,
+     * @see Validation,
+     * @return ClassOutputDtoList object
+     * */
+    public ClassOutputDtoList getClassOverview(String userName) {
+        validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
+        User user = userRepository.findByUserName(userName);
+        validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
+
+        // student only have one class
+        Class classDomain = user.getClasses().get(0);
+
+        return GetClassDtoListUser(classDomain);
+    }
+
     /** Validate the UserInputDto content
      * Check if username or email not already in the database and that the email has the right format.
      * @param userInputDto UserInputDto to be validated,
@@ -165,24 +183,6 @@ public class UserService {
                 .stream()
                 .map(classMapper::classToOutput)
                 .toList();
-    }
-
-    /** Get the overview of a class for a user.
-     * Check if both user is present in the database and is a member of a class.
-     * @param userName username use to retrieve a User from the database,
-     * @see UserRepository,
-     * @see Validation,
-     * @return ClassOutputDtoList object
-     * */
-    public ClassOutputDtoList getClassOverview(String userName) {
-        validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
-        User user = userRepository.findByUserName(userName);
-        validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
-
-        // student only have one class
-        Class classDomain = user.getClasses().get(0);
-
-        return GetClassDtoListUser(classDomain);
     }
 
     /** Private helper method that gets additional fields used in class mapper method for ClassOutputDtoList, also handles nullpointers
