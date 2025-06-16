@@ -81,15 +81,29 @@ public class UserController {
     /**
      * User get the overview of the class(es) he belongs to.
      *
-     * @param userName username of the user who wants to see the class overview
+     * @param username username of the user who wants to see the class overview
      * @return the class overview
      */
-    @GetMapping(path = "/{userName}/class-overview", produces = "application/json")
+    @GetMapping(path = "/{username}/class-overview", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
-    public ClassOutputDtoList getClassOverview(@PathVariable String userName) {
+    public ClassOutputDtoList getClassOverview(@PathVariable String username) {
         //AUTHORIZE
-        return userService.getClassOverview(userName);
+        return userService.getClassOverview(username);
+    }
+
+    /**
+     * User get the overview of all of his codelabs.
+     *
+     * @param username username of the user who wants to see the class overview
+     * @return the class overview
+     */
+    @GetMapping(path = "/{username}/codelabs-overview", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public ProgressPerUserDtoList getCodelabProgressPerUser(@PathVariable String username) {
+        //AUTHORIZE
+        return userService.getCodelabProgressPerUser(username);
     }
 
 }
