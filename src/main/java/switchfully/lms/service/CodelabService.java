@@ -10,30 +10,18 @@ import switchfully.lms.service.mapper.CodelabMapper;
 import java.util.List;
 
 /**
- * Service class that handles business logic for Codelabs.
- * Provides methods for creating, retrieving, and updating Codelabs.
+ * Service class for managing codelabs.
+ * Provides methods to create, retrieve, update, and manage codelabs.
  */
 @Service
 public class CodelabService {
 
     // FIELDS
-    /**
-     * Repository for accessing Codelab data in the database.
-     */
     private final CodelabRepository codelabRepository;
 
-    /**
-     * Mapper for converting between Codelab domain objects and DTOs.
-     */
     private final CodelabMapper codelabMapper;
 
     // CONSTRUCTOR
-    /**
-     * Creates a new CodelabService with the specified repository and mapper.
-     *
-     * @param codelabRepository Repository for accessing Codelab data
-     * @param codelabMapper Mapper for converting between Codelab domain objects and DTOs
-     */
     public CodelabService(CodelabRepository codelabRepository, CodelabMapper codelabMapper) {
         this.codelabRepository = codelabRepository;
         this.codelabMapper = codelabMapper;
@@ -41,25 +29,23 @@ public class CodelabService {
 
     // METHODS
     /**
-     * Creates a new Codelab based on the provided input data.
-     * The Codelab is saved to the database and associated with its parent Submodule.
+     * Creates a new codelab based on the provided input DTO, and associates it with the parent submodule
+     * that is specified in the input DTO.
      *
-     * @param codelabInputDto The DTO containing the data for the new Codelab
-     * @return A DTO containing the data of the created Codelab, including its generated ID
+     * @param codelabInputDto the input DTO containing codelab details
+     * @return the created codelab as an output DTO
      */
     public CodelabOutputDto createCodelab(CodelabInputDto codelabInputDto) {
         Codelab codelab = codelabMapper.inputDtoToCodelab(codelabInputDto);
-        System.out.println("Creating codelab: " + codelab.getTitle());
         Codelab saved = codelabRepository.save(codelab);
-        System.out.println("Codelab saved with description: " + saved.getDetails());
         saved.getParentSubmodule().getChildCodelabs().add(saved);
         return codelabMapper.codelabToOutputDto(saved);
     }
 
     /**
-     * Retrieves all Codelabs from the database.
+     * Retrieves all codelabs.
      *
-     * @return A list of DTOs containing the data of all Codelabs
+     * @return a list of all codelabs as output DTOs
      */
     public List<CodelabOutputDto> getAllCodelabs() {
         return codelabRepository
@@ -70,11 +56,11 @@ public class CodelabService {
     }
 
     /**
-     * Retrieves a specific Codelab by its ID.
+     * Retrieves a codelab by its ID.
      *
-     * @param id The ID of the Codelab to retrieve
-     * @return A DTO containing the data of the requested Codelab
-     * @throws IllegalArgumentException if no Codelab with the specified ID exists
+     * @param id the ID of the codelab to retrieve
+     * @return the codelab as an output DTO
+     * @throws IllegalArgumentException if no codelab is found with the given ID
      */
     public CodelabOutputDto getCodelabById(Long id) {
         Codelab codelab = codelabRepository.findById(id)
@@ -83,12 +69,12 @@ public class CodelabService {
     }
 
     /**
-     * Updates an existing Codelab with the provided data.
+     * Updates an existing codelab with the provided input DTO.
      *
-     * @param id The ID of the Codelab to update
-     * @param codelabInputDto The DTO containing the updated data
-     * @return A DTO containing the data of the updated Codelab
-     * @throws IllegalArgumentException if no Codelab with the specified ID exists
+     * @param id              the ID of the codelab to update
+     * @param codelabInputDto the input DTO containing updated codelab details
+     * @return the updated codelab as an output DTO
+     * @throws IllegalArgumentException if no codelab is found with the given ID
      */
     public CodelabOutputDto updateCodelab(Long id, CodelabInputDto codelabInputDto) {
         Codelab codelab = codelabRepository.findById(id)
