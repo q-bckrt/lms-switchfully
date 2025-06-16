@@ -86,7 +86,7 @@ public class CodelabController {
     }
 
     @GetMapping(path = "/{id}/user-progress-overview", produces = "application/json")
-    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)
     public ProgressPerCodelabDtoList getCodelabProgressPerCodelab(@PathVariable Long id) {
         return codelabService.getCodelabProgressPerCodelab(id);
