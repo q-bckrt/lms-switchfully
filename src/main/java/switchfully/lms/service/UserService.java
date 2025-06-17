@@ -1,10 +1,8 @@
 package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
-import switchfully.lms.domain.User;
+import switchfully.lms.domain.*;
 import switchfully.lms.domain.Class;
-import switchfully.lms.domain.Course;
-import switchfully.lms.domain.UserCodelab;
 import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.UserCodelabRepository;
@@ -22,6 +20,7 @@ import switchfully.lms.utility.security.KeycloakService;
 import switchfully.lms.utility.security.KeycloakUserDTO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -192,6 +191,22 @@ public class UserService {
 
         return userCodelabMapper.usernameAndProgressPerUserDtoToProgressPerUserDtoList(username,progressDtos);
 
+    }
+
+
+    public List<String> getProgressLevels() {
+        return Arrays.stream(ProgressLevel.values()).map(Enum::name).collect(Collectors.toList());
+    }
+
+    public boolean updateProgressLevel(String userName, Long codelabId, String progressLevel) {
+        validateArgument(userName,"User with username "+userName+" not found in database",u->!userRepository.existsByUserName(u),InvalidInputException::new);
+        User user = userRepository.findByUserName(userName);
+        UserCodelabId userCodelabId = new UserCodelabId(user.getId(),codelabId);
+        UserCodelab userCodelab = userCodelabRepository.findById(userCodelabId).orElseThrow(() -> new InvalidInputException("This user and codelab pair does not exist."));
+        userCodelab.setProgressLevel(ProgressLevel.valueOf(progressLevel.toUpperCase()));
+        userCodelabRepository.save(userCodelab);
+
+        return true;
     }
 
     /** Validate the UserInputDto content

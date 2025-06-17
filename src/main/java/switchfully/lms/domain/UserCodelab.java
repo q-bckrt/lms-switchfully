@@ -48,4 +48,8 @@ public class UserCodelab {
     public ProgressLevel getProgressLevel() {
         return progressLevel;
     }
+
+    public void setProgressLevel(ProgressLevel progressLevel) {
+        this.progressLevel = progressLevel;
+    }
 }

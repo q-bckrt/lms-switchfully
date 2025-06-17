@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.UserService;
 import switchfully.lms.service.dto.*;
 
+import java.util.List;
+
 /**
  * REST controller for managing user-related operations such as registration, profile updates, and class info retrieval.
  * <p>
@@ -105,5 +107,25 @@ public class UserController {
         //AUTHORIZE
         return userService.getCodelabProgressPerUser(username);
     }
+
+    @GetMapping(path = "/progress-levels", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getCodelabProgressPerUser() {
+        //AUTHORIZE
+        return userService.getProgressLevels();
+    }
+
+    @PutMapping(path="/{username}/edit/codelab/{codelabId}",produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    //only student or student and coach?
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean progressLevel(@PathVariable String username,
+                                 @PathVariable Long codelabId,
+                                 @RequestParam (name = "progressLevel", required = true) String progressLevel) {
+        return userService.updateProgressLevel(username,codelabId,progressLevel);
+    }
+
+
+
 
 }
