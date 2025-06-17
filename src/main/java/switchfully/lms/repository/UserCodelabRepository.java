@@ -15,6 +15,7 @@ public interface UserCodelabRepository extends JpaRepository<UserCodelab, UserCo
     List<UserCodelab> findByIdCodelabId(Long codelabId);
 
     Boolean existsByUserIdAndCodelabId(Long userId, Long codelabId);
+    Boolean existsByUserId(Long userId);
 
     @Query("SELECT uc FROM UserCodelab uc WHERE uc.user.role = :role AND uc.codelab.id = :codelabId")
     List<UserCodelab> findByUserRoleCodelabId(@Param("role") UserRole role, @Param("codelabId") Long codelabId);
