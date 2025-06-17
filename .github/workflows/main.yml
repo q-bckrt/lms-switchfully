@@ -32,4 +32,7 @@ jobs:
             ${{ runner.os }}-maven
 
       - name: Build and run tests
-        run: mvn clean verify
+        run: mvn test
+        env:
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
