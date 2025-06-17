@@ -81,11 +81,8 @@ public class CommentService {
         validateNonBlank(commentInputDto.getComment(),"Cannot post blank comments",InvalidInputException::new);
         validateArgument(username,"username " +username +" not found in repository",u->!userRepository.existsByUserName(u), InvalidInputException::new);
 
-        //A COACH CAN ADDA COMMENT TO A CODELAB --> THIS IMPLEIS THAT A COACH ALSO HAS PROGRESS IN A CODELAB SINCE USERS CODELAB LINK MUST
-        //EXIST FOR A USER TO BE ABLE TO PERSIST A COMMENT
         User user = userRepository.findByUserName(username);
-        //ADD EXISTS BY USER ID IN USERCODELABREPO!!!!!!
-        //validateArgument(user, "The codelab is not linked to this user",u->userCodelabRepository.existsByUserId,InvalidInputException::new);
+        validateArgument(user, "The codelab is not linked to this user",u->userCodelabRepository.existsByUserIdAndCodelabId(u.getId(),codelabId),InvalidInputException::new);
 
         Codelab codelab = codelabRepository.findById(codelabId).orElseThrow(() -> new InvalidInputException("code lab " +codelabId+ " not found"));
         Comment comment = commentMapper.inputToComment(user, codelab, commentInputDto);
