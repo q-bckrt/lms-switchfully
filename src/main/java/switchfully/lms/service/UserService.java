@@ -51,11 +51,13 @@ public class UserService {
     private final UserCodelabMapper userCodelabMapper;
     private final UserCodelabRepository userCodelabRepository;
     private final CodelabRepository codelabRepository;
+    private final UserCodelabService userCodelabService;
 
     public UserService(UserRepository userRepository, ClassRepository classRepository,
                        UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService,
                        CourseMapper courseMapper, UserCodelabMapper userCodelabMapper,
-                       UserCodelabRepository userCodelabRepository, CodelabRepository codelabRepository) {
+                       UserCodelabRepository userCodelabRepository, CodelabRepository codelabRepository,
+                       UserCodelabService userCodelabService) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
         this.userMapper = userMapper;
@@ -65,6 +67,7 @@ public class UserService {
         this.userCodelabMapper = userCodelabMapper;
         this.userCodelabRepository = userCodelabRepository;
         this.codelabRepository = codelabRepository;
+        this.userCodelabService = userCodelabService;
     }
 
     /** Register a new User on the database and Keycloak using a UserInputDto, the input dto contains a username, last and first name, an email and a password.
@@ -143,6 +146,9 @@ public class UserService {
         Class classDomain = classRepository.findById(classId).get();
         user.addClasses(classDomain);
         User savedUser = userRepository.save(user);
+
+        //update link between user and codelab
+        userCodelabService.updateLinkBetweenUserAndCodelabWithClassId(savedUser, classId);
 
         List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
 

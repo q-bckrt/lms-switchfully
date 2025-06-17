@@ -3,6 +3,7 @@ package switchfully.lms.service;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.Codelab;
 import switchfully.lms.domain.UserCodelab;
+import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.service.dto.CodelabInputDto;
@@ -28,13 +29,17 @@ public class CodelabService {
     private final CodelabMapper codelabMapper;
     private final UserCodelabMapper userCodelabMapper;
 
+    private final UserCodelabService userCodelabService;
+
     // CONSTRUCTOR
     public CodelabService(CodelabRepository codelabRepository, CodelabMapper codelabMapper,
-                          UserCodelabRepository userCodelabRepository, UserCodelabMapper userCodelabMapper) {
+                          UserCodelabRepository userCodelabRepository, UserCodelabMapper userCodelabMapper,
+                          UserCodelabService userCodelabService) {
         this.codelabRepository = codelabRepository;
         this.codelabMapper = codelabMapper;
         this.userCodelabRepository = userCodelabRepository;
         this.userCodelabMapper = userCodelabMapper;
+        this.userCodelabService = userCodelabService;
     }
 
     // METHODS
@@ -48,7 +53,9 @@ public class CodelabService {
     public CodelabOutputDto createCodelab(CodelabInputDto codelabInputDto) {
         Codelab codelab = codelabMapper.inputDtoToCodelab(codelabInputDto);
         Codelab saved = codelabRepository.save(codelab);
-        saved.getParentSubmodule().getChildCodelabs().add(saved);
+        saved.getParentSubmodule().addChildCodelab(saved);
+        // update link between user and new codelab
+        userCodelabService.updateLinkBetweenUserAndCodelabWithCodelab(saved);
         return codelabMapper.codelabToOutputDto(saved);
     }
 
@@ -106,7 +113,7 @@ public class CodelabService {
         Codelab codelab = codelabRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Codelab not found with id: " + id));
 
-        List<UserCodelab> userCodelabsList = userCodelabRepository.findByIdCodelabId(id);
+        List<UserCodelab> userCodelabsList = userCodelabRepository.findByUserRoleCodelabId(UserRole.STUDENT, id);
 
         List<ProgressPerCodelabDto> progressDtos = userCodelabsList.stream()
                 .map(userCodelabMapper::userCodelabToProgressPerCodelabDto)
