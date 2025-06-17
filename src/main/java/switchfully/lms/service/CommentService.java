@@ -6,6 +6,7 @@ import switchfully.lms.domain.Comment;
 import switchfully.lms.domain.User;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.CommentRepository;
+import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.CommentInputDto;
 import switchfully.lms.service.dto.CommentOutputDto;
@@ -42,15 +43,18 @@ public class CommentService {
     private final UserRepository userRepository;
     private final CodelabRepository codelabRepository;
     private final CommentMapper commentMapper;
+    private final UserCodelabRepository userCodelabRepository;
 
     public CommentService(CommentRepository commentRepository,
                           UserRepository userRepository,
                           CodelabRepository codelabRepository,
-                          CommentMapper commentMapper) {
+                          CommentMapper commentMapper,
+                          UserCodelabRepository userCodelabRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.codelabRepository = codelabRepository;
         this.commentMapper = commentMapper;
+        this.userCodelabRepository = userCodelabRepository;
     }
 
     /**
@@ -77,7 +81,12 @@ public class CommentService {
         validateNonBlank(commentInputDto.getComment(),"Cannot post blank comments",InvalidInputException::new);
         validateArgument(username,"username " +username +" not found in repository",u->!userRepository.existsByUserName(u), InvalidInputException::new);
 
+        //A COACH CAN ADDA COMMENT TO A CODELAB --> THIS IMPLEIS THAT A COACH ALSO HAS PROGRESS IN A CODELAB SINCE USERS CODELAB LINK MUST
+        //EXIST FOR A USER TO BE ABLE TO PERSIST A COMMENT
         User user = userRepository.findByUserName(username);
+        //ADD EXISTS BY USER ID IN USERCODELABREPO!!!!!!
+        //validateArgument(user, "The codelab is not linked to this user",u->userCodelabRepository.existsByUserId,InvalidInputException::new);
+
         Codelab codelab = codelabRepository.findById(codelabId).orElseThrow(() -> new InvalidInputException("code lab " +codelabId+ " not found"));
         Comment comment = commentMapper.inputToComment(user, codelab, commentInputDto);
         commentRepository.save(comment);
