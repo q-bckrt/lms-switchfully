@@ -2,10 +2,16 @@ package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.Codelab;
+import switchfully.lms.domain.UserCodelab;
+import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.CodelabRepository;
+import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.service.dto.CodelabInputDto;
 import switchfully.lms.service.dto.CodelabOutputDto;
+import switchfully.lms.service.dto.ProgressPerCodelabDto;
+import switchfully.lms.service.dto.ProgressPerCodelabDtoList;
 import switchfully.lms.service.mapper.CodelabMapper;
+import switchfully.lms.service.mapper.UserCodelabMapper;
 
 import java.util.List;
 
@@ -18,13 +24,22 @@ public class CodelabService {
 
     // FIELDS
     private final CodelabRepository codelabRepository;
+    private final UserCodelabRepository userCodelabRepository;
 
     private final CodelabMapper codelabMapper;
+    private final UserCodelabMapper userCodelabMapper;
+
+    private final UserCodelabService userCodelabService;
 
     // CONSTRUCTOR
-    public CodelabService(CodelabRepository codelabRepository, CodelabMapper codelabMapper) {
+    public CodelabService(CodelabRepository codelabRepository, CodelabMapper codelabMapper,
+                          UserCodelabRepository userCodelabRepository, UserCodelabMapper userCodelabMapper,
+                          UserCodelabService userCodelabService) {
         this.codelabRepository = codelabRepository;
         this.codelabMapper = codelabMapper;
+        this.userCodelabRepository = userCodelabRepository;
+        this.userCodelabMapper = userCodelabMapper;
+        this.userCodelabService = userCodelabService;
     }
 
     // METHODS
@@ -38,7 +53,9 @@ public class CodelabService {
     public CodelabOutputDto createCodelab(CodelabInputDto codelabInputDto) {
         Codelab codelab = codelabMapper.inputDtoToCodelab(codelabInputDto);
         Codelab saved = codelabRepository.save(codelab);
-        saved.getParentSubmodule().getChildCodelabs().add(saved);
+        saved.getParentSubmodule().addChildCodelab(saved);
+        // update link between user and new codelab
+        userCodelabService.updateLinkBetweenUserAndCodelabWithCodelab(saved);
         return codelabMapper.codelabToOutputDto(saved);
     }
 
@@ -83,6 +100,25 @@ public class CodelabService {
         codelab.setDetails(codelabInputDto.getDetails());
         Codelab updated = codelabRepository.save(codelab);
         return codelabMapper.codelabToOutputDto(updated);
+    }
+
+    /**
+     * Get an overview of the user progression for a specific codelab.
+     *
+     * @param id              the ID of the codelab to check
+     * @return ProgressPerCodelabDtoList object
+     * @throws IllegalArgumentException if no codelab is found with the given ID
+     */
+    public ProgressPerCodelabDtoList getCodelabProgressPerCodelab(Long id) {
+        Codelab codelab = codelabRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Codelab not found with id: " + id));
+
+        List<UserCodelab> userCodelabsList = userCodelabRepository.findByUserRoleCodelabId(UserRole.STUDENT, id);
+
+        List<ProgressPerCodelabDto> progressDtos = userCodelabsList.stream()
+                .map(userCodelabMapper::userCodelabToProgressPerCodelabDto)
+                .toList();
+        return  userCodelabMapper.codelabTitleAndProgressPerCodelabDtoToProgressPerCodelabDtoList(codelab.getTitle(), progressDtos);
     }
 
 }

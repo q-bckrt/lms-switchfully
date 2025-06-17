@@ -7,8 +7,10 @@ import switchfully.lms.service.CodelabService;
 import switchfully.lms.service.CommentService;
 import switchfully.lms.service.dto.CodelabInputDto;
 import switchfully.lms.service.dto.CodelabOutputDto;
+import switchfully.lms.service.dto.ProgressPerCodelabDtoList;
 import switchfully.lms.service.dto.CommentInputDto;
 import switchfully.lms.service.dto.CommentOutputDto;
+
 
 import java.util.List;
 
@@ -88,6 +90,14 @@ public class CodelabController {
     @ResponseStatus(HttpStatus.OK)
     public CodelabOutputDto updateCodelab(@PathVariable Long id, @RequestBody CodelabInputDto codelabInputDto) {
         return codelabService.updateCodelab(id, codelabInputDto);
+    }
+
+
+    @GetMapping(path = "/{id}/user-progress-overview", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public ProgressPerCodelabDtoList getCodelabProgressPerCodelab(@PathVariable Long id) {
+        return codelabService.getCodelabProgressPerCodelab(id);
     }
 
     /** Post a new comment under a codelab.
