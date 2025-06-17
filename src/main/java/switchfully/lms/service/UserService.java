@@ -60,8 +60,8 @@ public class UserService {
      * Some validation are performed (e.g., username not present in the database, valid email format) then user is first added to keycloak and then on the database.
      * For now, every user created using this method is a student.
      * @param userInputDto UserInputDto object,
-     * @see UserMapper,
-     * @see Validation,
+     * @see UserMapper
+     * @see Validation
      * @return new UserOutputDto object
      * */
     public UserOutputDto createNewStudent(UserInputDto userInputDto) {
@@ -80,8 +80,8 @@ public class UserService {
      * Search for the user in the database using its username.
      * Return the following information: username, display name, email and list of classes the user is part of.
      * @param username String username used to search the database,
-     * @see UserRepository,
-     * @see UserMapper,
+     * @see UserRepository
+     * @see UserMapper
      * @return new UserOutputDtoList object
      * */
     public UserOutputDtoList getProfile(String username) {
@@ -96,8 +96,8 @@ public class UserService {
      * Update second the information on the database (display name).
      * @param username String username used to search the database,
      * @param userInputEditDto UserInputEditDto object,
-     * @see UserRepository,
-     * @see UserMapper,
+     * @see UserRepository
+     * @see UserMapper
      * @return new UserOutputDtoList object
      * */
     // refactor -->  remove change password on database
@@ -121,9 +121,9 @@ public class UserService {
      * Get the class from the database and add it to the list.
      * @param username String username used to search the database,
      * @param classId Long id of the class to be added to the User entity,
-     * @see UserRepository,
-     * @see ClassRepository,
-     * @see UserMapper,
+     * @see UserRepository
+     * @see ClassRepository
+     * @see UserMapper
      * @return new UserOutputDtoList object
      * */
     public UserOutputDtoList updateClassInfo(Long classId, String username) {
@@ -142,7 +142,7 @@ public class UserService {
      * Check if username or email not already in the database and that the email has the right format.
      * @param userInputDto UserInputDto to be validated,
      * @throws IllegalArgumentException if criteria not met,
-     * @see Validation,
+     * @see Validation
      * @return validated UserInputDto object
      * */
     private UserInputDto validateStudentInput(UserInputDto userInputDto) {
@@ -156,7 +156,7 @@ public class UserService {
     /** Get the list of classes associated with a user.
      * Classes returned only contains the title and id of the class.
      * @param user User from which we want to retrieve the classes,
-     * @see ClassMapper,
+     * @see ClassMapper
      * @return List of Class
      * */
     private List<ClassOutputDto> getListOfClasses(User user) {
@@ -170,8 +170,8 @@ public class UserService {
     /** Get the overview of a class for a user.
      * Check if both user is present in the database and is a member of a class.
      * @param userName username use to retrieve a User from the database,
-     * @see UserRepository,
-     * @see Validation,
+     * @see UserRepository
+     * @see Validation
      * @return ClassOutputDtoList object
      * */
     public ClassOutputDtoList getClassOverview(String userName) {
