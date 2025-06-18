@@ -3,10 +3,7 @@ package switchfully.lms.service;
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.*;
 import switchfully.lms.domain.Module;
-import switchfully.lms.repository.CodelabRepository;
-import switchfully.lms.repository.ModuleRepository;
-import switchfully.lms.repository.SubmoduleRepository;
-import switchfully.lms.repository.UserRepository;
+import switchfully.lms.repository.*;
 import switchfully.lms.service.dto.ModuleInputDto;
 import switchfully.lms.service.dto.ModuleOutputDto;
 import switchfully.lms.service.dto.SubmoduleInputDto;
@@ -26,20 +23,20 @@ public class SubmoduleService {
     // FIELDS
     private final SubmoduleRepository submoduleRepository;
     private final SubmoduleMapper submoduleMapper;
-    private final CodelabRepository codelabsRepository;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserCodelabRepository userCodelabRepository;
 
     // CONSTRUCTOR
     public SubmoduleService(
             SubmoduleRepository submoduleRepository,
             SubmoduleMapper submoduleMapper,
-            CodelabRepository codelabsRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            UserCodelabRepository userCodelabRepository
     ) {
         this.submoduleRepository = submoduleRepository;
         this.submoduleMapper = submoduleMapper;
-        this.codelabsRepository = codelabsRepository;
         this.userRepository = userRepository;
+        this.userCodelabRepository = userCodelabRepository;
     }
 
     // METHODS
@@ -106,7 +103,7 @@ public class SubmoduleService {
      */
     public double getPercentageSubmoduleDoneForStudent(Long submoduleId, String username) {
         User user = userRepository.findByUserName(username);
-        List<UserCodelab> userCodelabList = submoduleRepository.findProgressBySubmodulesIdAndUserID(submoduleId, user.getId());
+        List<UserCodelab> userCodelabList = userCodelabRepository.findProgressBySubmodulesIdAndUserID(submoduleId, user.getId());
 
         if (userCodelabList == null || userCodelabList.isEmpty()) {
             return 0.0;

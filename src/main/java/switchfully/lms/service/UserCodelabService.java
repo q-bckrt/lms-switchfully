@@ -7,6 +7,7 @@ import switchfully.lms.domain.User;
 import switchfully.lms.domain.UserCodelab;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.UserCodelabRepository;
+import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.mapper.UserMapper;
 import switchfully.lms.utility.validation.Validation;
 
@@ -29,10 +30,14 @@ public class UserCodelabService {
 
     private final UserCodelabRepository userCodelabRepository;
     private final CodelabRepository codelabRepository;
+    private final UserRepository userRepository;
 
-    public UserCodelabService(UserCodelabRepository userCodelabRepository, CodelabRepository codelabRepository) {
+    public UserCodelabService(UserCodelabRepository userCodelabRepository,
+                              CodelabRepository codelabRepository,
+                              UserRepository userRepository) {
         this.userCodelabRepository = userCodelabRepository;
         this.codelabRepository = codelabRepository;
+        this.userRepository = userRepository;
     }
 
     /** Update link between user and codelab when a user is added to a class.
@@ -64,7 +69,7 @@ public class UserCodelabService {
      * */
     public void updateLinkBetweenUserAndCodelabWithCodelab( Codelab codelab) {
         //fetch all user of for the new codelab link to a class
-        List<User> users = codelabRepository.findUsersByCodelabId(codelab.getId());
+        List<User> users = userRepository.findUsersByCodelabId(codelab.getId());
 
         for (User user : users) {
             if (!userCodelabRepository.existsByUserIdAndCodelabId(user.getId(), codelab.getId())) {

@@ -5,6 +5,7 @@ import switchfully.lms.domain.*;
 import switchfully.lms.domain.Module;
 import switchfully.lms.repository.ModuleRepository;
 import switchfully.lms.repository.SubmoduleRepository;
+import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.ModuleInputDto;
 import switchfully.lms.service.dto.ModuleOutputDto;
@@ -24,18 +25,21 @@ public class ModuleService {
     private final ModuleMapper moduleMapper;
     private final SubmoduleRepository submoduleRepository;
     private final UserRepository userRepository;
+    private final UserCodelabRepository userCodelabRepository;
 
     // CONSTRUCTOR
     public ModuleService(
             ModuleRepository moduleRepository,
             ModuleMapper moduleMapper,
             SubmoduleRepository submoduleRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            UserCodelabRepository userCodelabRepository
     ) {
         this.moduleRepository = moduleRepository;
         this.moduleMapper = moduleMapper;
         this.submoduleRepository = submoduleRepository;
         this.userRepository = userRepository;
+        this.userCodelabRepository = userCodelabRepository;
     }
 
     // METHODS
@@ -120,7 +124,7 @@ public class ModuleService {
      */
     public double getPercentageModuleDoneForStudent(Long moduleId, String username) {
         User user = userRepository.findByUserName(username);
-        List<UserCodelab> userCodelabList = moduleRepository.findProgressByModuleIdAndUserID(moduleId, user.getId());
+        List<UserCodelab> userCodelabList = userCodelabRepository.findProgressByModuleIdAndUserID(moduleId, user.getId());
 
         if (userCodelabList == null || userCodelabList.isEmpty()) {
             return 0.0;
