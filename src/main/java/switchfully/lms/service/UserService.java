@@ -4,11 +4,15 @@ import org.springframework.stereotype.Service;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.Class;
 import switchfully.lms.domain.Course;
+import switchfully.lms.domain.UserCodelab;
 import switchfully.lms.repository.ClassRepository;
+import switchfully.lms.repository.CodelabRepository;
+import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
 import switchfully.lms.service.mapper.CourseMapper;
+import switchfully.lms.service.mapper.UserCodelabMapper;
 import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import switchfully.lms.utility.validation.Validation;
@@ -44,16 +48,26 @@ public class UserService {
     private final ClassMapper classMapper;
     private final KeycloakService keycloakService;
     private final CourseMapper courseMapper;
+    private final UserCodelabMapper userCodelabMapper;
+    private final UserCodelabRepository userCodelabRepository;
+    private final CodelabRepository codelabRepository;
+    private final UserCodelabService userCodelabService;
 
     public UserService(UserRepository userRepository, ClassRepository classRepository,
                        UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService,
-                       CourseMapper courseMapper) {
+                       CourseMapper courseMapper, UserCodelabMapper userCodelabMapper,
+                       UserCodelabRepository userCodelabRepository, CodelabRepository codelabRepository,
+                       UserCodelabService userCodelabService) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
         this.userMapper = userMapper;
         this.classMapper = classMapper;
         this.keycloakService = keycloakService;
         this.courseMapper = courseMapper;
+        this.userCodelabMapper = userCodelabMapper;
+        this.userCodelabRepository = userCodelabRepository;
+        this.codelabRepository = codelabRepository;
+        this.userCodelabService = userCodelabService;
     }
 
     /** Register a new User on the database and Keycloak using a UserInputDto, the input dto contains a username, last and first name, an email and a password.
@@ -133,6 +147,9 @@ public class UserService {
         user.addClasses(classDomain);
         User savedUser = userRepository.save(user);
 
+        //update link between user and codelab
+        userCodelabService.updateLinkBetweenUserAndCodelabWithClassId(savedUser, classId);
+
         List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
 
         return userMapper.userToOutputList(savedUser,classOutputDtos);
@@ -154,6 +171,27 @@ public class UserService {
         Class classDomain = user.getClasses().get(0);
 
         return GetClassDtoListUser(classDomain);
+    }
+
+    /** Get the progress for all the codelabs of a specific user.
+     * Get user from database and the UserCodelab associated with its ID.
+     * Add the title of the codelab and return a ProgressPerUserDtoList, with the username and a list of codelab title and their progress
+     * @param username username use to retrieve a User from the database,
+     * @see UserCodelabRepository,
+     * @see UserCodelabMapper,
+     * @return ProgressPerUserDtoList object
+     * */
+    public ProgressPerUserDtoList getCodelabProgressPerUser(String username) {
+        User user = userRepository.findByUserName(username);
+        List<UserCodelab> userCodelabList = userCodelabRepository.findByIdUserId(user.getId());
+
+        List<ProgressPerUserDto> progressDtos = userCodelabList.stream()
+                .map(userCodelabMapper::userCodelabToProgressPerUserDto
+                )
+                .toList();
+
+        return userCodelabMapper.usernameAndProgressPerUserDtoToProgressPerUserDtoList(username,progressDtos);
+
     }
 
     /** Validate the UserInputDto content
