@@ -18,6 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/modules")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ModuleController {
 
     // FIELDS
