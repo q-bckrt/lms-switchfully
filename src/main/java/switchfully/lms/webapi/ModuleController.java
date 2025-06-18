@@ -96,6 +96,22 @@ public class ModuleController {
         return moduleService.addSubmoduleToModule(moduleId, submoduleId);
     }
 
+    /**
+     * User get the percentage of Done for his/her module
+     *
+     * @param username username of the user who wants to see the module overview
+     * @param moduleId id of the module to get progress from
+     * @return percentage of done
+     */
+    @GetMapping(path="/{moduleId}/module-progress/{username}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public double getProgressPercentageModule(@PathVariable String username,
+                                              @PathVariable Long moduleId){
+        return moduleService.getPercentageModuleDoneForStudent(moduleId, username);
+    }
+
+
     // Delete (by ID) (not required)
     // Get All Courses Associated (by module ID) ??
     // Get All Submodules Associated (by module ID) ??

@@ -72,9 +72,9 @@ public class UserService {
     /** Register a new User on the database and Keycloak using a UserInputDto, the input dto contains a username, last and first name, an email and a password.
      * Some validation are performed (e.g., username not present in the database, valid email format) then user is first added to keycloak and then on the database.
      * For now, every user created using this method is a student.
-     * @param userInputDto UserInputDto object,
-     * @see UserMapper,
-     * @see Validation,
+     * @param userInputDto UserInputDto object
+     * @see UserMapper
+     * @see Validation
      * @return new UserOutputDto object
      * */
     public UserOutputDto createNewStudent(UserInputDto userInputDto) {
@@ -93,8 +93,8 @@ public class UserService {
      * Search for the user in the database using its username.
      * Return the following information: username, display name, email and list of classes the user is part of.
      * @param username String username used to search the database,
-     * @see UserRepository,
-     * @see UserMapper,
+     * @see UserRepository
+     * @see UserMapper
      * @return new UserOutputDtoList object
      * */
     public UserOutputDtoList getProfile(String username) {
@@ -107,10 +107,10 @@ public class UserService {
      * Search for the user in the database using its username.
      * Update first the information on Keycloak (password).
      * Update second the information on the database (display name).
-     * @param username String username used to search the database,
-     * @param userInputEditDto UserInputEditDto object,
-     * @see UserRepository,
-     * @see UserMapper,
+     * @param username String username used to search the database
+     * @param userInputEditDto UserInputEditDto object
+     * @see UserRepository
+     * @see UserMapper
      * @return new UserOutputDtoList object
      * */
     // refactor -->  remove change password on database
@@ -132,11 +132,11 @@ public class UserService {
      * Search for the user in the database using its username.
      * Check if class id is in the database.
      * Get the class from the database and add it to the list.
-     * @param username String username used to search the database,
-     * @param classId Long id of the class to be added to the User entity,
-     * @see UserRepository,
-     * @see ClassRepository,
-     * @see UserMapper,
+     * @param username String username used to search the database
+     * @param classId Long id of the class to be added to the User entity
+     * @see UserRepository
+     * @see ClassRepository
+     * @see UserMapper
      * @return new UserOutputDtoList object
      * */
     public UserOutputDtoList updateClassInfo(Long classId, String username) {
@@ -156,9 +156,9 @@ public class UserService {
 
     /** Get the overview of a class for a user.
      * Check if both user is present in the database and is a member of a class.
-     * @param userName username use to retrieve a User from the database,
-     * @see UserRepository,
-     * @see Validation,
+     * @param userName username use to retrieve a User from the database
+     * @see UserRepository
+     * @see Validation
      * @return ClassOutputDtoList object
      * */
     public ClassOutputDtoList getClassOverview(String userName) {
@@ -175,9 +175,9 @@ public class UserService {
     /** Get the progress for all the codelabs of a specific user.
      * Get user from database and the UserCodelab associated with its ID.
      * Add the title of the codelab and return a ProgressPerUserDtoList, with the username and a list of codelab title and their progress
-     * @param username username use to retrieve a User from the database,
-     * @see UserCodelabRepository,
-     * @see UserCodelabMapper,
+     * @param username username use to retrieve a User from the database
+     * @see UserCodelabRepository
+     * @see UserCodelabMapper
      * @return ProgressPerUserDtoList object
      * */
     public ProgressPerUserDtoList getCodelabProgressPerUser(String username) {
@@ -193,11 +193,22 @@ public class UserService {
 
     }
 
-
+    /** Get the progress level values.
+     * These values are to be used in a dropdown menu for a student to record where he/she is at the moment in a specific codelab.
+     * @return List of String
+     * */
     public List<String> getProgressLevels() {
         return Arrays.stream(ProgressLevel.values()).map(Enum::name).collect(Collectors.toList());
     }
 
+    /** Validate the UserInputDto content
+     * Check if username or email not already in the database and that the email has the right format.
+     * @param userName user's username who wish to change his/her codelab progress
+     * @param codelabId id of the codelab to be udpated
+     * @param progressLevel new value for the progress
+     * @throws InvalidInputException if the user/codelab pair is not present in the database
+     * @return Boolean if operation went well
+     * */
     public boolean updateProgressLevel(String userName, Long codelabId, String progressLevel) {
         validateArgument(userName,"User with username "+userName+" not found in database",u->!userRepository.existsByUserName(u),InvalidInputException::new);
         User user = userRepository.findByUserName(userName);
@@ -211,9 +222,9 @@ public class UserService {
 
     /** Validate the UserInputDto content
      * Check if username or email not already in the database and that the email has the right format.
-     * @param userInputDto UserInputDto to be validated,
-     * @throws IllegalArgumentException if criteria not met,
-     * @see Validation,
+     * @param userInputDto UserInputDto to be validated
+     * @throws IllegalArgumentException if criteria not met
+     * @see Validation
      * @return validated UserInputDto object
      * */
     private UserInputDto validateStudentInput(UserInputDto userInputDto) {
@@ -226,8 +237,8 @@ public class UserService {
 
     /** Get the list of classes associated with a user.
      * Classes returned only contains the title and id of the class.
-     * @param user User from which we want to retrieve the classes,
-     * @see ClassMapper,
+     * @param user User from which we want to retrieve the classes
+     * @see ClassMapper
      * @return List of Class
      * */
     private List<ClassOutputDto> getListOfClasses(User user) {

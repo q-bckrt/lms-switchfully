@@ -18,6 +18,9 @@ import java.util.List;
 @Repository
 public interface CodelabRepository extends JpaRepository<Codelab, Long> {
 
+    /** Get the list of codelab related to a specific class.
+     * @see switchfully.lms.service.UserCodelabService
+     * */
     @Query(value = """
     SELECT cdl.*
     FROM classes cls
@@ -31,6 +34,9 @@ public interface CodelabRepository extends JpaRepository<Codelab, Long> {
     """, nativeQuery = true)
     List<Codelab> findCodelabsByClassId(@Param("classId") Long classId);
 
+    /** Get the list of user related to a codelab.
+     * @see switchfully.lms.service.UserCodelabService
+     * */
     @Query(value = """
     SELECT u.*
     FROM codelabs cdl

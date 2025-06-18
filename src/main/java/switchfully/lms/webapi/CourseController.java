@@ -99,6 +99,22 @@ public class CourseController {
         return courseService.addModuleToCourse(courseId, moduleId);
     }
 
+    /**
+     * User get the percentage of Done for his/her course
+     *
+     * @param username username of the user who wants to see the course overview
+     * @param courseId id of the course to get progress from
+     * @return percentage of done
+     */
+    @GetMapping(path="/{courseId}/course-progress/{username}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public double getProgressPercentageCourse(@PathVariable String username,
+                                           @PathVariable Long courseId){
+        return courseService.getPercentageCourseDoneForStudent(courseId, username);
+    }
+
+
     // Delete (by ID) (not required)
     // Get All Modules Associated (by course ID) ??
 }
