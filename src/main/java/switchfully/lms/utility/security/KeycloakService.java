@@ -70,7 +70,14 @@ public class KeycloakService {
     }
 
 
-    private UserResource getUser(String userId) {
+    private UserResource getUser(String username) {
+        List<UserRepresentation> users = realmResource.users().search(username, true);
+
+        if (users.isEmpty()) {
+            throw new RuntimeException("User not found: " + username);
+        }
+
+        String userId = users.getFirst().getId();
         return realmResource.users().get(userId);
     }
 
