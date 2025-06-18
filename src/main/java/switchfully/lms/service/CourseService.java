@@ -1,13 +1,15 @@
 package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
-import switchfully.lms.domain.Course;
+import switchfully.lms.domain.*;
+import switchfully.lms.domain.Module;
 import switchfully.lms.repository.CourseRepository;
 import switchfully.lms.repository.ModuleRepository;
+import switchfully.lms.repository.UserCodelabRepository;
+import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.CourseInputDto;
 import switchfully.lms.service.dto.CourseOutputDto;
 import switchfully.lms.service.mapper.CourseMapper;
-import switchfully.lms.domain.Module;
 
 import java.util.List;
 
@@ -22,16 +24,22 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
     private final ModuleRepository moduleRepository;
+    private final UserRepository userRepository;
+    private final UserCodelabRepository userCodelabRepository;
 
     // CONSTRUCTORS
     public CourseService(
             CourseRepository courseRepository,
             CourseMapper courseMapper,
-            ModuleRepository moduleRepository
+            ModuleRepository moduleRepository,
+            UserRepository userRepository,
+            UserCodelabRepository userCodelabRepository
     ) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.moduleRepository = moduleRepository;
+        this.userRepository = userRepository;
+        this.userCodelabRepository = userCodelabRepository;
     }
 
     // METHODS
@@ -104,6 +112,29 @@ public class CourseService {
         course.addChildModule(module);
         Course updated = courseRepository.save(course);
         return courseMapper.courseToOutputDto(updated);
+    }
+
+    /**
+     * Get the percentage of done for a course for a specific user.
+     *
+     * @param courseId                 the ID of the course to check
+     * @param username  user for which we want the progress percentage
+     * @return double percentage of done
+     */
+    public double getPercentageCourseDoneForStudent(Long courseId, String username) {
+        User user = userRepository.findByUserName(username);
+        List<UserCodelab> userCodelabList = userCodelabRepository.findProgressByCourseIdAndUserID(courseId, user.getId());
+
+        if (userCodelabList == null || userCodelabList.isEmpty()) {
+            return 0.0;
+        }
+
+        long doneCount = userCodelabList.stream()
+                .filter(codelab -> codelab.getProgressLevel() == ProgressLevel.DONE)
+                .count();
+
+        return (doneCount * 100.0) / userCodelabList.size();
+
     }
 
 }

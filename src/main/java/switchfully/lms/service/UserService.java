@@ -1,14 +1,16 @@
 package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
-import switchfully.lms.domain.User;
+import switchfully.lms.domain.*;
 import switchfully.lms.domain.Class;
-import switchfully.lms.domain.Course;
 import switchfully.lms.repository.ClassRepository;
+import switchfully.lms.repository.CodelabRepository;
+import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
 import switchfully.lms.service.mapper.CourseMapper;
+import switchfully.lms.service.mapper.UserCodelabMapper;
 import switchfully.lms.service.mapper.UserMapper;
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import switchfully.lms.utility.validation.Validation;
@@ -18,6 +20,7 @@ import switchfully.lms.utility.security.KeycloakService;
 import switchfully.lms.utility.security.KeycloakUserDTO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,22 +47,32 @@ public class UserService {
     private final ClassMapper classMapper;
     private final KeycloakService keycloakService;
     private final CourseMapper courseMapper;
+    private final UserCodelabMapper userCodelabMapper;
+    private final UserCodelabRepository userCodelabRepository;
+    private final CodelabRepository codelabRepository;
+    private final UserCodelabService userCodelabService;
 
     public UserService(UserRepository userRepository, ClassRepository classRepository,
                        UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService,
-                       CourseMapper courseMapper) {
+                       CourseMapper courseMapper, UserCodelabMapper userCodelabMapper,
+                       UserCodelabRepository userCodelabRepository, CodelabRepository codelabRepository,
+                       UserCodelabService userCodelabService) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
         this.userMapper = userMapper;
         this.classMapper = classMapper;
         this.keycloakService = keycloakService;
         this.courseMapper = courseMapper;
+        this.userCodelabMapper = userCodelabMapper;
+        this.userCodelabRepository = userCodelabRepository;
+        this.codelabRepository = codelabRepository;
+        this.userCodelabService = userCodelabService;
     }
 
     /** Register a new User on the database and Keycloak using a UserInputDto, the input dto contains a username, last and first name, an email and a password.
      * Some validation are performed (e.g., username not present in the database, valid email format) then user is first added to keycloak and then on the database.
      * For now, every user created using this method is a student.
-     * @param userInputDto UserInputDto object,
+     * @param userInputDto UserInputDto object
      * @see UserMapper
      * @see Validation
      * @return new UserOutputDto object
@@ -94,8 +107,8 @@ public class UserService {
      * Search for the user in the database using its username.
      * Update first the information on Keycloak (password).
      * Update second the information on the database (display name).
-     * @param username String username used to search the database,
-     * @param userInputEditDto UserInputEditDto object,
+     * @param username String username used to search the database
+     * @param userInputEditDto UserInputEditDto object
      * @see UserRepository
      * @see UserMapper
      * @return new UserOutputDtoList object
@@ -119,8 +132,8 @@ public class UserService {
      * Search for the user in the database using its username.
      * Check if class id is in the database.
      * Get the class from the database and add it to the list.
-     * @param username String username used to search the database,
-     * @param classId Long id of the class to be added to the User entity,
+     * @param username String username used to search the database
+     * @param classId Long id of the class to be added to the User entity
      * @see UserRepository
      * @see ClassRepository
      * @see UserMapper
@@ -138,38 +151,9 @@ public class UserService {
         return userMapper.userToOutputList(savedUser,classOutputDtos);
     }
 
-    /** Validate the UserInputDto content
-     * Check if username or email not already in the database and that the email has the right format.
-     * @param userInputDto UserInputDto to be validated,
-     * @throws IllegalArgumentException if criteria not met,
-     * @see Validation
-     * @return validated UserInputDto object
-     * */
-    private UserInputDto validateStudentInput(UserInputDto userInputDto) {
-        validateArgument(userInputDto.getEmail(), "Email already exists in the repository", userRepository::existsByEmail, InvalidInputException::new);
-        validateArgument(userInputDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
-        validateArgument(userInputDto.getEmail(),"Invalid email format", e-> !EmailValidator.getInstance().isValid(e),InvalidInputException::new);
-
-        return userInputDto;
-    }
-
-    /** Get the list of classes associated with a user.
-     * Classes returned only contains the title and id of the class.
-     * @param user User from which we want to retrieve the classes,
-     * @see ClassMapper
-     * @return List of Class
-     * */
-    private List<ClassOutputDto> getListOfClasses(User user) {
-        List<ClassOutputDto> classOutputDtos;
-        return classOutputDtos = user.getClasses()
-                .stream()
-                .map(classMapper::classToOutput)
-                .toList();
-    }
-
     /** Get the overview of a class for a user.
      * Check if both user is present in the database and is a member of a class.
-     * @param userName username use to retrieve a User from the database,
+     * @param userName username use to retrieve a User from the database
      * @see UserRepository
      * @see Validation
      * @return ClassOutputDtoList object
@@ -183,6 +167,83 @@ public class UserService {
         Class classDomain = user.getClasses().get(0);
 
         return GetClassDtoListUser(classDomain);
+    }
+
+    /** Get the progress for all the codelabs of a specific user.
+     * Get user from database and the UserCodelab associated with its ID.
+     * Add the title of the codelab and return a ProgressPerUserDtoList, with the username and a list of codelab title and their progress
+     * @param username username use to retrieve a User from the database
+     * @see UserCodelabRepository
+     * @see UserCodelabMapper
+     * @return ProgressPerUserDtoList object
+     * */
+    public ProgressPerUserDtoList getCodelabProgressPerUser(String username) {
+        User user = userRepository.findByUserName(username);
+        List<UserCodelab> userCodelabList = userCodelabRepository.findByIdUserId(user.getId());
+
+        List<ProgressPerUserDto> progressDtos = userCodelabList.stream()
+                .map(userCodelabMapper::userCodelabToProgressPerUserDto
+                )
+                .toList();
+
+        return userCodelabMapper.usernameAndProgressPerUserDtoToProgressPerUserDtoList(username,progressDtos);
+
+    }
+
+    /** Get the progress level values.
+     * These values are to be used in a dropdown menu for a student to record where he/she is at the moment in a specific codelab.
+     * @return List of String
+     * */
+    public List<String> getProgressLevels() {
+        return Arrays.stream(ProgressLevel.values()).map(Enum::name).collect(Collectors.toList());
+    }
+
+    /** Validate the UserInputDto content
+     * Check if username or email not already in the database and that the email has the right format.
+     * @param userName user's username who wish to change his/her codelab progress
+     * @param codelabId id of the codelab to be udpated
+     * @param progressLevel new value for the progress
+     * @throws InvalidInputException if the user/codelab pair is not present in the database
+     * @return Boolean if operation went well
+     * */
+    public boolean updateProgressLevel(String userName, Long codelabId, String progressLevel) {
+        validateArgument(userName,"User with username "+userName+" not found in database",u->!userRepository.existsByUserName(u),InvalidInputException::new);
+        User user = userRepository.findByUserName(userName);
+        UserCodelabId userCodelabId = new UserCodelabId(user.getId(),codelabId);
+        UserCodelab userCodelab = userCodelabRepository.findById(userCodelabId).orElseThrow(() -> new InvalidInputException("This user and codelab pair does not exist."));
+        userCodelab.setProgressLevel(ProgressLevel.valueOf(progressLevel.toUpperCase()));
+        userCodelabRepository.save(userCodelab);
+
+        return true;
+    }
+
+    /** Validate the UserInputDto content
+     * Check if username or email not already in the database and that the email has the right format.
+     * @param userInputDto UserInputDto to be validated
+     * @throws IllegalArgumentException if criteria not met
+     * @see Validation
+     * @return validated UserInputDto object
+     * */
+    private UserInputDto validateStudentInput(UserInputDto userInputDto) {
+        validateArgument(userInputDto.getEmail(), "Email already exists in the repository", userRepository::existsByEmail, InvalidInputException::new);
+        validateArgument(userInputDto.getUserName(), "Username already exists in the repository", userRepository::existsByUserName, InvalidInputException::new);
+        validateArgument(userInputDto.getEmail(),"Invalid email format", e-> !EmailValidator.getInstance().isValid(e),InvalidInputException::new);
+
+        return userInputDto;
+    }
+
+    /** Get the list of classes associated with a user.
+     * Classes returned only contains the title and id of the class.
+     * @param user User from which we want to retrieve the classes
+     * @see ClassMapper
+     * @return List of Class
+     * */
+    private List<ClassOutputDto> getListOfClasses(User user) {
+        List<ClassOutputDto> classOutputDtos;
+        return classOutputDtos = user.getClasses()
+                .stream()
+                .map(classMapper::classToOutput)
+                .toList();
     }
 
     /** Private helper method that gets additional fields used in class mapper method for ClassOutputDtoList, also handles nullpointers

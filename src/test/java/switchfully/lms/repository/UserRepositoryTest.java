@@ -5,8 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import switchfully.lms.domain.User;
-import switchfully.lms.domain.UserRole;
+import switchfully.lms.domain.*;
+import switchfully.lms.domain.Class;
+import switchfully.lms.domain.Module;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,11 +20,31 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CodelabRepository codelabRepository;
+    @Autowired
+    private SubmoduleRepository submoduleRepository;
+    @Autowired
+    private ClassRepository classRepository;
+    @Autowired
+    private ModuleRepository moduleRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
         userRepository.flush();
+        codelabRepository.deleteAll();
+        codelabRepository.flush();
+        submoduleRepository.deleteAll();
+        submoduleRepository.flush();
+        classRepository.deleteAll();
+        classRepository.flush();
+        moduleRepository.deleteAll();
+        moduleRepository.flush();
+        courseRepository.deleteAll();
+        courseRepository.flush();
     }
 
     @Test
@@ -101,5 +124,29 @@ public class UserRepositoryTest {
         userRepository.save(testUser);
 
         assertThat(userRepository.existsByUserName(testUser.getUserName())).isEqualTo(true);
+    }
+
+    @Test
+    void givenCodelabId_retrieveListOfUsersAssociatedToIt(){
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        userRepository.save(testUser);
+        Course course = new Course("course name");
+        courseRepository.save(course);
+        Class classDomain = new Class("class name");
+        classDomain.setCourse(course);
+        Class savedClass = classRepository.save(classDomain);
+        testUser.addClasses(savedClass);
+        userRepository.save(testUser);
+        Module module = new Module("module name");
+        course.addChildModule(module);
+        moduleRepository.save(module);
+        Submodule submodule = new Submodule("submodule name");
+        submoduleRepository.save(submodule);
+        module.addChildSubmodule(submodule);
+        moduleRepository.save(module);
+        Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
+        codelabRepository.save(codelab);
+
+        List<User> userList = userRepository.findUsersByCodelabId(codelab.getId());
     }
 }

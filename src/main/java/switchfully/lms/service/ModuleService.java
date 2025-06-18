@@ -1,13 +1,15 @@
 package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
-import switchfully.lms.domain.Submodule;
+import switchfully.lms.domain.*;
+import switchfully.lms.domain.Module;
 import switchfully.lms.repository.ModuleRepository;
 import switchfully.lms.repository.SubmoduleRepository;
+import switchfully.lms.repository.UserCodelabRepository;
+import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.ModuleInputDto;
 import switchfully.lms.service.dto.ModuleOutputDto;
 import switchfully.lms.service.mapper.ModuleMapper;
-import switchfully.lms.domain.Module;
 
 import java.util.List;
 
@@ -22,16 +24,22 @@ public class ModuleService {
     private final ModuleRepository moduleRepository;
     private final ModuleMapper moduleMapper;
     private final SubmoduleRepository submoduleRepository;
+    private final UserRepository userRepository;
+    private final UserCodelabRepository userCodelabRepository;
 
     // CONSTRUCTOR
     public ModuleService(
             ModuleRepository moduleRepository,
             ModuleMapper moduleMapper,
-            SubmoduleRepository submoduleRepository
+            SubmoduleRepository submoduleRepository,
+            UserRepository userRepository,
+            UserCodelabRepository userCodelabRepository
     ) {
         this.moduleRepository = moduleRepository;
         this.moduleMapper = moduleMapper;
         this.submoduleRepository = submoduleRepository;
+        this.userRepository = userRepository;
+        this.userCodelabRepository = userCodelabRepository;
     }
 
     // METHODS
@@ -105,6 +113,29 @@ public class ModuleService {
         module.addChildSubmodule(submodule);
         Module updated = moduleRepository.save(module);
         return moduleMapper.moduleToOutputDto(updated);
+    }
+
+    /**
+     * Get the percentage of done for a module for a specific user.
+     *
+     * @param moduleId                 the ID of the module to check
+     * @param username  user for which we want the progress percentage
+     * @return double percentage of done
+     */
+    public double getPercentageModuleDoneForStudent(Long moduleId, String username) {
+        User user = userRepository.findByUserName(username);
+        List<UserCodelab> userCodelabList = userCodelabRepository.findProgressByModuleIdAndUserID(moduleId, user.getId());
+
+        if (userCodelabList == null || userCodelabList.isEmpty()) {
+            return 0.0;
+        }
+
+        long doneCount = userCodelabList.stream()
+                .filter(codelab -> codelab.getProgressLevel() == ProgressLevel.DONE)
+                .count();
+
+        return (doneCount * 100.0) / userCodelabList.size();
+
     }
 
 
