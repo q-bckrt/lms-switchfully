@@ -92,7 +92,12 @@ public class CodelabController {
         return codelabService.updateCodelab(id, codelabInputDto);
     }
 
-
+    /** See overview of the all student's progress for a codelab.
+     * Only coaches can see everyone progress.
+     * ProgressPerCodelabDtoList return the title of the codelab and a list of the display name of the students and their progress
+     * @param id the ID of the codelab to update
+     * @return ProgressPerCodelabDtoList object
+     */
     @GetMapping(path = "/{id}/user-progress-overview", produces = "application/json")
     @PreAuthorize("hasAuthority('COACH')")
     @ResponseStatus(HttpStatus.OK)

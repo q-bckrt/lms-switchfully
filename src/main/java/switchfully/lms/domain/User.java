@@ -2,6 +2,7 @@ package switchfully.lms.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +42,7 @@ public class User {
     @JoinTable(name="users_classes",
     joinColumns = {@JoinColumn(name = "user_id")},
     inverseJoinColumns = {@JoinColumn(name="class_id")})
-    private List<Class> classes;
+    private List<Class> classes = new ArrayList<>();
 
     public User() {
     }

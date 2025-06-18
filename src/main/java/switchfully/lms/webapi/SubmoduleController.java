@@ -83,6 +83,22 @@ public class SubmoduleController {
         return submoduleService.updateSubmodule(id, submoduleInputDto);
     }
 
+    /**
+     * User get the percentage of Done for his/her submodule
+     *
+     * @param username username of the user who wants to see the submodule overview
+     * @param submoduleId id of the submodule to get progress from
+     * @return percentage of done
+     */
+    @GetMapping(path="/{submoduleId}/submodule-progress/{username}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public double getProgressPercentageSubmodule(@PathVariable String username,
+                                              @PathVariable Long submoduleId){
+        return submoduleService.getPercentageSubmoduleDoneForStudent(submoduleId, username);
+    }
+
+
     // Delete (by ID) (not required)
     // Get All Modules Associated (by Submodule ID) ??
     // Get All Codelabs Associated (by Submodule ID) ??

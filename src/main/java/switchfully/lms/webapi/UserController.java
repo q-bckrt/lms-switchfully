@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.UserService;
 import switchfully.lms.service.dto.*;
 
+import java.util.List;
+
 /**
  * REST controller for managing user-related operations such as registration, profile updates, and class info retrieval.
  * <p>
@@ -17,6 +19,7 @@ import switchfully.lms.service.dto.*;
 public class UserController {
 
     private final UserService userService;
+
 
     public UserController(UserService userService){
         this.userService = userService;
@@ -105,5 +108,34 @@ public class UserController {
         //AUTHORIZE
         return userService.getCodelabProgressPerUser(username);
     }
+
+    /**
+     * Helper methods for the frontend to get the list of possible values for the progress level of a codelab
+     *
+     * @return list of String
+     */
+    @GetMapping(path = "/progress-levels", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getCodelabProgressPerUser() {
+        //AUTHORIZE
+        return userService.getProgressLevels();
+    }
+
+    /**
+     * User get the overview of all of his codelabs.
+     *
+     * @param username username of the user who wants to see the class overview
+     * @return the class overview
+     */
+    @PutMapping(path="/{username}/edit/codelab/{codelabId}",produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    //only student or student and coach?
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean progressLevel(@PathVariable String username,
+                                 @PathVariable Long codelabId,
+                                 @RequestParam (name = "progressLevel", required = true) String progressLevel) {
+        return userService.updateProgressLevel(username,codelabId,progressLevel);
+    }
+
 
 }
