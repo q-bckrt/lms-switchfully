@@ -9,7 +9,7 @@ import switchfully.lms.utility.security.KeycloakUserDTO;
 import java.util.List;
 
 /**
- * Mapper class with methods to convert dtos to entities of the databse and vice versa. <p>
+ * Mapper class with methods to convert dtos to entities of the database and vice versa. <p>
  */
 @Component
 public class UserMapper {
