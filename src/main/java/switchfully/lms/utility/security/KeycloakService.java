@@ -3,10 +3,8 @@ package switchfully.lms.utility.security;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.ClientResource;
-import org.keycloak.admin.client.resource.ClientsResource;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -32,12 +30,12 @@ public class KeycloakService {
 
     public void addUser(KeycloakUserDTO keycloakUserDTO) {
         String createdUserId = createUser(keycloakUserDTO);
-        getUser(createdUserId).resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
-        addRole(getUser(createdUserId), keycloakUserDTO.role().name());
+        getUserById(createdUserId).resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
+        addRole(getUserById(createdUserId), keycloakUserDTO.role().name());
     }
 
     public void changePassword(KeycloakUserDTO keycloakUserDTO) {
-        UserResource user = getUser(keycloakUserDTO.userName());
+        UserResource user = getUserByUserName(keycloakUserDTO.userName());
         user.resetPassword(createCredentialRepresentation(keycloakUserDTO.password()));
     }
 
@@ -69,8 +67,11 @@ public class KeycloakService {
         return realmResource.clients().findByClientId(clientID).get(0).getId();
     }
 
+    private UserResource getUserById(String userId) {
+        return realmResource.users().get(userId);
+    }
 
-    private UserResource getUser(String username) {
+    private UserResource getUserByUserName(String username) {
         List<UserRepresentation> users = realmResource.users().search(username, true);
 
         if (users.isEmpty()) {
