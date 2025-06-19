@@ -102,9 +102,9 @@ public class ClassControllerTest {
         student2 = userRepository.save(new User("jil_sander","Jil Sander","testFirstname","testLastName","jil@yahoo.com","pass", UserRole.STUDENT));
         student3 = userRepository.save(new User("maarten_mar","Maarten Margiela","testFirstname","testLastName","maarten@yahoo.com","pass", UserRole.STUDENT));
 
-        student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail());
-        student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail());
-        student3Dto = new UserOutputDto(student3.getUserName(),student3.getDisplayName(),student3.getEmail());
+        student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail(), UserRole.STUDENT);
+        student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail(), UserRole.STUDENT);
+        student3Dto = new UserOutputDto(student3.getUserName(),student3.getDisplayName(),student3.getEmail(), UserRole.STUDENT);
 
         student1.setClasses(new ArrayList<>());
         student2.setClasses(new ArrayList<>());
@@ -112,7 +112,7 @@ public class ClassControllerTest {
 
         coach = userRepository.save(new User("elsa_schiap","Elsa Schiaparelli","testFirstname","testLastName","elsa@yahoo.com","pass", UserRole.COACH));
 
-        coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail());
+        coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail(), UserRole.COACH);
 
         coach.setClasses(new ArrayList<>());
 

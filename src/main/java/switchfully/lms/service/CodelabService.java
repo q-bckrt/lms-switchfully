@@ -46,8 +46,9 @@ public class CodelabService {
     /**
      * Creates a new codelab based on the provided input DTO, and associates it with the parent submodule
      * that is specified in the input DTO.
-     *
+     * Create link between this new codelab and all the user part of the related course/class
      * @param codelabInputDto the input DTO containing codelab details
+     * @see UserCodelabService
      * @return the created codelab as an output DTO
      */
     public CodelabOutputDto createCodelab(CodelabInputDto codelabInputDto) {
