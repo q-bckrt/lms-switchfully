@@ -35,6 +35,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/classes")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ClassController {
 
     private final ClassService classService;
