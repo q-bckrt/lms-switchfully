@@ -93,7 +93,8 @@ public class UserMapper {
         return new UserOutputDto(
                 user.getUserName().toLowerCase(),
                 user.getDisplayName(),
-                user.getEmail()
+                user.getEmail(),
+                user.getRole()
         );
     }
 

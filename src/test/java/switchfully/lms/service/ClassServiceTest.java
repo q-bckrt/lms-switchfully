@@ -127,10 +127,10 @@ public class ClassServiceTest {
         lenient().when(userRepository.existsByUserName(student3.getUserName())).thenReturn(true);
         lenient().when(userRepository.existsByUserName(coach.getUserName())).thenReturn(true);
 
-        student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail());
-        student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail());
-        student3Dto = new UserOutputDto(student3.getUserName(),student3.getDisplayName(),student3.getEmail());
-        coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail());
+        student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail(), UserRole.STUDENT);
+        student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail(), UserRole.STUDENT);
+        student3Dto = new UserOutputDto(student3.getUserName(),student3.getDisplayName(),student3.getEmail(), UserRole.STUDENT);
+        coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail(), UserRole.COACH);
 
         lenient().when(userMapper.userToOutput(student1)).thenReturn(student1Dto);
         lenient().when(userMapper.userToOutput(student2)).thenReturn(student2Dto);
