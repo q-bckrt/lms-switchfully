@@ -39,7 +39,7 @@ public class CourseControllerTest {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = "http://localhost";
+        RestAssured.baseURI = "http://localhost:8080/courses";
         RestAssured.port = port;
         courseRepository.deleteAll();
         moduleRepository.deleteAll();
