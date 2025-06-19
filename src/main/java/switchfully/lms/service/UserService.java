@@ -132,11 +132,13 @@ public class UserService {
      * Search for the user in the database using its username.
      * Check if class id is in the database.
      * Get the class from the database and add it to the list.
+     * Create link between user and all the codelab related to the newly added class
      * @param username String username used to search the database
      * @param classId Long id of the class to be added to the User entity
      * @see UserRepository
      * @see ClassRepository
      * @see UserMapper
+     * @see UserCodelabService
      * @return new UserOutputDtoList object
      * */
     public UserOutputDtoList updateClassInfo(Long classId, String username) {
@@ -145,6 +147,9 @@ public class UserService {
         Class classDomain = classRepository.findById(classId).get();
         user.addClasses(classDomain);
         User savedUser = userRepository.save(user);
+
+        //update link between user and codelab
+        userCodelabService.updateLinkBetweenUserAndCodelabWithClassId(savedUser, classId);
 
         List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
 
@@ -239,8 +244,7 @@ public class UserService {
      * @return List of Class
      * */
     private List<ClassOutputDto> getListOfClasses(User user) {
-        List<ClassOutputDto> classOutputDtos;
-        return classOutputDtos = user.getClasses()
+        return user.getClasses()
                 .stream()
                 .map(classMapper::classToOutput)
                 .toList();
