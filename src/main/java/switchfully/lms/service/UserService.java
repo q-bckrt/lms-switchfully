@@ -163,15 +163,16 @@ public class UserService {
      * @see Validation
      * @return ClassOutputDtoList object
      * */
-    public ClassOutputDtoList getClassOverview(String userName) {
+    public List<ClassOutputDtoList> getClassOverview(String userName) {
         validateArgument(userName, "User not " +userName+ " found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
         User user = userRepository.findByUserName(userName);
         validateArgument(user.getClasses(),"This user is not part of any classes", List::isEmpty,InvalidInputException::new);
 
         // student only have one class
-        Class classDomain = user.getClasses().get(0);
+        List<Class> classesDomain = user.getClasses();
 
-        return GetClassDtoListUser(classDomain);
+        return classesDomain.stream().map(this::GetClassDtoListUser).toList();
+        //return GetClassDtoListUser(classDomain);
     }
 
     /** Get the progress for all the codelabs of a specific user.

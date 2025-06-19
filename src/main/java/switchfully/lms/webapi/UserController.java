@@ -90,7 +90,7 @@ public class UserController {
     @GetMapping(path = "/{username}/class-overview", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
     @ResponseStatus(HttpStatus.OK)
-    public ClassOutputDtoList getClassOverview(@PathVariable String username) {
+    public List<ClassOutputDtoList> getClassOverview(@PathVariable String username) {
         //AUTHORIZE
         return userService.getClassOverview(username);
     }
