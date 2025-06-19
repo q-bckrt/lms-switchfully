@@ -10,22 +10,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
-import switchfully.lms.domain.User;
-import switchfully.lms.domain.UserRole;
-import switchfully.lms.repository.ClassRepository;
-import switchfully.lms.repository.UserRepository;
-import switchfully.lms.service.dto.UserInputDto;
-import switchfully.lms.service.dto.UserInputEditDto;
-import switchfully.lms.service.dto.UserOutputDto;
-import switchfully.lms.service.dto.UserOutputDtoList;
+import switchfully.lms.domain.*;
 import switchfully.lms.domain.Class;
+import switchfully.lms.repository.*;
+import switchfully.lms.service.dto.*;
+import switchfully.lms.utility.exception.InvalidInputException;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
+@Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -37,6 +33,12 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Autowired
     private ClassRepository classRepository;
+    @Autowired
+    private CodelabRepository codelabRepository;
+    @Autowired
+    private UserCodelabRepository userCodelabRepository;
+    @Autowired
+    private SubmoduleRepository submoduleRepository;
 
     @BeforeEach
     public void cleanup(){
@@ -65,7 +67,6 @@ public class UserServiceTest {
 //        assertThat(savedUser.getDisplayName()).isEqualTo(expectedUser.getDisplayName());
 //    }
 
-    @Transactional
     @Test
     void givenUserName_getProfileInformation(){
         // given user
@@ -100,7 +101,6 @@ public class UserServiceTest {
 //
 //    }
 
-    @Transactional
     @Test
     void givenUserNameAndEditDto_ifAlreadyExistingUsername_throwException(){
         // given user and userInputEditDto
@@ -115,7 +115,6 @@ public class UserServiceTest {
 
     }
 
-    @Transactional
     @Test
     void givenClassId_updateListClassesOfUser(){
         // given user and userInputEditDto
@@ -134,7 +133,6 @@ public class UserServiceTest {
         assertThat(userResult.getClasses().get(0).getTitle()).isEqualTo("TestClass");
     }
 
-    @Transactional
     @Test
     void givenNonExistingClassId_throwException(){
         // given user and userInputEditDto
@@ -144,5 +142,49 @@ public class UserServiceTest {
 
         //then
         assertThrows(Exception.class, ()-> userService.updateClassInfo(4L, testUser.getUserName()));
+    }
+
+    @Test
+    void givenUsername_getProgressLevelForAllCodelabOfAUser(){
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        userRepository.save(testUser);
+        Submodule submodule = new Submodule("submodule name");
+        submoduleRepository.save(submodule);
+        Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
+        codelabRepository.save(codelab);
+
+        UserCodelab userCodelab = new UserCodelab(testUser,codelab, ProgressLevel.BUSY);
+        userCodelabRepository.save(userCodelab);
+
+        //when
+        ProgressPerUserDtoList progressList = userService.getCodelabProgressPerUser(testUser.getUserName());
+
+        assertThat(progressList).isNotNull();
+        assertThat(progressList.getUsername()).isEqualTo(testUser.getUserName());
+        assertThat(progressList.getProgressPerUserDtoList()).hasSize(1);
+        assertThat(progressList.getProgressPerUserDtoList().get(0).getProgressLevel()).isEqualTo(ProgressLevel.BUSY);
+
+    }
+
+    @Test
+    void givenUsernameCodelabIdProgressLevel_updateProgressLevel(){
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        userRepository.save(testUser);
+        Submodule submodule = new Submodule("submodule name");
+        submoduleRepository.save(submodule);
+        Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
+        codelabRepository.save(codelab);
+        UserCodelab userCodelab = new UserCodelab(testUser,codelab, ProgressLevel.BUSY);
+        userCodelabRepository.save(userCodelab);
+
+        //when
+        Boolean updateDone = userService.updateProgressLevel(testUser.getUserName(), codelab.getId(),"STUCK");
+
+        assertThat(updateDone).isTrue();
+
+        UserCodelabId userCodelabId = new UserCodelabId(testUser.getId(),codelab.getId());
+        UserCodelab userCodelabUpdated = userCodelabRepository.findById(userCodelabId).orElseThrow(() -> new InvalidInputException("This user and codelab pair does not exist."));
+
+        assertThat(userCodelabUpdated.getProgressLevel()).isEqualTo(ProgressLevel.STUCK);
     }
 }
