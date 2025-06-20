@@ -121,4 +121,11 @@ public class CodelabController {
         return commentService.postComment(commentInputDto, username, codelabId);
     }
 
+    @GetMapping(path = "/{codelabId}/comments", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CommentOutputDto> getComment(@PathVariable Long codelabId) {
+        return commentService.getAllCommentsByCodelabId(codelabId);
+    }
+
 }
