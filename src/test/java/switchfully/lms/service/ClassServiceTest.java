@@ -232,8 +232,8 @@ public class ClassServiceTest {
         classRepository.save(classDomain3);
 
         ClassOutputDto classDomain1Dto = new ClassOutputDto(classDomain1.getId(),classDomain1.getTitle(),course.getId(),course.getTitle());
-        ClassOutputDto classDomain2Dto = new ClassOutputDto(classDomain2.getId(),classDomain2.getTitle(),course.getId(),course.getTitle());
-        ClassOutputDto classDomain3Dto = new ClassOutputDto(classDomain3.getId(),classDomain3.getTitle(),course.getId(),course.getTitle());
+        ClassOutputDto classDomain2Dto = new ClassOutputDto(classDomain2.getId(),classDomain2.getTitle(),course1.getId(),course1.getTitle());
+        ClassOutputDto classDomain3Dto = new ClassOutputDto(classDomain3.getId(),classDomain3.getTitle(),course2.getId(),course2.getTitle());
 
 
         when(classRepository.findAll()).thenReturn(List.of(classDomain1, classDomain2, classDomain3));

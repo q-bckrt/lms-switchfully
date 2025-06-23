@@ -49,6 +49,13 @@ public class ClassMapper {
      * @return mapped ClassOutputDto object
      * */
     public ClassOutputDto classToOutput(Class classDomain, Course course) {
+        if(course == null) {
+            return new ClassOutputDto(classDomain.getId(),
+                    classDomain.getTitle(),
+                    null,
+                    null
+            );
+        }
         return new ClassOutputDto(classDomain.getId(),
                 classDomain.getTitle(),
                 course.getId(),

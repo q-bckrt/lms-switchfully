@@ -39,6 +39,8 @@ public class UserServiceTest {
     private UserCodelabRepository userCodelabRepository;
     @Autowired
     private SubmoduleRepository submoduleRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
     @BeforeEach
     public void cleanup(){
@@ -124,6 +126,7 @@ public class UserServiceTest {
         Class baseClass = new Class("TestClass");
         classRepository.save(baseClass);
         Course course = new Course("TestCourse");
+        courseRepository.save(course);
         baseClass.setCourse(course);
         classRepository.save(baseClass);
         // when

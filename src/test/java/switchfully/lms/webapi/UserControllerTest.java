@@ -18,6 +18,7 @@ import switchfully.lms.domain.User;
 import switchfully.lms.domain.UserRole;
 import switchfully.lms.domain.Class;
 import switchfully.lms.repository.ClassRepository;
+import switchfully.lms.repository.CourseRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.utility.security.KeycloakService;
 
@@ -44,7 +45,8 @@ public class UserControllerTest {
     private User user;
     private Class classDomain;
     private Course course;
-
+    @Autowired
+    private CourseRepository courseRepository;
 
 
     @BeforeEach
@@ -57,6 +59,7 @@ public class UserControllerTest {
         classRepository.flush();
         classDomain = new Class("TestClass");
         course = new Course("TestCourse");
+        courseRepository.save(course);
         classDomain.setCourse(course);
         classRepository.save(classDomain);
     }
