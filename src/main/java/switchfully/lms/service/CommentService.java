@@ -85,7 +85,7 @@ public class CommentService {
         validateArgument(username,"username " +username +" not found in repository",u->!userRepository.existsByUserName(u), InvalidInputException::new);
 
         User user = userRepository.findByUserName(username);
-        validateArgument(user, "The codelab is not linked to this user",u->userCodelabRepository.existsByUserIdAndCodelabId(u.getId(),codelabId),InvalidInputException::new);
+        validateArgument(user, "The codelab is not linked to this user",u->!userCodelabRepository.existsByUserIdAndCodelabId(u.getId(),codelabId),InvalidInputException::new);
 
         Codelab codelab = codelabRepository.findById(codelabId).orElseThrow(() -> new InvalidInputException("code lab " +codelabId+ " not found"));
         Comment comment = commentMapper.inputToComment(user, codelab, commentInputDto);
