@@ -123,6 +123,9 @@ public class UserServiceTest {
         userRepository.save(testUser);
         Class baseClass = new Class("TestClass");
         classRepository.save(baseClass);
+        Course course = new Course("TestCourse");
+        baseClass.setCourse(course);
+        classRepository.save(baseClass);
         // when
         UserOutputDtoList userResult = userService.updateClassInfo(1L, testUser.getUserName());
 

@@ -11,7 +11,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import switchfully.lms.TestSecurityConfig;
+import switchfully.lms.domain.Course;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.UserRole;
 import switchfully.lms.domain.Class;
@@ -41,6 +43,7 @@ public class UserControllerTest {
 
     private User user;
     private Class classDomain;
+    private Course course;
 
 
 
@@ -53,6 +56,8 @@ public class UserControllerTest {
         userRepository.flush();
         classRepository.flush();
         classDomain = new Class("TestClass");
+        course = new Course("TestCourse");
+        classDomain.setCourse(course);
         classRepository.save(classDomain);
     }
 
@@ -115,6 +120,7 @@ public class UserControllerTest {
 //
 //    }
 
+    @Transactional
     @Test
     void testUpdateClassInformation(){
         // given

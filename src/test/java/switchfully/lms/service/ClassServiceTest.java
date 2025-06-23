@@ -149,8 +149,8 @@ public class ClassServiceTest {
         classOutputDtoList = new ClassOutputDtoList(classEnrolled.getId(),courseJavaDto, classEnrolled.getTitle(), userDtoList);
         lenient().when(classMapper.classToOutputList(eq(classEnrolled),anyList(),eq(courseJavaDto))).thenReturn(classOutputDtoList);
 
-        classOutputDto = new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle());
-        lenient().when(classMapper.classToOutput(classEnrolled)).thenReturn(classOutputDto);
+        classOutputDto = new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle(),courseJava.getId(),courseJava.getTitle());
+        lenient().when(classMapper.classToOutput(classEnrolled, courseJava)).thenReturn(classOutputDto);
 
         lenient().when(classRepository.findById(classEnrolled.getId())).thenReturn(Optional.of(classEnrolled));
         lenient().when(courseRepository.findById(courseJava.getId())).thenReturn(Optional.of(courseJava));
@@ -214,22 +214,32 @@ public class ClassServiceTest {
         Class classDomain1 = new Class("NEW CLASS1");
         Class classDomain2 = new Class("NEW CLASS2");
         Class classDomain3 = new Class("NEW CLASS3");
+        Course course = new Course("NEW COURSE");
+        Course course1 = new Course("NEW COURSE1");
+        Course course2 = new Course("NEW COURSE2");
+        classDomain1.setCourse(course);
+        classDomain2.setCourse(course1);
+        classDomain3.setCourse(course2);
         classDomain1.addCoach(coach);
         classDomain2.addCoach(coach);
         classDomain3.addCoach(coach);
         setId(classDomain1, 90L);
         setId(classDomain2, 91L);
         setId(classDomain3, 92L);
+        setId(course, 99L);
+        classRepository.save(classDomain1);
+        classRepository.save(classDomain2);
+        classRepository.save(classDomain3);
 
-        ClassOutputDto classDomain1Dto = new ClassOutputDto(classDomain1.getId(),classDomain1.getTitle());
-        ClassOutputDto classDomain2Dto = new ClassOutputDto(classDomain2.getId(),classDomain2.getTitle());
-        ClassOutputDto classDomain3Dto = new ClassOutputDto(classDomain3.getId(),classDomain3.getTitle());
+        ClassOutputDto classDomain1Dto = new ClassOutputDto(classDomain1.getId(),classDomain1.getTitle(),course.getId(),course.getTitle());
+        ClassOutputDto classDomain2Dto = new ClassOutputDto(classDomain2.getId(),classDomain2.getTitle(),course.getId(),course.getTitle());
+        ClassOutputDto classDomain3Dto = new ClassOutputDto(classDomain3.getId(),classDomain3.getTitle(),course.getId(),course.getTitle());
 
 
         when(classRepository.findAll()).thenReturn(List.of(classDomain1, classDomain2, classDomain3));
-        when(classMapper.classToOutput(classDomain1)).thenReturn(classDomain1Dto);
-        when(classMapper.classToOutput(classDomain2)).thenReturn(classDomain2Dto);
-        when(classMapper.classToOutput(classDomain3)).thenReturn(classDomain3Dto);
+        when(classMapper.classToOutput(classDomain1,course)).thenReturn(classDomain1Dto);
+        when(classMapper.classToOutput(classDomain2,course)).thenReturn(classDomain2Dto);
+        when(classMapper.classToOutput(classDomain3,course)).thenReturn(classDomain3Dto);
 
         //EXPECTED RESULT
         List<ClassOutputDto> expectedResult = new ArrayList<>();
@@ -252,12 +262,12 @@ public class ClassServiceTest {
         classDomain.addCoach(coach);
         classDomain.setCourse(course);
 
-        ClassOutputDto classDomainDto = new ClassOutputDto(classDomain.getId(),classDomain.getTitle());
+        ClassOutputDto classDomainDto = new ClassOutputDto(classDomain.getId(),classDomain.getTitle(),course.getId(),course.getTitle());
 
         when(classRepository.findById(classDomain.getId())).thenReturn(Optional.of(classDomain));
         when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
         when(classRepository.save(classDomain)).thenReturn(classDomain);
-        when(classMapper.classToOutput(classDomain)).thenReturn(classDomainDto);
+        when(classMapper.classToOutput(classDomain, course)).thenReturn(classDomainDto);
 
         ClassOutputDto result = classService.linkCourseToClass(classDomain.getId(),course.getId());
 

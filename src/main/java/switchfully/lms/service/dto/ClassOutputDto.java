@@ -6,10 +6,14 @@ import java.util.Objects;
 public class ClassOutputDto {
     private Long id;
     private String title;
+    private Long courseId;
+    private String courseTitle;
 
-    public ClassOutputDto(Long id, String title) {
+    public ClassOutputDto(Long id, String title, Long courseId, String courseTitle) {
         this.id = id;
         this.title = title;
+        this.courseId = courseId;
+        this.courseTitle = courseTitle;
     }
 
     public Long getId() {
@@ -18,6 +22,12 @@ public class ClassOutputDto {
 
     public String getTitle() {
         return title;
+    }
+    public Long getCourseId() {
+        return courseId;
+    }
+    public String getCourseTitle() {
+        return courseTitle;
     }
 
     @Override

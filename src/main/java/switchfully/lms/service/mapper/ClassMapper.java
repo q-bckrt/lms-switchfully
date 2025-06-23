@@ -1,6 +1,7 @@
 package switchfully.lms.service.mapper;
 
 import org.springframework.stereotype.Component;
+import switchfully.lms.domain.Course;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.domain.Class;
 
@@ -47,9 +48,11 @@ public class ClassMapper {
      * @see ClassOutputDto
      * @return mapped ClassOutputDto object
      * */
-    public ClassOutputDto classToOutput(Class classDomain) {
+    public ClassOutputDto classToOutput(Class classDomain, Course course) {
         return new ClassOutputDto(classDomain.getId(),
-                classDomain.getTitle()
+                classDomain.getTitle(),
+                course.getId(),
+                course.getTitle()
         );
     }
 }

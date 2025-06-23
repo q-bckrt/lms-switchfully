@@ -32,10 +32,12 @@ public class ClassMapperTest {
     void givenClassDomainEntity_whenClassToOutput_thenReturnClassDto() {
         //GIVEN
         Class classDomain = new Class("validTitle");
-        //EXPECTED
-        ClassOutputDto expectedResult = new ClassOutputDto(1L,"validTitle");
+        Course course = new Course("validTitle");
 
-        ClassOutputDto result = classMapper.classToOutput(classDomain);
+        //EXPECTED
+        ClassOutputDto expectedResult = new ClassOutputDto(1L,"validTitle", course.getId(),course.getTitle());
+
+        ClassOutputDto result = classMapper.classToOutput(classDomain, course);
 
         assertThat(result.getTitle()).isEqualTo(expectedResult.getTitle());
     }

@@ -95,7 +95,8 @@ public class ClassService {
      * */
     public ClassOutputDto findClassById(Long classId) {
         Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
-        return classMapper.classToOutput(classDomain);
+        Course course = classDomain.getCourse();
+        return classMapper.classToOutput(classDomain, course);
     }
 
     /** Finds all classes in the database and returns a list of ClassOutputDto
@@ -107,7 +108,7 @@ public class ClassService {
      * */
     public List<ClassOutputDto> findAllClasses() {
         return classRepository.findAll().stream()
-                .map(classMapper::classToOutput)
+                .map(classDomain -> classMapper.classToOutput(classDomain, classDomain.getCourse()))
                 .collect(Collectors.toList());
     }
 
@@ -128,7 +129,7 @@ public class ClassService {
         Class classDomain = classRepository.findById(classId).orElseThrow(() -> new InvalidInputException("Class id not found in repository"));
         classDomain.setCourse(course);
 
-        return classMapper.classToOutput(classRepository.save(classDomain));
+        return classMapper.classToOutput(classRepository.save(classDomain), course);
     }
 
     /** Private helper method that validates fields on the ClassInputDto used in class creation and returns the input dto or throws exceptions, also validates if a given user's role is permitted to create classes

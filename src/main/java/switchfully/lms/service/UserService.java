@@ -247,7 +247,7 @@ public class UserService {
     private List<ClassOutputDto> getListOfClasses(User user) {
         return user.getClasses()
                 .stream()
-                .map(classMapper::classToOutput)
+                .map(classDomain -> classMapper.classToOutput(classDomain, classDomain.getCourse()))
                 .toList();
     }
 

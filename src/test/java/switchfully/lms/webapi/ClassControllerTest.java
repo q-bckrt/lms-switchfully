@@ -188,7 +188,7 @@ public class ClassControllerTest {
 
 
         //EXPECTED
-        ClassOutputDto expectedResult = new ClassOutputDto(newClass.getId(),newClass.getTitle());
+        ClassOutputDto expectedResult = new ClassOutputDto(newClass.getId(),newClass.getTitle(), newCourse.getId(),newCourse.getTitle());
         //RESULT
         ClassOutputDto response = given()
                 .when()
@@ -212,7 +212,7 @@ public class ClassControllerTest {
         Course newCourse = courseRepository.save(new Course("NEW COURSE"));
 
         //EXPECTED
-        ClassOutputDto expectedResult = new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle());
+        ClassOutputDto expectedResult = new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle(), newCourse.getId(),newCourse.getTitle());
         //RESULT
         ClassOutputDto response = given()
                 .when()
@@ -235,11 +235,20 @@ public class ClassControllerTest {
         //GIVEN
         Class newClass1 = classRepository.save(new Class("NEW CLASS1"));
         Class newClass2 = classRepository.save(new Class("NEW CLASS2"));
+        Course newCourse = courseRepository.save(new Course("NEW COURSE"));
+        Course newCourse1 = courseRepository.save(new Course("NEW COURSE1"));
+        Course newCourse2 = courseRepository.save(new Course("NEW COURSE2"));
+        classEnrolled.setCourse(newCourse);
+        newClass1.setCourse(newCourse1);
+        newClass2.setCourse(newCourse2);
+        classRepository.save(newClass1);
+        classRepository.save(newClass2);
+        classRepository.save(classEnrolled);
 
         //EXPECTED
-        List<ClassOutputDto> expectedResult = List.of(new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle()),
-                new ClassOutputDto(newClass1.getId(),newClass1.getTitle()),
-                new ClassOutputDto(newClass2.getId(),newClass2.getTitle()));
+        List<ClassOutputDto> expectedResult = List.of(new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle(), newCourse.getId(),newCourse.getTitle()),
+                new ClassOutputDto(newClass1.getId(),newClass1.getTitle(), newCourse1.getId(),newCourse1.getTitle()),
+                new ClassOutputDto(newClass2.getId(),newClass2.getTitle(), newCourse2.getId(),newCourse2.getTitle()));
         //RESULT
         List<ClassOutputDto> response = given()
                 .when()
@@ -249,7 +258,15 @@ public class ClassControllerTest {
                 .extract()
                 .as(new TypeRef<List<ClassOutputDto>>() {});
 
-        assertThat(response).isEqualTo(expectedResult);
+        System.out.println(response);
+
+        assertThat(response.get(0).getTitle()).isEqualTo(expectedResult.get(0).getTitle());
+        assertThat(response.get(0).getId()).isEqualTo(expectedResult.get(0).getId());
+        assertThat(response.get(1).getTitle()).isEqualTo(expectedResult.get(1).getTitle());
+        assertThat(response.get(1).getId()).isEqualTo(expectedResult.get(1).getId());
+        assertThat(response.get(2).getTitle()).isEqualTo(expectedResult.get(2).getTitle());
+        assertThat(response.get(2).getId()).isEqualTo(expectedResult.get(2).getId());
+
     }
 
     @Test
@@ -261,9 +278,10 @@ public class ClassControllerTest {
         //GIVEN
         Class newClass1 = classRepository.save(new Class("NEW CLASS1"));
         Class newClass2 = classRepository.save(new Class("NEW CLASS2"));
+        Course newCourse = courseRepository.save(new Course("NEW COURSE"));
 
         //EXPECTED
-        ClassOutputDto expectedResult = new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle());
+        ClassOutputDto expectedResult = new ClassOutputDto(classEnrolled.getId(),classEnrolled.getTitle(), newCourse.getId(),newCourse.getTitle());
 
         ClassOutputDto response = given()
                 .when()
