@@ -11,6 +11,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import switchfully.lms.TestSecurityConfig;
 import switchfully.lms.domain.Course;
@@ -39,14 +40,10 @@ public class UserControllerTest {
     private UserRepository userRepository;
     @Autowired
     private ClassRepository classRepository;
-    @Autowired
-    private KeycloakService keycloakService;
 
-    private User user;
+
     private Class classDomain;
-    private Course course;
-    @Autowired
-    private CourseRepository courseRepository;
+
 
 
     @BeforeEach
@@ -58,10 +55,8 @@ public class UserControllerTest {
         userRepository.flush();
         classRepository.flush();
         classDomain = new Class("TestClass");
-        course = new Course("TestCourse");
-        courseRepository.save(course);
-        classDomain.setCourse(course);
-        classRepository.save(classDomain);
+        classDomain = classRepository.save(classDomain);
+        classRepository.flush();
     }
 
     //BELOW IS PERSISTING TO KEYCLOAK DB --> WE WONT TEST THIS
@@ -88,7 +83,6 @@ public class UserControllerTest {
         User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
         userRepository.save(expectedUser);
         String username = "test";
-
         given()
                 .when()
                 //.auth().oauth2(tokenStudent)
@@ -123,13 +117,15 @@ public class UserControllerTest {
 //
 //    }
 
-    @Transactional
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Test
     void testUpdateClassInformation(){
         // given
         User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
         String username = "test";
         userRepository.save(expectedUser);
+//        System.out.println(classRepository.findAll());
+//        System.out.println(classDomain);
 
         given()
                 .when()

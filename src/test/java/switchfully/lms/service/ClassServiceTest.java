@@ -237,9 +237,9 @@ public class ClassServiceTest {
 
 
         when(classRepository.findAll()).thenReturn(List.of(classDomain1, classDomain2, classDomain3));
-        when(classMapper.classToOutput(classDomain1,course)).thenReturn(classDomain1Dto);
-        when(classMapper.classToOutput(classDomain2,course)).thenReturn(classDomain2Dto);
-        when(classMapper.classToOutput(classDomain3,course)).thenReturn(classDomain3Dto);
+        when(classMapper.classToOutput(eq(classDomain1), any(Course.class))).thenReturn(classDomain1Dto);
+        when(classMapper.classToOutput(eq(classDomain2), any(Course.class))).thenReturn(classDomain2Dto);
+        when(classMapper.classToOutput(eq(classDomain3), any(Course.class))).thenReturn(classDomain3Dto);
 
         //EXPECTED RESULT
         List<ClassOutputDto> expectedResult = new ArrayList<>();

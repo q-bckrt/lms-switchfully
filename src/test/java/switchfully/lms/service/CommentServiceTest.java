@@ -76,6 +76,7 @@ public class CommentServiceTest {
         lenient().when(commentRepository.findById(testComment.getId())).thenReturn(Optional.of(testComment));
 
         lenient().when(userRepository.existsByUserName(testUser.getUserName())).thenReturn(true);
+        lenient().when(userCodelabRepository.existsByUserIdAndCodelabId(testUser.getId(), testCodelab.getId())).thenReturn(true);
 
     }
 
@@ -84,6 +85,8 @@ public class CommentServiceTest {
         CommentInputDto input = new CommentInputDto("new test comment");
         Comment comment = new Comment(testUser,testCodelab,"new test comment");
         setId(comment,99L);
+        UserCodelab userCodelab = new UserCodelab(testUser,testCodelab,ProgressLevel.NOT_STARTED);
+        userCodelabRepository.save(userCodelab);
 
         //EXPECTED
         CommentOutputDto expected = new CommentOutputDto(99L,testUser.getDisplayName(),testCodelab.getTitle(),input.getComment(), LocalDateTime.now());
