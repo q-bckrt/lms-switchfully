@@ -18,6 +18,23 @@ public interface UserCodelabRepository extends JpaRepository<UserCodelab, UserCo
     @Query("SELECT uc FROM UserCodelab uc WHERE uc.user.role = :role AND uc.codelab.id = :codelabId")
     List<UserCodelab> findByUserRoleCodelabId(@Param("role") UserRole role, @Param("codelabId") Long codelabId);
 
+    /** Get the list of usercodelab related to a specific class and user.
+     * @see switchfully.lms.service.ClassService
+     * */
+    @Query(value= """
+    SELECT uc.*
+    FROM classes cls
+    JOIN courses crs ON crs.id = cls.course_id
+    JOIN courses_modules cm ON crs.id = cm.course_id
+    JOIN modules m ON cm.module_id = m.id
+    JOIN modules_submodules ms ON m.id = ms.module_id
+    JOIN submodules sm ON ms.submodule_id = sm.id
+    JOIN codelabs cdl ON sm.id = cdl.submodule_id
+    JOIN users_codelabs uc on cdl.id = uc.codelab_id
+    WHERE cls.id = :classId AND uc.user_id = :userId
+    """, nativeQuery = true)
+    List<UserCodelab> findProgressByClassIddAndUserID(@Param("classId") Long classId, @Param("userId") Long userId);
+
     /** Get the list of usercodelab related to a specific course and user.
      * @see switchfully.lms.service.CourseService
      * */

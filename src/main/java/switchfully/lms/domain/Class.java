@@ -69,6 +69,10 @@ public class Class {
         return course;
     }
 
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
