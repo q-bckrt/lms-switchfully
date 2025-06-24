@@ -196,14 +196,6 @@ public class UserService {
 
     }
 
-    /** Get the progress level values.
-     * These values are to be used in a dropdown menu for a student to record where he/she is at the moment in a specific codelab.
-     * @return List of String
-     * */
-    public List<String> getProgressLevels() {
-        return Arrays.stream(ProgressLevel.values()).map(Enum::name).collect(Collectors.toList());
-    }
-
     /** Validate the UserInputDto content
      * Check if username or email not already in the database and that the email has the right format.
      * @param userName user's username who wish to change his/her codelab progress
