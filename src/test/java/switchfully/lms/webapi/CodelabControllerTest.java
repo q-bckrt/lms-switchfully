@@ -51,12 +51,16 @@ public class CodelabControllerTest {
     private UserRepository userRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private UserCodelabRepository userCodelabRepository;
 
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
 
+        userCodelabRepository.deleteAll();
+        userCodelabRepository.flush();
         commentRepository.deleteAll();
         commentRepository.flush();
         userRepository.deleteAll();
@@ -65,7 +69,8 @@ public class CodelabControllerTest {
         codelabRepository.deleteAll();
         submoduleRepository.flush();
         codelabRepository.flush();
-
+        userCodelabRepository.deleteAll();
+        userCodelabRepository.flush();
     }
 
     @Test
@@ -202,6 +207,8 @@ public class CodelabControllerTest {
         User user = userRepository.save(new User("userName","displayName","firstName","lastName","email@yahoo.com","password", UserRole.STUDENT));
         Submodule submodule = submoduleRepository.save(new Submodule("Parent Submodule"));
         Codelab codelab = codelabRepository.save(new Codelab("codelabtitle","codelabdetails",submodule));
+        UserCodelab userCodelab = new UserCodelab(user,codelab,ProgressLevel.NOT_STARTED);
+        userCodelabRepository.save(userCodelab);
         //EXPECTED
         //null values in expected output dto are not being tested on
         CommentOutputDto expectedResult = new CommentOutputDto(null,user.getDisplayName(),codelab.getTitle(),input.getComment(), null);
