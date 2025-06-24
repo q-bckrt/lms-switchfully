@@ -26,7 +26,7 @@ public class UserCodelabMapperTest {
         Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
         UserCodelab userCodelab = new UserCodelab(testUser,codelab, ProgressLevel.NOT_STARTED);
         //expected
-        ProgressPerUserDto expectedResult = new ProgressPerUserDto(codelab.getTitle(), ProgressLevel.NOT_STARTED);
+        ProgressPerUserDto expectedResult = new ProgressPerUserDto(codelab.getTitle(), ProgressLevel.NOT_STARTED, codelab.getId());
         //when
         ProgressPerUserDto result = userCodelabMapper.userCodelabToProgressPerUserDto(userCodelab);
         //then
@@ -42,8 +42,8 @@ public class UserCodelabMapperTest {
         Submodule submodule = new Submodule("submodule name");
         Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
         Codelab codelab2 = new Codelab("some codelab2", "details about the codelab2", submodule);
-        ProgressPerUserDto prUsDto = new ProgressPerUserDto(codelab.getTitle(), ProgressLevel.NOT_STARTED);
-        ProgressPerUserDto prUsDto2 = new ProgressPerUserDto(codelab2.getTitle(), ProgressLevel.NOT_STARTED);
+        ProgressPerUserDto prUsDto = new ProgressPerUserDto(codelab.getTitle(), ProgressLevel.NOT_STARTED,codelab.getId());
+        ProgressPerUserDto prUsDto2 = new ProgressPerUserDto(codelab2.getTitle(), ProgressLevel.NOT_STARTED,codelab2.getId());
         List<ProgressPerUserDto> prgressList = Arrays.asList(prUsDto, prUsDto2);
         // expected
         ProgressPerUserDtoList prUsDtoList = new ProgressPerUserDtoList(testUser.getUserName(),prgressList);
