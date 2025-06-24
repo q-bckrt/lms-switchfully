@@ -132,6 +132,14 @@ public class ClassService {
         return classMapper.classToOutput(classRepository.save(classDomain), course);
     }
 
+    public List<ClassOutputDto> findClassForAUsername(String username) {
+        List<Class> classList = classRepository.findClassByUserName(username);
+
+        return classList.stream()
+                .map(classDomain -> classMapper.classToOutput(classDomain, classDomain.getCourse()))
+                .collect(Collectors.toList());
+    }
+
     /** Private helper method that validates fields on the ClassInputDto used in class creation and returns the input dto or throws exceptions, also validates if a given user's role is permitted to create classes
      * @param classInputDto The {@code ClassInputDto} to validate fields on
      * @param user the {@code User} to validate role on

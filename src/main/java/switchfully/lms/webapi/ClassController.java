@@ -100,6 +100,19 @@ public class ClassController {
         return classService.findClassById(classId);
     }
 
+    /** endpoint to get class list for specific username
+     * @param username the id of the class that should be returns
+     * @see Class
+     * @return list of ClassOutputDto objects
+     * */
+    @GetMapping(path = "/get-classes/{username}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ClassOutputDto> findClassByUserName(@PathVariable String username) {
+        //AUTHORIZE
+        return classService.findClassForAUsername(username);
+    }
+
 
 
 
