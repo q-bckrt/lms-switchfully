@@ -1,16 +1,11 @@
 package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
-import switchfully.lms.domain.Codelab;
-import switchfully.lms.domain.ProgressLevel;
-import switchfully.lms.domain.UserCodelab;
-import switchfully.lms.domain.UserRole;
+import switchfully.lms.domain.*;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.UserCodelabRepository;
-import switchfully.lms.service.dto.CodelabInputDto;
-import switchfully.lms.service.dto.CodelabOutputDto;
-import switchfully.lms.service.dto.ProgressPerCodelabDto;
-import switchfully.lms.service.dto.ProgressPerCodelabDtoList;
+import switchfully.lms.repository.UserRepository;
+import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.CodelabMapper;
 import switchfully.lms.service.mapper.UserCodelabMapper;
 
@@ -28,6 +23,7 @@ public class CodelabService {
     // FIELDS
     private final CodelabRepository codelabRepository;
     private final UserCodelabRepository userCodelabRepository;
+    private final UserRepository userRepository;
 
     private final CodelabMapper codelabMapper;
     private final UserCodelabMapper userCodelabMapper;
@@ -37,12 +33,13 @@ public class CodelabService {
     // CONSTRUCTOR
     public CodelabService(CodelabRepository codelabRepository, CodelabMapper codelabMapper,
                           UserCodelabRepository userCodelabRepository, UserCodelabMapper userCodelabMapper,
-                          UserCodelabService userCodelabService) {
+                          UserCodelabService userCodelabService, UserRepository userRepository) {
         this.codelabRepository = codelabRepository;
         this.codelabMapper = codelabMapper;
         this.userCodelabRepository = userCodelabRepository;
         this.userCodelabMapper = userCodelabMapper;
         this.userCodelabService = userCodelabService;
+        this.userRepository = userRepository;
     }
 
     // METHODS
@@ -131,6 +128,23 @@ public class CodelabService {
      * */
     public List<String> getProgressLevels() {
         return Arrays.stream(ProgressLevel.values()).map(Enum::name).collect(Collectors.toList());
+    }
+
+    /** Get the progress for one codelab of a specific user.
+     * Get user from database and the UserCodelab associated with its ID.
+     * Add the title of the codelab and return a ProgressPerUserDtoList, with the username and a list of codelab title and their progress
+     * @param username username use to retrieve a User from the database
+     * @see UserCodelabRepository
+     * @see UserCodelabMapper
+     * @return ProgressPerUserDtoList object
+     * */
+    public ProgressPerUserDto getCodelabProgressPerUserForOneCodelab(String username, Long codelabId) {
+        User user = userRepository.findByUserName(username);
+        UserCodelabId userCodelabId = new UserCodelabId(user.getId(),codelabId);
+        UserCodelab userCodelabList = userCodelabRepository.findById(userCodelabId).get();
+
+        return userCodelabMapper.userCodelabToProgressPerUserDto(userCodelabList);
+
     }
 
 
