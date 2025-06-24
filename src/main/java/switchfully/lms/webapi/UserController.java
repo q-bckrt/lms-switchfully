@@ -109,17 +109,6 @@ public class UserController {
         return userService.getCodelabProgressPerUser(username);
     }
 
-    /**
-     * Helper methods for the frontend to get the list of possible values for the progress level of a codelab
-     *
-     * @return list of String
-     */
-    @GetMapping(path = "/progress-levels", produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public List<String> getCodelabProgressPerUser() {
-        //AUTHORIZE
-        return userService.getProgressLevels();
-    }
 
     /**
      * User get the overview of all of his codelabs.

@@ -2,6 +2,7 @@ package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.Codelab;
+import switchfully.lms.domain.ProgressLevel;
 import switchfully.lms.domain.UserCodelab;
 import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.CodelabRepository;
@@ -13,7 +14,9 @@ import switchfully.lms.service.dto.ProgressPerCodelabDtoList;
 import switchfully.lms.service.mapper.CodelabMapper;
 import switchfully.lms.service.mapper.UserCodelabMapper;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for managing codelabs.
@@ -121,5 +124,14 @@ public class CodelabService {
                 .toList();
         return  userCodelabMapper.codelabTitleAndProgressPerCodelabDtoToProgressPerCodelabDtoList(codelab.getTitle(), progressDtos);
     }
+
+    /** Get the progress level values.
+     * These values are to be used in a dropdown menu for a student to record where he/she is at the moment in a specific codelab.
+     * @return List of String
+     * */
+    public List<String> getProgressLevels() {
+        return Arrays.stream(ProgressLevel.values()).map(Enum::name).collect(Collectors.toList());
+    }
+
 
 }

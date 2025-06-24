@@ -128,4 +128,16 @@ public class CodelabController {
         return commentService.getAllCommentsByCodelabId(codelabId);
     }
 
+    /**
+     * Helper methods for the frontend to get the list of possible values for the progress level of a codelab
+     *
+     * @return list of String
+     */
+    @GetMapping(path = "/progress-levels", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getProgressLevels() {
+        //AUTHORIZE
+        return codelabService.getProgressLevels();
+    }
+
 }
