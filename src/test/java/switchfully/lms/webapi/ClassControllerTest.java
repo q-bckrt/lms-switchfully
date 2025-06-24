@@ -140,7 +140,7 @@ public class ClassControllerTest {
         ClassInputDto input = new ClassInputDto("NEW CLASS");
         String token = "GENERATE TOKEN HERE";
         //EXPECTED
-        ClassOutputDtoList expectedResult = new ClassOutputDtoList(lastClassId+1,null,input.getTitle(), List.of(userMapper.userToOutput(coach)));
+        ClassOutputDtoList expectedResult = new ClassOutputDtoList(lastClassId+1,null,input.getTitle(),new ArrayList<>());
         //RESULT
         ClassOutputDtoList response = given()
                 .contentType(ContentType.JSON)

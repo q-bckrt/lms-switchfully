@@ -78,8 +78,9 @@ public class ClassService {
         validateArgument(userNameCoach, "User " +userNameCoach+ " not found in repository",u->!userRepository.existsByUserName(u),InvalidInputException::new);
         User coach = userRepository.findByUserName(userNameCoach);
         Class classDomain = classMapper.intputToClass(validateClassInputDto(classInputDto, coach));
-        classDomain.addCoach(coach);
         classRepository.save(classDomain);
+        coach.addClasses(classDomain);
+        userRepository.save(coach);
 
         return GetClassDtoList(classDomain);
     }
