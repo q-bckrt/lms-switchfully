@@ -5,11 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import switchfully.lms.service.CodelabService;
 import switchfully.lms.service.CommentService;
-import switchfully.lms.service.dto.CodelabInputDto;
-import switchfully.lms.service.dto.CodelabOutputDto;
-import switchfully.lms.service.dto.ProgressPerCodelabDtoList;
-import switchfully.lms.service.dto.CommentInputDto;
-import switchfully.lms.service.dto.CommentOutputDto;
+import switchfully.lms.service.dto.*;
 
 
 import java.util.List;
@@ -138,6 +134,20 @@ public class CodelabController {
     public List<String> getProgressLevels() {
         //AUTHORIZE
         return codelabService.getProgressLevels();
+    }
+
+    /**
+     * Helper methods for the frontend to get the progress of specific codelab for a specific user
+     *
+     * @return ProgressPer
+     */
+    @GetMapping(path = "/{codelabId}/progress-level/{username}", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('STUDENT','COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public ProgressPerUserDto getProgressForCodelabUser(@PathVariable Long codelabId,
+                                                        @PathVariable String username) {
+        //AUTHORIZE
+        return codelabService.getCodelabProgressPerUserForOneCodelab(username, codelabId);
     }
 
 }
