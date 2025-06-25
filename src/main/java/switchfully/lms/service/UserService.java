@@ -8,10 +8,8 @@ import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
-import switchfully.lms.service.mapper.ClassMapper;
-import switchfully.lms.service.mapper.CourseMapper;
-import switchfully.lms.service.mapper.UserCodelabMapper;
-import switchfully.lms.service.mapper.UserMapper;
+import switchfully.lms.service.mapper.*;
+
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import switchfully.lms.utility.validation.Validation;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -51,12 +49,15 @@ public class UserService {
     private final UserCodelabRepository userCodelabRepository;
     private final CodelabRepository codelabRepository;
     private final UserCodelabService userCodelabService;
+    private final ClassService classService;
+    private final OverviewMapper overviewMapper;
 
     public UserService(UserRepository userRepository, ClassRepository classRepository,
                        UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService,
                        CourseMapper courseMapper, UserCodelabMapper userCodelabMapper,
                        UserCodelabRepository userCodelabRepository, CodelabRepository codelabRepository,
-                       UserCodelabService userCodelabService) {
+                       UserCodelabService userCodelabService, ClassService classService,
+                       OverviewMapper overviewMapper) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
         this.userMapper = userMapper;
@@ -67,6 +68,8 @@ public class UserService {
         this.userCodelabRepository = userCodelabRepository;
         this.codelabRepository = codelabRepository;
         this.userCodelabService = userCodelabService;
+        this.classService = classService;
+        this.overviewMapper = overviewMapper;
     }
 
     /** Register a new User on the database and Keycloak using a UserInputDto, the input dto contains a username, last and first name, an email and a password.
@@ -213,6 +216,23 @@ public class UserService {
         userCodelabRepository.save(userCodelab);
 
         return true;
+    }
+
+    public OverviewProgressCoachDto getOverviewCoach(String username){
+        // class lie au coach
+        List<Class> classes = classRepository.findClassByUserName(username);
+        List<OverviewProgressClassDto> classesDto = new ArrayList<>();
+        // For each class, filter the list of users to keep only students
+        for (Class classDomain : classes) {
+            List<OverviewProgressStudentDto> studentUsers = classDomain.getUsers().stream()
+                    .filter(user -> user.getRole() == UserRole.STUDENT)
+                    .map(user -> overviewMapper.userToOverviewProgressStudentDto(user, classDomain.getId()))
+                    .collect(Collectors.toList());
+            OverviewProgressClassDto overviewProgressClassDto = overviewMapper.classToOverviewProgressClassDto(classDomain,studentUsers);
+            classesDto.add(overviewProgressClassDto);
+        }
+
+        return overviewMapper.classesToOverviewProgressCoachDto(classesDto);
     }
 
     /** Validate the UserInputDto content

@@ -126,5 +126,19 @@ public class UserController {
         return userService.updateProgressLevel(username,codelabId,progressLevel);
     }
 
+    /**
+     * User get the overview of all of his codelabs.
+     *
+     * @param username username of the user who wants to see the class overview
+     * @return the class overview
+     */
+    @GetMapping(path = "/{username}/all-students-overview", produces = "application/json")
+    @PreAuthorize("hasAuthority('COACH')")
+    @ResponseStatus(HttpStatus.OK)
+    public OverviewProgressCoachDto getOverviewStudentForCoach(@PathVariable String username) {
+        //AUTHORIZE
+        return userService.getOverviewCoach(username);
+    }
+
 
 }

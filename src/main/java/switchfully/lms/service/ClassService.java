@@ -1,12 +1,11 @@
 package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
-import switchfully.lms.domain.Course;
-import switchfully.lms.domain.User;
+import switchfully.lms.domain.*;
 import switchfully.lms.domain.Class;
-import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.CourseRepository;
+import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.dto.*;
 import switchfully.lms.service.mapper.ClassMapper;
@@ -53,17 +52,20 @@ public class ClassService {
     private final UserMapper userMapper;
     private final CourseMapper courseMapper;
     private final UserRepository userRepository;
+    private final UserCodelabRepository userCodelabRepository;
 
     public ClassService(ClassRepository classRepository,
                         CourseRepository courseRepository,
                         ClassMapper classMapper, UserMapper userMapper,
-                        CourseMapper courseMapper, UserRepository userRepository) {
+                        CourseMapper courseMapper, UserRepository userRepository,
+                        UserCodelabRepository userCodelabRepository) {
         this.classRepository = classRepository;
         this.courseRepository = courseRepository;
         this.classMapper = classMapper;
         this.userMapper = userMapper;
         this.courseMapper = courseMapper;
         this.userRepository = userRepository;
+        this.userCodelabRepository = userCodelabRepository;
     }
 
     /** validates arguments, creates a class domain entity, persists it to the database, and maps and outputs a ClassOutputDtoList
@@ -181,5 +183,28 @@ public class ClassService {
         }
 
         return classMapper.classToOutputList(classDomain,userList,courseOutputDto);
+    }
+
+    /**
+     * Get the percentage of done for a class for a specific user.
+     *
+     * @param classId                 the ID of the class to check
+     * @param username  user for which we want the progress percentage
+     * @return double percentage of done
+     */
+    public double getPercentageClassDoneForStudent(Long classId, String username) {
+        User user = userRepository.findByUserName(username);
+        List<UserCodelab> userCodelabList = userCodelabRepository.findProgressByClassIddAndUserID(classId, user.getId());
+
+        if (userCodelabList == null || userCodelabList.isEmpty()) {
+            return 0.0;
+        }
+
+        long doneCount = userCodelabList.stream()
+                .filter(codelab -> codelab.getProgressLevel() == ProgressLevel.DONE)
+                .count();
+
+        return (doneCount * 100.0) / userCodelabList.size();
+
     }
 }
