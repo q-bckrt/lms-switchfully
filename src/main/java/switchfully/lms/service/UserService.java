@@ -120,17 +120,17 @@ public class UserService {
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
 
-        if(userInputEditDto.getPassword() != null) {
+        if(userInputEditDto.getPassword() != null || !userInputEditDto.getPassword().isEmpty() || !userInputEditDto.getPassword().isBlank()) {
             // keycloak
             KeycloakUserDTO keycloakUserDTO = userMapper.userEditToKeycloakUser(user, userInputEditDto);
             keycloakService.changePassword(keycloakUserDTO);
             user.setPassword(userInputEditDto.getPassword());
         }
-        if (userInputEditDto.getDisplayName() != null) {
+        if (userInputEditDto.getDisplayName() != null || !userInputEditDto.getDisplayName().isEmpty() || !userInputEditDto.getDisplayName().isBlank()) {
             // database
             user.setDisplayName(userInputEditDto.getDisplayName());
         }
-        
+
         User savedUser = userRepository.save(user);
         List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
 
