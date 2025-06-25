@@ -62,6 +62,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserOutputDtoList updateProfileInfo(@PathVariable String username,
                                                @RequestBody UserInputEditDto userInputEditDto) {
+        System.out.println(userInputEditDto.getDisplayName());
+        System.out.println(userInputEditDto.getPassword());
         return userService.updateProfile(userInputEditDto,username);
     }
 
