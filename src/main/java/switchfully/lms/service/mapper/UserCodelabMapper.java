@@ -24,7 +24,8 @@ public class UserCodelabMapper {
     public ProgressPerUserDto userCodelabToProgressPerUserDto(UserCodelab userCodelab) {
         return new ProgressPerUserDto(
                 userCodelab.getCodelab().getTitle(),
-                userCodelab.getProgressLevel()
+                userCodelab.getProgressLevel(),
+                userCodelab.getCodelab().getId()
         );
     }
     /** Convert username and list of ProgressPerUser to a ProgressPerUserDtoList.
