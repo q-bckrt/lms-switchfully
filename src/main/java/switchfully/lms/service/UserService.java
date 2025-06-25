@@ -119,12 +119,18 @@ public class UserService {
     // refactor -->  remove change password on database
     public UserOutputDtoList updateProfile(UserInputEditDto userInputEditDto, String username) {
         User user = userRepository.findByUserName(username);
-        // keycloak
-        KeycloakUserDTO keycloakUserDTO = userMapper.userEditToKeycloakUser(user, userInputEditDto);
-        keycloakService.changePassword(keycloakUserDTO);
-        // database
-        user.setDisplayName(userInputEditDto.getDisplayName());
-        user.setPassword(userInputEditDto.getPassword());
+
+        if(userInputEditDto.getPassword() != null) {
+            // keycloak
+            KeycloakUserDTO keycloakUserDTO = userMapper.userEditToKeycloakUser(user, userInputEditDto);
+            keycloakService.changePassword(keycloakUserDTO);
+            user.setPassword(userInputEditDto.getPassword());
+        }
+        if (userInputEditDto.getDisplayName() != null) {
+            // database
+            user.setDisplayName(userInputEditDto.getDisplayName());
+        }
+        
         User savedUser = userRepository.save(user);
         List<ClassOutputDto> classOutputDtos = getListOfClasses(user);
 
