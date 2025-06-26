@@ -13,7 +13,8 @@ import java.util.List;
  * <p>
  * Handles incoming HTTP requests and delegates processing to {@link UserService}.
  */
-@CrossOrigin(origins = "http://localhost:4200")
+// @CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://lms-sw-frontend.netlify.app/")
 @RestController
 @RequestMapping("/users")
 public class UserController {

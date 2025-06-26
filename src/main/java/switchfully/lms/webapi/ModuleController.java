@@ -18,7 +18,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/modules")
-@CrossOrigin(origins = "http://localhost:4200")
+// @CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://lms-sw-frontend.netlify.app/")
 public class ModuleController {
 
     // FIELDS
