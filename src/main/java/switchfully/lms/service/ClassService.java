@@ -135,6 +135,12 @@ public class ClassService {
         return classMapper.classToOutput(classRepository.save(classDomain), course);
     }
 
+    /**
+     * Get the list of class for a specific user (mainly used for coach).
+     *
+     * @param username  user for which we want the list of classes
+     * @return list of ClassOutputDto
+     */
     public List<ClassOutputDto> findClassForAUsername(String username) {
         List<Class> classList = classRepository.findClassByUserName(username);
 

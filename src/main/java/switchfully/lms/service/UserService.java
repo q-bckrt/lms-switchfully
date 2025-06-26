@@ -18,7 +18,6 @@ import switchfully.lms.utility.security.KeycloakService;
 import switchfully.lms.utility.security.KeycloakUserDTO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -224,6 +223,11 @@ public class UserService {
         return true;
     }
 
+    /** Create overview for the coach
+     *
+     * @param username username of the coach
+     * @return OverviewProgressCoachDto list of classes with their students and their progress
+     * */
     public OverviewProgressCoachDto getOverviewCoach(String username){
         // class lie au coach
         List<Class> classes = classRepository.findClassByUserName(username);

@@ -5,8 +5,6 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

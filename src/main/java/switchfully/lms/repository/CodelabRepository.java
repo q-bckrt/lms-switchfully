@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import switchfully.lms.domain.Codelab;
-import switchfully.lms.domain.User;
 
 import java.util.List;
 

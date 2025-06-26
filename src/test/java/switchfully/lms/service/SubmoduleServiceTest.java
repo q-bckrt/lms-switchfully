@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import switchfully.lms.domain.Codelab;
-import switchfully.lms.domain.Course;
 import switchfully.lms.domain.Module;
 
 import org.junit.jupiter.api.TestInstance;
@@ -16,8 +15,6 @@ import switchfully.lms.domain.Submodule;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.ModuleRepository;
 import switchfully.lms.repository.SubmoduleRepository;
-import switchfully.lms.service.dto.ModuleInputDto;
-import switchfully.lms.service.dto.ModuleOutputDto;
 import switchfully.lms.service.dto.SubmoduleInputDto;
 import switchfully.lms.service.dto.SubmoduleOutputDto;
 

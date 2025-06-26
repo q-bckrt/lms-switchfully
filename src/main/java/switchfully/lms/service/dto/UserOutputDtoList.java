@@ -1,7 +1,5 @@
 package switchfully.lms.service.dto;
 
-import switchfully.lms.domain.Class;
-
 import java.util.List;
 import java.util.Objects;
 

@@ -120,43 +120,5 @@ public class Validation {
         return argumentToValidate;
     }
 
-//    private void EXAMPLES() {
-//        int intArg = 100;
-//        boolean boolArg = true;
-//        Member memberArg = null;
-//        AddressDtoInput addressDtoInput = null;
-//        //to use these validation methods you can either use a predicate as a condition, or a boolean (sometimes predicates are needed for more complex logic)
-//        //the below examples all use predicates
-//
-//        //If you dont provide validateArgument() with an Exception constructor via method reference, it will by default throw an illegal argument exception
-//        //the message below will both be the exception message and the logging message with logger.error(exceptionmessage)
-//        validateArgument(intArg, "This argument cannot be higher than 50", i->i>50);
-//
-//        //here, a method reference (or Function lambda when the type of exception needs more than just the message as an argument)
-//        // to the runtimeException constructor is given, the method is overloaded and now ta runtime exception is thrown with the input message
-//        //here logger.error(exceptionMessage) is called as well
-//        validateArgument(boolArg, "This boolean cannot be true", b-> b==true, RuntimeException::new);
-//
-//        //another example with MemberNotFoundException
-//        validateArgument(memberArg, "Member does not exist in database", m-> Objects.isNull(m), MemberNotFoundException::new);
-//
-//        //another example with a function lambda instead of a method reference (i dont think we will use this ever but hey, we can)
-//        String street = validateNonBlank(addressDtoInput.getStreet(),"Street field cannot be null", m->new ResponseStatusException(HttpStatus.BAD_REQUEST,m));
-//
-//        // Its easy to combine these in your own specialized methods if you need/want to check multiple things at a time as these static methods are available everywhere in the project :)
-//        validateAddressInput(addressDtoInput);
-//
-//    }
-
-//    private void validateAddressInput(AddressDtoInput input) {
-//        String regex = "[a-zA-Z]+";
-//
-//        validateNonBlank(input.getStreet(),"Street field cannot be empty", InvalidInputException::new);
-//        validateArgument(input.getStreet(),"Street field must contain at least 3 characters", s->s.length()<3, InvalidInputException::new);
-//        validateArgument(input.getStreet(),"Street field cannot contain any special characters", s->!s.matches(regex), InvalidInputException::new);
-//
-//        validateArgument(input.getPostalCode(),"Postalcode cannot be null", String::isEmpty, InvalidInputException::new);
-//        validateArgument(input.getCity(),"city cannot be null", String::isEmpty, InvalidInputException::new);
-//        validateArgument(input.getCountry(),"Country cannot be null", String::isEmpty, InvalidInputException::new);}
 }
 

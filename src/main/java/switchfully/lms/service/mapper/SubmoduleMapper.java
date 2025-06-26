@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import switchfully.lms.domain.Codelab;
 import switchfully.lms.domain.Module;
 import switchfully.lms.domain.Submodule;
-import switchfully.lms.repository.ModuleRepository;
 import switchfully.lms.service.dto.SubmoduleInputDto;
 import switchfully.lms.service.dto.SubmoduleOutputDto;
 

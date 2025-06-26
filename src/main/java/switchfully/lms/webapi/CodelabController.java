@@ -7,7 +7,6 @@ import switchfully.lms.service.CodelabService;
 import switchfully.lms.service.CommentService;
 import switchfully.lms.service.dto.*;
 
-
 import java.util.List;
 
 /**
@@ -117,6 +116,12 @@ public class CodelabController {
         return commentService.postComment(commentInputDto, username, codelabId);
     }
 
+    /** Get all comments for a codelab
+     * coaches and students can see comments.
+     *
+     * @param codelabId id of the codelab
+     * @return the created comment as a CommentOutputDto
+     */
     @GetMapping(path = "/{codelabId}/comments", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('STUDENT', 'COACH')")
     @ResponseStatus(HttpStatus.OK)

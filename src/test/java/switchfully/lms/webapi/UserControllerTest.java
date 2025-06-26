@@ -14,14 +14,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import switchfully.lms.TestSecurityConfig;
-import switchfully.lms.domain.Course;
 import switchfully.lms.domain.User;
 import switchfully.lms.domain.UserRole;
 import switchfully.lms.domain.Class;
 import switchfully.lms.repository.ClassRepository;
-import switchfully.lms.repository.CourseRepository;
 import switchfully.lms.repository.UserRepository;
-import switchfully.lms.utility.security.KeycloakService;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -59,24 +56,6 @@ public class UserControllerTest {
         classRepository.flush();
     }
 
-    //BELOW IS PERSISTING TO KEYCLOAK DB --> WE WONT TEST THIS
-
-//    @Test
-//    void testCreateNewStudent(){
-//        // given
-//        UserInputDto userInput = new UserInputDto("test","testFirstname","testLastName", "test@test.com", "testPassword");
-//
-//        given()
-//                .contentType("application/json")
-//                .body(userInput)
-//                .when()
-//                .post("/users")
-//                .then()
-//                .statusCode(201)
-//                .body("userName", equalTo("test"))
-//                .body("displayName", equalTo("test"));
-//    }
-
     @Test
     void testGetSpecificUser(){
         // given
@@ -94,29 +73,6 @@ public class UserControllerTest {
 
     }
 
-
-    //BELOW IS PERSISTING TO KEYCLOAK DB --> WE WONT TEST THIS
-
-//    @Test
-//    void testUpdateProfileInformation(){
-//        // given
-//        User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
-//        String username = "test";
-//        userRepository.save(expectedUser);
-//        UserInputEditDto userEditDto = new UserInputEditDto( "Display test", "testPassword");
-//
-//        given()
-//                .contentType("application/json")
-//                .body(userEditDto)
-//                .when()
-//                .put("/users/" + username + "/edit")
-//                .then()
-//                .statusCode(200)
-//                .body("displayName", equalTo("Display test"))
-//                .body("userName", equalTo("test2"));
-//
-//    }
-
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Test
     void testUpdateClassInformation(){
@@ -124,8 +80,6 @@ public class UserControllerTest {
         User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
         String username = "test";
         userRepository.save(expectedUser);
-//        System.out.println(classRepository.findAll());
-//        System.out.println(classDomain);
 
         given()
                 .when()

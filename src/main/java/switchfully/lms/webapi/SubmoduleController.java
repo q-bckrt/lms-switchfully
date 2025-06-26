@@ -99,8 +99,4 @@ public class SubmoduleController {
         return submoduleService.getPercentageSubmoduleDoneForStudent(submoduleId, username);
     }
 
-
-    // Delete (by ID) (not required)
-    // Get All Modules Associated (by Submodule ID) ??
-    // Get All Codelabs Associated (by Submodule ID) ??
 }

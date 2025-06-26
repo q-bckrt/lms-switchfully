@@ -14,7 +14,6 @@ import switchfully.lms.service.mapper.CommentMapper;
 import switchfully.lms.utility.exception.InvalidInputException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static switchfully.lms.utility.validation.Validation.validateArgument;
 import static switchfully.lms.utility.validation.Validation.validateNonBlank;
@@ -94,6 +93,12 @@ public class CommentService {
         return commentMapper.commentToOutput(comment);
     }
 
+    /**
+     * Get the all comments for a specific codelab.
+     *
+     * @param codelabId                 the ID of the codelab
+     * @return List of CommentOutputDto
+     */
     public List<CommentOutputDto> getAllCommentsByCodelabId(Long codelabId) {
         List<Comment> comments = commentRepository.findCommentsByCodelabId(codelabId);
         return comments.stream().map(commentMapper::commentToOutput).toList();

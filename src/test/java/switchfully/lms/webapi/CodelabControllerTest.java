@@ -19,12 +19,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import switchfully.lms.domain.Module;
 import switchfully.lms.repository.*;
 import switchfully.lms.service.dto.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;

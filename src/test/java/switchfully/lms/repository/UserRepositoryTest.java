@@ -126,27 +126,4 @@ public class UserRepositoryTest {
         assertThat(userRepository.existsByUserName(testUser.getUserName())).isEqualTo(true);
     }
 
-    @Test
-    void givenCodelabId_retrieveListOfUsersAssociatedToIt(){
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
-        userRepository.save(testUser);
-        Course course = new Course("course name");
-        courseRepository.save(course);
-        Class classDomain = new Class("class name");
-        classDomain.setCourse(course);
-        Class savedClass = classRepository.save(classDomain);
-        testUser.addClasses(savedClass);
-        userRepository.save(testUser);
-        Module module = new Module("module name");
-        course.addChildModule(module);
-        moduleRepository.save(module);
-        Submodule submodule = new Submodule("submodule name");
-        submoduleRepository.save(submodule);
-        module.addChildSubmodule(submodule);
-        moduleRepository.save(module);
-        Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
-        codelabRepository.save(codelab);
-
-        List<User> userList = userRepository.findUsersByCodelabId(codelab.getId());
-    }
 }

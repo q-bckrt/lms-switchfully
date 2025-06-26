@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import switchfully.lms.domain.Class;
 import switchfully.lms.domain.Course;
 import switchfully.lms.domain.User;
-import switchfully.lms.repository.UserRepository;
 import switchfully.lms.service.ClassService;
 import switchfully.lms.service.dto.ClassInputDto;
 import switchfully.lms.service.dto.ClassOutputDto;

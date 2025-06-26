@@ -6,7 +6,6 @@ import switchfully.lms.service.dto.*;
 import switchfully.lms.domain.Class;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Mapper class for mapping different types of class objects to each other <p>

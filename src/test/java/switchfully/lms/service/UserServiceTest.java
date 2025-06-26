@@ -48,26 +48,6 @@ public class UserServiceTest {
         userRepository.flush();
     }
 
-    //BELOW IS PERSISTING TO KEYCLOAK DB --> WE WONT TEST THIS
-
-//    @Test
-//    void givenUserInputDto_createNewUserAndSaveIt(){
-//        // given
-//        UserInputDto userInput = new UserInputDto("test","testFirstname","testLastName", "test@test.com", "testPassword");
-//        // Expected
-//        User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
-//        // create user
-//        UserOutputDto resultUser = userService.createNewStudent(userInput);
-//
-//        //
-//        User savedUser= userRepository.findByUserName(expectedUser.getUserName());
-//        assertThat(savedUser).isNotNull();
-//        assertThat(savedUser.getUserName()).isEqualTo(expectedUser.getUserName());
-//        assertThat(savedUser.getPassword()).isEqualTo(expectedUser.getPassword());
-//        assertThat(savedUser.getRole()).isEqualTo(expectedUser.getRole());
-//        assertThat(savedUser.getEmail()).isEqualTo(expectedUser.getEmail());
-//        assertThat(savedUser.getDisplayName()).isEqualTo(expectedUser.getDisplayName());
-//    }
 
     @Test
     void givenUserName_getProfileInformation(){
@@ -83,25 +63,6 @@ public class UserServiceTest {
         assertThat(retrievedUser.getDisplayName()).isEqualTo(testUser.getDisplayName());
         assertThat(retrievedUser.getClasses().isEmpty()).isTrue();
     }
-
-    //BELOW IS PERSISTING TO KEYCLOAK DB --> WE WONT TEST THIS
-
-//    @Transactional
-//    @Test
-//    void givenUserNameAndEditDto_updateUser(){
-//        // given user and userInputEditDto
-//        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
-//        testUser.setClasses(new ArrayList<>());
-//        userRepository.save(testUser);
-//        UserInputEditDto userInputEdit = new UserInputEditDto( "New Test", "PassTest");
-//        // when
-//        UserOutputDtoList retrievedUser = userService.updateProfile(userInputEdit, testUser.getUserName());
-//
-//        assertThat(retrievedUser).isNotNull();
-//        assertThat(retrievedUser.getUserName()).isEqualTo(testUser.getUserName());
-//        assertThat(retrievedUser.getDisplayName()).isEqualTo(userInputEdit.getDisplayName());
-//
-//    }
 
     @Test
     void givenUserNameAndEditDto_ifAlreadyExistingUsername_throwException(){

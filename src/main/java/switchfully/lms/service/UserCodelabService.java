@@ -8,8 +8,6 @@ import switchfully.lms.domain.UserCodelab;
 import switchfully.lms.repository.CodelabRepository;
 import switchfully.lms.repository.UserCodelabRepository;
 import switchfully.lms.repository.UserRepository;
-import switchfully.lms.service.mapper.UserMapper;
-import switchfully.lms.utility.validation.Validation;
 
 import java.util.List;
 

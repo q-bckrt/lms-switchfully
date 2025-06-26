@@ -115,7 +115,4 @@ public class CourseController {
         return courseService.getPercentageCourseDoneForStudent(courseId, username);
     }
 
-
-    // Delete (by ID) (not required)
-    // Get All Modules Associated (by course ID) ??
 }

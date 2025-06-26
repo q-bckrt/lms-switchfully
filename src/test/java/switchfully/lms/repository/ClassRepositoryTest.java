@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import switchfully.lms.domain.Class;
-import switchfully.lms.domain.User;
-import switchfully.lms.domain.UserRole;
-import switchfully.lms.utility.exception.InvalidInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

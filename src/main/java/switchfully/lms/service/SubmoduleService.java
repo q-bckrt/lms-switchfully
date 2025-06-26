@@ -2,13 +2,9 @@ package switchfully.lms.service;
 
 import org.springframework.stereotype.Service;
 import switchfully.lms.domain.*;
-import switchfully.lms.domain.Module;
 import switchfully.lms.repository.*;
-import switchfully.lms.service.dto.ModuleInputDto;
-import switchfully.lms.service.dto.ModuleOutputDto;
 import switchfully.lms.service.dto.SubmoduleInputDto;
 import switchfully.lms.service.dto.SubmoduleOutputDto;
-import switchfully.lms.service.mapper.ModuleMapper;
 import switchfully.lms.service.mapper.SubmoduleMapper;
 
 import java.util.List;

@@ -1,14 +1,10 @@
 package switchfully.lms.service.mapper;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import switchfully.lms.domain.*;
-import switchfully.lms.domain.Class;
 import switchfully.lms.service.dto.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

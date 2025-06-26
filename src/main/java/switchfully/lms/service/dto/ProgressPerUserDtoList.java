@@ -1,7 +1,5 @@
 package switchfully.lms.service.dto;
 
-import switchfully.lms.domain.ProgressLevel;
-
 import java.util.List;
 
 public class ProgressPerUserDtoList {

@@ -2,8 +2,6 @@ package switchfully.lms.service.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * Data Transfer Object for Codelab Output.
  * This class is used to transfer codelab data from the server to the client,

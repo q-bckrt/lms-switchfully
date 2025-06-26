@@ -1,7 +1,6 @@
 package switchfully.lms.service.mapper;
 
 import org.springframework.stereotype.Component;
-import switchfully.lms.domain.Codelab;
 import switchfully.lms.domain.UserCodelab;
 import switchfully.lms.service.dto.ProgressPerCodelabDto;
 import switchfully.lms.service.dto.ProgressPerCodelabDtoList;

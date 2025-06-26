@@ -1,7 +1,5 @@
 package switchfully.lms.service.dto;
 
-import switchfully.lms.domain.User;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
