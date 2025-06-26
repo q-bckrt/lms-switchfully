@@ -52,7 +52,7 @@ public class UserServiceTest {
     @Test
     void givenUserName_getProfileInformation(){
         // given user
-        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         testUser.setClasses(new ArrayList<>());
         userRepository.save(testUser);
         // when
@@ -67,8 +67,8 @@ public class UserServiceTest {
     @Test
     void givenUserNameAndEditDto_ifAlreadyExistingUsername_throwException(){
         // given user and userInputEditDto
-        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
-        User testUser2 = new User("test2", "test2","testFirstname","testLastName", "test2@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
+        User testUser2 = new User("test2", "test2","testFirstname","testLastName", "test2@test.com", UserRole.STUDENT);
         testUser.setClasses(new ArrayList<>());
         userRepository.save(testUser);
         userRepository.save(testUser2);
@@ -81,7 +81,7 @@ public class UserServiceTest {
     @Test
     void givenClassId_updateListClassesOfUser(){
         // given user and userInputEditDto
-        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         testUser.setClasses(new ArrayList<>());
         userRepository.save(testUser);
         Class baseClass = new Class("TestClass");
@@ -103,7 +103,7 @@ public class UserServiceTest {
     @Test
     void givenNonExistingClassId_throwException(){
         // given user and userInputEditDto
-        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         testUser.setClasses(new ArrayList<>());
         userRepository.save(testUser);
 
@@ -113,7 +113,7 @@ public class UserServiceTest {
 
     @Test
     void givenUsername_getProgressLevelForAllCodelabOfAUser(){
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         Submodule submodule = new Submodule("submodule name");
         submoduleRepository.save(submodule);
@@ -135,7 +135,7 @@ public class UserServiceTest {
 
     @Test
     void givenUsernameCodelabIdProgressLevel_updateProgressLevel(){
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         Submodule submodule = new Submodule("submodule name");
         submoduleRepository.save(submodule);

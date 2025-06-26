@@ -59,7 +59,7 @@ public class UserControllerTest {
     @Test
     void testGetSpecificUser(){
         // given
-        User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(expectedUser);
         String username = "test";
         given()
@@ -77,7 +77,7 @@ public class UserControllerTest {
     @Test
     void testUpdateClassInformation(){
         // given
-        User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User expectedUser = new User("test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         String username = "test";
         userRepository.save(expectedUser);
 

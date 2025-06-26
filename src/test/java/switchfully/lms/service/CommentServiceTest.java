@@ -60,7 +60,7 @@ public class CommentServiceTest {
     @BeforeEach
     public void beforeEach() {
 
-        testUser = new User("username","displayname","firstname","lastname","email@email.com","password", UserRole.STUDENT);
+        testUser = new User("username","displayname","firstname","lastname","email@email.com", UserRole.STUDENT);
         testSubmodule = new Submodule("submodule title");
         testCodelab = new Codelab("codelabtitle","codelab details",testSubmodule);
         testComment = new Comment(testUser,testCodelab,"test comment");
@@ -120,7 +120,7 @@ public class CommentServiceTest {
     @Test
     void givenUserCodelabDoesNotExistsAndInputValid_whenPostComment_thenThrowException() {
         CommentInputDto input = new CommentInputDto("Valid Input");
-        User newUser = new User("newusername","displayname","firstname","lastname","newemail@yahoo.com","password", UserRole.STUDENT);
+        User newUser = new User("newusername","displayname","firstname","lastname","newemail@yahoo.com", UserRole.STUDENT);
         setId(newUser,89L);
 
 

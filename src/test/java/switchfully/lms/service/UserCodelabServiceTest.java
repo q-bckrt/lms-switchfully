@@ -61,7 +61,7 @@ public class UserCodelabServiceTest {
 
     @Test
     void givenUserAndClassId_updateLinkBetweenUserAndCodelabOfTheCLass(){
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         Course course = new Course("course name");
         courseRepository.save(course);
@@ -98,7 +98,7 @@ public class UserCodelabServiceTest {
 
     @Test
     void givenUserAlreadyLinkedToCodelab_thenNoDuplicateLinkIsCreated() {
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         Course course = new Course("course name");
         courseRepository.save(course);
@@ -132,8 +132,8 @@ public class UserCodelabServiceTest {
 
     @Test
     void givenCodelabId_updateLinkBetweenCodelabAndAllUsersBelongingToTheSameCLassAsCodelab() {
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
-        User testUser2 = new User("Test2", "test2","testFirstname2","testLastName2", "test2@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
+        User testUser2 = new User("Test2", "test2","testFirstname2","testLastName2", "test2@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         userRepository.save(testUser2);
         Course course = new Course("course name");

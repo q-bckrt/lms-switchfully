@@ -46,16 +46,14 @@ public class UserService {
     private final CourseMapper courseMapper;
     private final UserCodelabMapper userCodelabMapper;
     private final UserCodelabRepository userCodelabRepository;
-    private final CodelabRepository codelabRepository;
     private final UserCodelabService userCodelabService;
-    private final ClassService classService;
     private final OverviewMapper overviewMapper;
 
     public UserService(UserRepository userRepository, ClassRepository classRepository,
                        UserMapper userMapper, ClassMapper classMapper, KeycloakService keycloakService,
                        CourseMapper courseMapper, UserCodelabMapper userCodelabMapper,
-                       UserCodelabRepository userCodelabRepository, CodelabRepository codelabRepository,
-                       UserCodelabService userCodelabService, ClassService classService,
+                       UserCodelabRepository userCodelabRepository,
+                       UserCodelabService userCodelabService,
                        OverviewMapper overviewMapper) {
         this.userRepository = userRepository;
         this.classRepository = classRepository;
@@ -65,9 +63,7 @@ public class UserService {
         this.courseMapper = courseMapper;
         this.userCodelabMapper = userCodelabMapper;
         this.userCodelabRepository = userCodelabRepository;
-        this.codelabRepository = codelabRepository;
         this.userCodelabService = userCodelabService;
-        this.classService = classService;
         this.overviewMapper = overviewMapper;
     }
 
@@ -123,7 +119,6 @@ public class UserService {
             // keycloak
             KeycloakUserDTO keycloakUserDTO = userMapper.userEditToKeycloakUser(user, userInputEditDto);
             keycloakService.changePassword(keycloakUserDTO);
-            user.setPassword(userInputEditDto.getPassword());
         }
         if (userInputEditDto.getDisplayName() != null && !userInputEditDto.getDisplayName().isEmpty() && !userInputEditDto.getDisplayName().isBlank()) {
             // database

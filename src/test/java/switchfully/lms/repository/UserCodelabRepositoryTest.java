@@ -51,7 +51,7 @@ public class UserCodelabRepositoryTest {
 
     @Test
     void givenCorrectUserIdAndCodelabId_whenSave_thenReturnCorrectUserCodelab() {
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         User savedUser = userRepository.save(testUser);
         Submodule submodule = new Submodule("submodule name");
         submoduleRepository.save(submodule);
@@ -67,7 +67,7 @@ public class UserCodelabRepositoryTest {
 
     @Test
     void givenCorrectUserId_whenFindByUserId_thenReturnCorrectUserCodelab() {
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         User savedUser = userRepository.save(testUser);
         Submodule submodule = new Submodule("submodule name");
         submoduleRepository.save(submodule);
@@ -85,7 +85,7 @@ public class UserCodelabRepositoryTest {
 
     @Test
     void giveCorrectUserIdAndCodelabId_whenExistsByUserIdAndCodelabId_thenReturnTrue() {
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         User savedUser = userRepository.save(testUser);
         Submodule submodule = new Submodule("submodule name");
         submoduleRepository.save(submodule);
@@ -100,8 +100,8 @@ public class UserCodelabRepositoryTest {
 
     @Test
     void givenSpecificUserRole_returnOnlyCodelabOfUserWithThisRole() {
-        User studentUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
-        User coachUser = new User("coachUser", "coachUser","coachUser","coachUser", "coachUser@test.com", "testPassword", UserRole.COACH);
+        User studentUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
+        User coachUser = new User("coachUser", "coachUser","coachUser","coachUser", "coachUser@test.com", UserRole.COACH);
         userRepository.save(studentUser);
         userRepository.save(coachUser);
         Submodule submodule = new Submodule("submodule name");
@@ -122,7 +122,7 @@ public class UserCodelabRepositoryTest {
 
     @Test
     void givenCourseIdAndUserId_returnListOfUserCodelabLinkToCourseAndUser(){
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         Course course = new Course("course name");
         courseRepository.save(course);
@@ -152,7 +152,7 @@ public class UserCodelabRepositoryTest {
 
     @Test
     void givenModuleIdAndUserId_returnListOfUserCodelabLinkToUserAndModule(){
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         Module module = new Module("module name");
         moduleRepository.save(module);
@@ -179,7 +179,7 @@ public class UserCodelabRepositoryTest {
 
     @Test
     void givenSubmoduleIdAndUserId_returnListOfUserCodelabLinkToUserAndSubmodule(){
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         userRepository.save(testUser);
         Submodule submodule = new Submodule("submodule name");
         Submodule submodule1 = new Submodule("submodule name1");
