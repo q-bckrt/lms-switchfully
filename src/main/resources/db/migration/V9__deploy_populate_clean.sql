@@ -3,6 +3,18 @@
 
 SET search_path TO lms;
 
+ALTER SEQUENCE users_seq RESTART WITH 1;
+ALTER SEQUENCE courses_seq RESTART WITH 1;
+ALTER SEQUENCE classes_seq RESTART WITH 1;
+ALTER SEQUENCE modules_seq RESTART WITH 1;
+ALTER SEQUENCE submodules_seq RESTART WITH 1;
+ALTER SEQUENCE codelabs_seq RESTART WITH 1;
+ALTER SEQUENCE comments_seq RESTART WITH 1;
+
+ALTER TABLE codelabs
+    ALTER COLUMN details TYPE TEXT,
+    ALTER COLUMN title TYPE TEXT;
+
 -- Insert 3 Coaches (role = 'COACH')
 INSERT INTO users (id, user_name, display_name, email, role, first_name, last_name) VALUES
                                                                                         (nextval('users_seq'), 'jrodriguez', 'James Rodriguez', 'james.rodriguez@lms.edu', 'COACH', 'James', 'Rodriguez'),

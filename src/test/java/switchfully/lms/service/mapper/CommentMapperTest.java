@@ -19,7 +19,7 @@ public class CommentMapperTest {
 
     @BeforeEach
     void setUp() {
-        testUser = new User("username","displayname","firstname","lastname","email@email.com","password",UserRole.STUDENT);
+        testUser = new User("username","displayname","firstname","lastname","email@email.com",UserRole.STUDENT);
         testSubmodule = new Submodule("submodule title");
         testCodelab = new Codelab("codelabtitle","codelab details",testSubmodule);
         testComment = new Comment(testUser,testCodelab,"test comment");

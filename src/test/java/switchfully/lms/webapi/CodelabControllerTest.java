@@ -200,7 +200,7 @@ public class CodelabControllerTest {
 
         //GIVEN
         CommentInputDto input = new CommentInputDto("valid comment");
-        User user = userRepository.save(new User("userName","displayName","firstName","lastName","email@yahoo.com","password", UserRole.STUDENT));
+        User user = userRepository.save(new User("userName","displayName","firstName","lastName","email@yahoo.com", UserRole.STUDENT));
         Submodule submodule = submoduleRepository.save(new Submodule("Parent Submodule"));
         Codelab codelab = codelabRepository.save(new Codelab("codelabtitle","codelabdetails",submodule));
         UserCodelab userCodelab = new UserCodelab(user,codelab,ProgressLevel.NOT_STARTED);

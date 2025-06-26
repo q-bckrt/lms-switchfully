@@ -18,7 +18,7 @@ public class UserMapperTest {
         //Given
         UserInputDto userInput = new UserInputDto("test","testFirstname","testLastName", "test@test.com", "testPassword");
         // Expected
-        User expectedUser = new User("test", "testFirstname testLastName","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User expectedUser = new User("test", "testFirstname testLastName","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         //when
         User userResult = userMapper.inputToUser(userInput);
         //then
@@ -31,7 +31,7 @@ public class UserMapperTest {
     @Test
     void givenUserEntity_whenUsertoOutputDto_thenReturnUserOutputDto() {
         //Given
-        User user = new User("test", "testDisplay","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User user = new User("test", "testDisplay","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         // expected
         UserOutputDto expectedDto = new UserOutputDto("test","testDisplay", "test@test.com", UserRole.STUDENT);
         //when

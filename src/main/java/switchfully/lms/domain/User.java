@@ -29,9 +29,6 @@ public class User {
     @Column(name="email", nullable = false, unique = true)
     private String email;
 
-//    @Column(name="password", nullable = false)
-    private String password;
-
     @Column(name="role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -47,13 +44,12 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String displayName, String firstName, String lastName, String email, String password, UserRole role) {
+    public User(String userName, String displayName, String firstName, String lastName, String email, UserRole role) {
         this.userName = userName;
         this.displayName = displayName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
         this.role = role;
     }
 
@@ -81,9 +77,6 @@ public class User {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public UserRole getRole() {
         return role;
@@ -103,10 +96,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setClasses(List<Class> classes) {

@@ -28,11 +28,7 @@ import switchfully.lms.domain.UserRole;
 import switchfully.lms.repository.ClassRepository;
 import switchfully.lms.repository.CourseRepository;
 import switchfully.lms.repository.UserRepository;
-import switchfully.lms.service.ClassService;
-import switchfully.lms.service.UserService;
 import switchfully.lms.service.dto.*;
-import switchfully.lms.service.mapper.ClassMapper;
-import switchfully.lms.service.mapper.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,18 +50,9 @@ public class ClassControllerTest {
     private int port;
 
     @Autowired
-    private ClassService classService;
-    @Autowired
     private ClassRepository classRepository;
     @Autowired
-    private ClassMapper classMapper;
-
-    @Autowired
-    private UserService userService;
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
     @Autowired
     private CourseRepository courseRepository;
 
@@ -96,9 +83,9 @@ public class ClassControllerTest {
         entityManager.flush();
         entityManager.clear();
 
-        student1 = userRepository.save(new User("ann_DM","Ann Demeulemeester","testFirstname","testLastName","ann@yahoo.com","pass", UserRole.STUDENT));
-        student2 = userRepository.save(new User("jil_sander","Jil Sander","testFirstname","testLastName","jil@yahoo.com","pass", UserRole.STUDENT));
-        student3 = userRepository.save(new User("maarten_mar","Maarten Margiela","testFirstname","testLastName","maarten@yahoo.com","pass", UserRole.STUDENT));
+        student1 = userRepository.save(new User("ann_DM","Ann Demeulemeester","testFirstname","testLastName","ann@yahoo.com", UserRole.STUDENT));
+        student2 = userRepository.save(new User("jil_sander","Jil Sander","testFirstname","testLastName","jil@yahoo.com", UserRole.STUDENT));
+        student3 = userRepository.save(new User("maarten_mar","Maarten Margiela","testFirstname","testLastName","maarten@yahoo.com", UserRole.STUDENT));
 
         student1Dto = new UserOutputDto(student1.getUserName(),student1.getDisplayName(),student1.getEmail(), UserRole.STUDENT);
         student2Dto = new UserOutputDto(student2.getUserName(),student2.getDisplayName(),student2.getEmail(), UserRole.STUDENT);
@@ -108,7 +95,7 @@ public class ClassControllerTest {
         student2.setClasses(new ArrayList<>());
         student3.setClasses(new ArrayList<>());
 
-        coach = userRepository.save(new User("elsa_schiap","Elsa Schiaparelli","testFirstname","testLastName","elsa@yahoo.com","pass", UserRole.COACH));
+        coach = userRepository.save(new User("elsa_schiap","Elsa Schiaparelli","testFirstname","testLastName","elsa@yahoo.com", UserRole.COACH));
 
         coachDto = new UserOutputDto(coach.getUserName(),coach.getDisplayName(),coach.getEmail(), UserRole.COACH);
 

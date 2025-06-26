@@ -33,7 +33,7 @@ public class CommentRepositoryTest {
         codelabRepository.deleteAll();
         submoduleRepository.deleteAll();
 
-        testUser = userRepository.save(new User("username","displayname","firstname","lastname","email@email.com","password",UserRole.STUDENT));
+        testUser = userRepository.save(new User("username","displayname","firstname","lastname","email@email.com",UserRole.STUDENT));
         testSubmodule = submoduleRepository.save(new Submodule("submodule title"));
         testCodelab = codelabRepository.save(new Codelab("codelabtitle","codelab details",testSubmodule));
         testComment = commentRepository.save(new Comment(testUser,testCodelab,"test comment"));

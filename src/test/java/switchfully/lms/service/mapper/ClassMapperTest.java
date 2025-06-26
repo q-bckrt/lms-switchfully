@@ -44,7 +44,7 @@ public class ClassMapperTest {
     @Test
     void givenClassDomainEntity_whenClassToOutputList_thenReturnClassDtoList() {
         //GIVEN
-        User coach = new User("coach","coach","testFirstname","testLastName","coach@yahoo.com","pass", UserRole.COACH);
+        User coach = new User("coach","coach","testFirstname","testLastName","coach@yahoo.com", UserRole.COACH);
         Course course = new Course("course");
         course.setId(4L);
         Module module = new Module("module");

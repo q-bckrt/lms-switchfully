@@ -28,7 +28,6 @@ public class UserMapper {
                 userInputDto.getFirstName(),
                 userInputDto.getLastName(),
                 userInputDto.getEmail(),
-                userInputDto.getPassword(),
                 UserRole.STUDENT
         );
     }

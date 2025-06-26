@@ -21,7 +21,7 @@ public class UserCodelabMapperTest {
     @Test
     void givenCorrectUserCodelab_whenUserCodelabToProgressPerUserDto_thenReturnProgressPerUserDto() {
         //given
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         Submodule submodule = new Submodule("submodule name");
         Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
         UserCodelab userCodelab = new UserCodelab(testUser,codelab, ProgressLevel.NOT_STARTED);
@@ -38,7 +38,7 @@ public class UserCodelabMapperTest {
     @Test
     void givenCorrectListOfProgressPerUserDto_usernameAndProgressPerUserDto_thenReturnProgressPerUserDtoList() {
         //given
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         Submodule submodule = new Submodule("submodule name");
         Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
         Codelab codelab2 = new Codelab("some codelab2", "details about the codelab2", submodule);
@@ -58,7 +58,7 @@ public class UserCodelabMapperTest {
     @Test
     void givenCorrectUserCodelab_whenUserCodelabToProgressPerCodelabDto_thenReturnProgressPerCodelabDto() {
         //given
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         Submodule submodule = new Submodule("submodule name");
         Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
         UserCodelab userCodelab = new UserCodelab(testUser,codelab, ProgressLevel.NOT_STARTED);
@@ -75,7 +75,7 @@ public class UserCodelabMapperTest {
     @Test
     void givenCorrectListOfProgressPerUserDto_whenCodelabTitleAndProgressPerCodelabDtoToProgressPerCodelabDtoList_thenReturnProgressPerCodelabDtoList() {
         //given
-        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", "testPassword", UserRole.STUDENT);
+        User testUser = new User("Test", "test","testFirstname","testLastName", "test@test.com", UserRole.STUDENT);
         Submodule submodule = new Submodule("submodule name");
         Codelab codelab = new Codelab("some codelab", "details about the codelab", submodule);
         ProgressPerCodelabDto prUsDto = new ProgressPerCodelabDto(testUser.getDisplayName(), ProgressLevel.NOT_STARTED);
