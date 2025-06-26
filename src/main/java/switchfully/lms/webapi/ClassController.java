@@ -35,7 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/classes")
 // @CrossOrigin(origins = "http://localhost:4200")
-@CrossOrigin(origins = "https://lms-sw-frontend.netlify.app/")
+@CrossOrigin(origins = "https://lms-sw-frontend.netlify.app")
 public class ClassController {
 
     private final ClassService classService;
